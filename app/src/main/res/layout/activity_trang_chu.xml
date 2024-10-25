@@ -32,6 +32,8 @@
                     android:id="@+id/btDangNhapTuTrangChu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#03A9F4"
+                    android:textColor="@color/white"
                     android:text="Đăng nhập" />
 
                 <Button
@@ -39,6 +41,8 @@
                     android:layout_width="114dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:backgroundTint="#03A9F4"
+                    android:textColor="@color/white"
                     android:text="Đăng Ký" />
             </LinearLayout>
 

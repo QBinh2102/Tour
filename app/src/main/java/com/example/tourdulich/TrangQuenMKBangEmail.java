@@ -12,20 +12,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class TrangQuenMK extends AppCompatActivity {
+public class TrangQuenMKBangEmail extends AppCompatActivity {
 
     private Button btnQuayLai;
-    private TextView linkFindByMail;
+    private TextView linkFindByPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_trang_quen_mk);
+        setContentView(R.layout.activity_trang_quen_mkbang_email);
 
         //Quay lại TRANG ĐĂNG NHẬP
         Intent trangDangNhap = new Intent(this, MainActivity.class);
-        btnQuayLai = findViewById(R.id.btQuayLaiTuQuenMatKhau);
+        btnQuayLai = findViewById(R.id.btQuayLaiTuQuenMKBangMail);
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,10 +34,10 @@ public class TrangQuenMK extends AppCompatActivity {
             }
         });
 
-        //Chuyển sang TRANG QUÊN MẬT KHẨU BẰNG MAIL
-        Intent trangQuenPassBangMail = new Intent(this, TrangQuenMKBangEmail.class);
-        linkFindByMail = findViewById(R.id.textViewLinkTimBangMail);
-        linkFindByMail.setOnClickListener(new View.OnClickListener() {
+        //Chuyển sang TRANG QUÊN MẬT KHẨU BẰNG SĐT
+        Intent trangQuenPassBangMail = new Intent(this, TrangQuenMK.class);
+        linkFindByPhone = findViewById(R.id.textViewLinkTimBangSDT);
+        linkFindByPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Start activity MainActivity

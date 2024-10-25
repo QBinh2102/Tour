@@ -13,6 +13,9 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
+            android:name=".TrangQuenMKBangEmail"
+            android:exported="false" />
+        <activity
             android:name=".TrangDangKy"
             android:exported="false" />
         <activity
