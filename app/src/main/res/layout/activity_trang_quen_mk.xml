@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TrangQuenMK">
+
+    <RelativeLayout
+        android:background="#54A8CE"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btQuayLaiTuQuenMatKhau"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#54A8CE"
+                android:drawableLeft="@drawable/baseline_keyboard_return_24"
+                android:textColor="@color/white"
+                android:text="Quay lại" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:paddingLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tìm tài khoản" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:paddingLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nhập số di động" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_margin="20dp"
+                app:cardCornerRadius="10dp"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/editTextPhoneQuenMatKhau"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Số di động"
+                    android:textColorHint="#96A0AA"
+                    android:textColor="@color/black"
+                    android:ems="10"
+                    android:inputType="phone" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textView14"
+                android:paddingLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Xác thực mã OTP" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_margin="20dp"
+                app:cardCornerRadius="10dp"
+                android:backgroundTint="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/editTextNumberOTP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mã OTP"
+                    android:textColorHint="#96A0AA"
+                    android:textColor="@color/black"
+                    android:ems="10"
+                    android:inputType="number" />
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btTiepTucTuQuenMatKhau"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="#1C43F4"
+                android:textColor="@color/white"
+                android:text="Tiếp tục" />
+
+            <TextView
+                android:id="@+id/textViewLinkTimBangMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="15dp"
+                android:padding="10dp"
+                android:text="Tìm kiếm bằng email"
+                android:linksClickable="true"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
