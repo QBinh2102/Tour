@@ -14,10 +14,23 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
@@ -72,15 +85,15 @@ public class TrangDangKy extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                     edtTextUserNameDangKy.setError("Vui lòng điền tên đăng nhập");
                     edtTextUserNameDangKy.requestFocus();
-                } else if (TextUtils.isEmpty(matKhau)) {
+                } else if (TextUtils.isEmpty(matKhau)|| matKhau.length() < 6) {
                     Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
                             Toast.LENGTH_LONG).show();
-                    edtTextPasswordDangKy.setError("Vui lòng điền mật khẩu");
+                    edtTextPasswordDangKy.setError("Mật khẩu phải từ 6 ký tự trở lên");
                     edtTextPasswordDangKy.requestFocus();
-                } else if (TextUtils.isEmpty(xacNhanMK)) {
+                } else if (TextUtils.isEmpty(xacNhanMK)|| xacNhanMK.length() < 6) {
                     Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
                             Toast.LENGTH_LONG).show();
-                    edtTextPasswordXacThucDangKy.setError("Vui lòng xác nhận mật khẩu");
+                    edtTextPasswordXacThucDangKy.setError("Mật khẩu phải từ 6 ký tự trở lên");
                     edtTextPasswordXacThucDangKy.requestFocus();
                 } else if (!matKhau.equals(xacNhanMK)) {
                     Toast.makeText(TrangDangKy.this, "Mật khẩu không khớp. Vui lòng thử lại",
@@ -117,14 +130,61 @@ public class TrangDangKy extends AppCompatActivity {
                     edtTextEmailAddressDangKy.requestFocus();
                 }else{
                     thanhTienTrinh.setVisibility(View.VISIBLE);
-                    Toast.makeText(TrangDangKy.this, "Đăng ký thành công",
-                            Toast.LENGTH_LONG).show();
                     nguoiDangKy(tenDangNhap, matKhau, xacNhanMK, diaChi,soDienThoai, email);
                 }
             }
 
+            //FirebaseAuth() là một lớp trong Firebase Authentication, được sử dụng để quản lý xác thực người dùng trong ứng dụng
             private void nguoiDangKy(String tenDangNhap, String matKhau, String xacNhanMK, String diaChi, String soDienThoai, String email) {
+                FirebaseAuth xacThucFirebase = FirebaseAuth.getInstance();
+                xacThucFirebase.createUserWithEmailAndPassword(email, matKhau).addOnCompleteListener(
+                        TrangDangKy.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        thanhTienTrinh.setVisibility(View.GONE);
+                        if (task.isSuccessful()){
+                            FirebaseUser nguoiDungFB = xacThucFirebase.getCurrentUser();
+                            //Thay doi thong tin ho so nguoi dung
+                            UserProfileChangeRequest thayDoiTTUser = new UserProfileChangeRequest.Builder().setDisplayName(tenDangNhap).build();
+                            nguoiDungFB.updateProfile(thayDoiTTUser);
 
+                            //Quan ly du lieu nguoi dung
+                            LuuThongTinUser thongTinUser = new LuuThongTinUser( diaChi, soDienThoai, email);
+                            DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
+                            refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(TrangDangKy.this, "Đăng ký thành công!", Toast.LENGTH_LONG).show();
+                                        //Mo thong tin nguoi dung sau khi dang ky thanh cong
+                                        Intent yeuCau = new Intent(TrangDangKy.this, TrangChu.class);
+                                        yeuCau.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(yeuCau);
+                                        finish();
+                                    }else{
+                                        Toast.makeText(TrangDangKy.this, "Đăng ký thất bại. Vui lòng thử lại", Toast.LENGTH_LONG).show();
+                                        thanhTienTrinh.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
+
+                        }else {
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                edtTextEmailAddressDangKy.setError("Email không hợp lệ vui lòng thử lại");
+                                edtTextEmailAddressDangKy.requestFocus();
+                            } catch (FirebaseAuthUserCollisionException e) {
+                                edtTextEmailAddressDangKy.setError("Email này đã được sử dụng vui lòng thử lại");
+                                edtTextEmailAddressDangKy.requestFocus();
+                            } catch (Exception e) {
+                                Toast.makeText( TrangDangKy.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                            thanhTienTrinh.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         });
         //Quay lại TRANG CHỦ
