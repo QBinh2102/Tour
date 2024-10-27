@@ -32,6 +32,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TrangDangKy extends AppCompatActivity {
@@ -79,6 +80,14 @@ public class TrangDangKy extends AppCompatActivity {
                 String soDienThoai = edtTextPhoneDangKy.getText().toString();
                 String email = edtTextEmailAddressDangKy.getText().toString();
 
+                //Kiem tra so dien thoai co hop li khong
+                //So dien thoai chi hop ly khi bat dau voi 3 so ben duoi va 7 so con lai tu 0->9
+                String quyDinhSDT = "(039|038|037|036|035|034|033|032|096|097|098|086|083|084|085|081" +
+                        "|088|082|070|079|077|076|078|090|093|089|052|056|058|092)[0-9]{7}";
+                Matcher mauKiemTraSDT;
+                Pattern sdtHopLe = Pattern.compile(quyDinhSDT);
+                mauKiemTraSDT = sdtHopLe.matcher(soDienThoai);
+
                 //Kiểm lỗi người dùng
                 if(TextUtils.isEmpty(tenDangNhap)){
                     Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
@@ -112,6 +121,11 @@ public class TrangDangKy extends AppCompatActivity {
                     Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
                             Toast.LENGTH_LONG).show();
                     edtTextPhoneDangKy.setError("Vui lòng điền số điện thoại");
+                    edtTextPhoneDangKy.requestFocus();
+                } else if (!mauKiemTraSDT.find()) {
+                    Toast.makeText(TrangDangKy.this, "Vui lòng xem lại số điện thoại",
+                            Toast.LENGTH_LONG).show();
+                    edtTextPhoneDangKy.setError("Số điện thoại không hợp lệ");
                     edtTextPhoneDangKy.requestFocus();
                 } else if (soDienThoai.length() != 10) {
                     Toast.makeText(TrangDangKy.this, "Vui lòng xem lại số điện thoại",
@@ -156,8 +170,8 @@ public class TrangDangKy extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(TrangDangKy.this, "Đăng ký thành công!", Toast.LENGTH_LONG).show();
-                                        //Mo thong tin nguoi dung sau khi dang ky thanh cong
-                                        Intent yeuCau = new Intent(TrangDangKy.this, TrangChu.class);
+                                        //Mo trang dang nhap sau khi nguoi dung dang ky thanh cong
+                                        Intent yeuCau = new Intent(TrangDangKy.this, MainActivity.class );
                                         yeuCau.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
                                                 | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(yeuCau);
