@@ -1,9 +1,11 @@
 package com.example.tourdulich;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,6 +27,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPassShow = false;
     private Button btnQuayLaiTrangChu;
     private TextView textQuenPass;
-
+    private static final String TAG = "Người dùng đăng nhập";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,16 +143,61 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Đăng nhập thành công",
-                            Toast.LENGTH_SHORT).show();
+                    //lấy thông tin của người dùng hiện tại đang đăng nhập vào ứng dụng
+                    FirebaseUser firebaseUser = xacThucFirebase.getCurrentUser();
+                    if (firebaseUser.isEmailVerified()){
+                        Toast.makeText(MainActivity.this, "Đăng nhập thành công",
+                                Toast.LENGTH_SHORT).show();
+                    }else{
+                        firebaseUser.sendEmailVerification();
+                        xacThucFirebase.signOut();
+                        showAlertDialog();
+                    }
+
                 } else {
-                    Toast.makeText(MainActivity.this, "Có lỗi xảy ra. Vui lòng thử lại",
-                            Toast.LENGTH_SHORT).show();
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthInvalidUserException e) {
+                        Toast.makeText(MainActivity.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        Toast.makeText(MainActivity.this, "Thông tin đăng nhập không chính xác. Vui lòng kiểm tra lại", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 thanhTienTrinh.setVisibility(View.GONE);
             }
         });
     }
 
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Xác thực email");
+        builder.setMessage("Bạn chưa xác thực email");
 
+        builder.setPositiveButton("Tiếp tục", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//Mo email o cua so khac
+                startActivity(intent);
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+//Kiem tra neu user da log in roi -> vao thang profile
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(xacThucFirebase.getCurrentUser() != null){
+            Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, ThongTinCaNhan.class));
+            finish();
+        }else{
+            Toast.makeText(MainActivity.this, "Bạn có thể đăng nhập được rồi", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

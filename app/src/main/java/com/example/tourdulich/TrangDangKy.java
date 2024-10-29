@@ -169,12 +169,13 @@ public class TrangDangKy extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(TrangDangKy.this, "Đăng ký thành công!", Toast.LENGTH_LONG).show();
+                                        nguoiDungFB.sendEmailVerification();
+                                        Toast.makeText(TrangDangKy.this, "Đăng ký thành công! Vui lòng xác thực email", Toast.LENGTH_LONG).show();
                                         //Mo trang dang nhap sau khi nguoi dung dang ky thanh cong
-                                        Intent yeuCau = new Intent(TrangDangKy.this, MainActivity.class );
-                                        yeuCau.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        Intent intent = new Intent(TrangDangKy.this, MainActivity.class );
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
                                                 | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(yeuCau);
+                                        startActivity(intent);
                                         finish();
                                     }else{
                                         Toast.makeText(TrangDangKy.this, "Đăng ký thất bại. Vui lòng thử lại", Toast.LENGTH_LONG).show();
