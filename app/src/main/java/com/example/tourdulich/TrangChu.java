@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,8 @@ public class TrangChu extends AppCompatActivity {
 
     private Button btnDangNhap;
     private Button btnDangKy;
+    private LinearLayout btnToiHoSo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,16 @@ public class TrangChu extends AppCompatActivity {
             }
         });
 
+        //Chuyển sang TRANG THÔNG TIN CÁ NHÂN
+        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
+        btnToiHoSo = findViewById(R.id.btTrangChuToiHoSo);
+        btnToiHoSo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ttcn);
+            }
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -49,13 +62,3 @@ public class TrangChu extends AppCompatActivity {
 
     }
 }
-/*
-Intent trangChu = new Intent(this, TrangChu.class);
-        btnQuayLai = findViewById(R.id.btQuayLaiTrangChu);
-        btnQuayLai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(trangChu);
-            }
-        });
- */
