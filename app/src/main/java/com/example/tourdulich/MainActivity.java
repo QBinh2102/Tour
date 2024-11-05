@@ -145,9 +145,13 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     //lấy thông tin của người dùng hiện tại đang đăng nhập vào ứng dụng
                     FirebaseUser firebaseUser = xacThucFirebase.getCurrentUser();
+
                     if (firebaseUser.isEmailVerified()){
                         Toast.makeText(MainActivity.this, "Đăng nhập thành công",
                                 Toast.LENGTH_SHORT).show();
+
+                        startActivity(new Intent(MainActivity.this, ThongTinCaNhan.class));
+                        finish();
                     }else{
                         firebaseUser.sendEmailVerification();
                         xacThucFirebase.signOut();

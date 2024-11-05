@@ -163,7 +163,7 @@ public class TrangDangKy extends AppCompatActivity {
                             nguoiDungFB.updateProfile(thayDoiTTUser);
 
                             //Quan ly du lieu nguoi dung
-                            LuuThongTinUser thongTinUser = new LuuThongTinUser( diaChi, soDienThoai, email);
+                            LuuThongTinUser thongTinUser = new LuuThongTinUser(diaChi, soDienThoai, email);
                             DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
                             refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
