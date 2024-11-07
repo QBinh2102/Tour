@@ -12,10 +12,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class TrangChu extends AppCompatActivity {
 
-    private LinearLayout btnToiHoSo;
+    private FirebaseAuth xacThucFirebase;
+
     private LinearLayout btnToiDatVe;
+    private LinearLayout btnToiHoSo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,25 +29,28 @@ public class TrangChu extends AppCompatActivity {
         setContentView(R.layout.activity_trang_chu);
 
 
-
-
-        //Chuyển sang TRANG THÔNG TIN CÁ NHÂN
-//        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
-//        btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
-//        btnToiHoSo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(ttcn);
-//            }
-//        });
-        Intent ttcncdn = new Intent(this, ThongTinCaNhan.class);
-        btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
-        btnToiHoSo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(ttcncdn);
-            }
-        });
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu đã đăng nhập thành công
+            Intent ttcn = new Intent(this, ThongTinCaNhan.class);
+            btnToiHoSo = findViewById(R.id.btTrangChuToiHoSo);
+            btnToiHoSo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(ttcn);
+                }
+            });
+        }else {
+            //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu chưa đăng nhập
+            Intent ttcncdn = new Intent(this, ThongTinChuaDangNhap.class);
+            btnToiHoSo = findViewById(R.id.btTrangChuToiHoSo);
+            btnToiHoSo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(ttcncdn);
+                }
+            });
+        }
 
 
 

@@ -46,6 +46,13 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         android:textColor="@color/white">
                     </TextView>
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Button" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -118,7 +125,7 @@
                 </RelativeLayout>
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/btDangXuat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

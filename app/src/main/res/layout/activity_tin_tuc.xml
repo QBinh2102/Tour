@@ -7,17 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".TinTuc">
 
-    <ScrollView
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -31,7 +35,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/btHoSoToiTrangChu"
+                android:id="@+id/btTinTucToiTrangChu"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -78,7 +82,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btHoSoToiDatVe"
+                android:id="@+id/btTinTucToiDatVe"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

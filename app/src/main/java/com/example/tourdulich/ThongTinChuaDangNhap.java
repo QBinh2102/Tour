@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,8 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
 
     private Button btnDangNhap;
     private Button btnDangKy;
+    private LinearLayout btnToiTrangChu;
+    private LinearLayout btnToiDatVe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,25 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(dangKy);
+            }
+        });
+
+        //Chuyển sang TRANG CHỦ
+        Intent trangChu = new Intent(this, TrangChu.class);
+        btnToiTrangChu = findViewById(R.id.btHoSoNullToiTrangChu);
+        btnToiTrangChu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(trangChu);
+            }
+        });
+
+        Intent datVe = new Intent(this, DatVe.class);
+        btnToiDatVe = findViewById(R.id.btHoSoNullToiDatVe);
+        btnToiDatVe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(datVe);
             }
         });
 

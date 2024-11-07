@@ -35,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText edtTextEmailDangNhap;
     private EditText edtTextPasswordDangNhap;
+
     private ProgressBar thanhTienTrinh;
     private FirebaseAuth xacThucFirebase;
+
     private Button btLogin;
     private ImageButton btnAnHienMK;
     private EditText editTextPass;
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
 
-        }
+    }
     private void userDangNhap(String email, String matKhau) {
         xacThucFirebase.signInWithEmailAndPassword(email, matKhau).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override

@@ -16,6 +16,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -43,14 +46,28 @@ public class DatVe extends AppCompatActivity {
         });
 
 
-        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
-        btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
-        btnToiHoSo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(ttcn);
-            }
-        });
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser != null) {
+            //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu đã đăng nhập thành công
+            Intent ttcn = new Intent(this, ThongTinCaNhan.class);
+            btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
+            btnToiHoSo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(ttcn);
+                }
+            });
+        }else {
+            //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu chưa đăng nhập
+            Intent ttcncdn = new Intent(this, ThongTinChuaDangNhap.class);
+            btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
+            btnToiHoSo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(ttcncdn);
+                }
+            });
+        }
 
         Intent trangChu = new Intent(this, TrangChu.class);
         btnToiTrangChu = findViewById(R.id.btDatVeToiTrangChu);

@@ -81,7 +81,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:id="@+id/btHoSoToiTrangChu"
+                android:id="@+id/btHoSoNullToiTrangChu"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -128,7 +128,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btHoSoToiDatVe"
+                android:id="@+id/btHoSoNullToiDatVe"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
