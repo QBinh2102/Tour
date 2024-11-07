@@ -14,9 +14,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class TrangChu extends AppCompatActivity {
 
-    private Button btnDangNhap;
-    private Button btnDangKy;
     private LinearLayout btnToiHoSo;
+    private LinearLayout btnToiDatVe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,33 +23,36 @@ public class TrangChu extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trang_chu);
 
-        //Chuyển sang TRANG ĐĂNG NHẬP
-        Intent dangNhap = new Intent(this, MainActivity.class);
-        btnDangNhap = findViewById(R.id.btDangNhapTuTrangChu);
-        btnDangNhap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(dangNhap);
-            }
-        });
 
-        //Chuyển sang TRANG ĐĂNG KÝ
-        Intent dangKy = new Intent(this, TrangDangKy.class);
-        btnDangKy = findViewById(R.id.btDangKyTuTrangChu);
-        btnDangKy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(dangKy);
-            }
-        });
+
 
         //Chuyển sang TRANG THÔNG TIN CÁ NHÂN
-        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
-        btnToiHoSo = findViewById(R.id.btTrangChuToiHoSo);
+//        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
+//        btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
+//        btnToiHoSo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(ttcn);
+//            }
+//        });
+        Intent ttcncdn = new Intent(this, ThongTinCaNhan.class);
+        btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
         btnToiHoSo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ttcn);
+                startActivity(ttcncdn);
+            }
+        });
+
+
+
+
+        Intent datve = new Intent(this, DatVe.class);
+        btnToiDatVe = findViewById(R.id.btTrangChuToiDatVe);
+        btnToiDatVe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(datve);
             }
         });
 

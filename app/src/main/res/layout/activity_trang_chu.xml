@@ -56,28 +56,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:padding="50dp">
-
-                        <Button
-                            android:id="@+id/btDangNhapTuTrangChu"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:backgroundTint="#03A9F4"
-                            android:text="Đăng nhập"
-                            android:textColor="@color/white" />
-
-                        <Button
-                            android:id="@+id/btDangKyTuTrangChu"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:backgroundTint="#03A9F4"
-                            android:text="Đăng Ký"
-                            android:textColor="@color/white" />
-                    </LinearLayout>
+                        android:padding="50dp"/>
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
@@ -391,6 +370,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btTrangChuToiDatVe"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -437,7 +417,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btTrangChuToiHoSo"
+                android:id="@+id/btDatVeToiHoSo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

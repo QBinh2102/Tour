@@ -36,6 +36,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private String email, dienThoai, diaChi, tenHoSo;
     private ImageView imageView;
     private FirebaseAuth xacThucFirebase;
+    private LinearLayout btnToiDatVe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,15 @@ public class ThongTinCaNhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(trangChu);
+            }
+        });
+
+        Intent datVe = new Intent(this, DatVe.class);
+        btnToiDatVe = findViewById(R.id.btHoSoToiDatVe);
+        btnToiDatVe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(datVe);
             }
         });
 

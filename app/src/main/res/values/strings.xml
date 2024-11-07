@@ -42,4 +42,24 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <string-array name="service_types">
+        <item>500.000 VND</item>
+        <item>1.000.000 VND</item>
+        <item>1.500.000 VND</item>
+        <item>2.500.000</item>
+    </string-array>
+
+    <string-array name="cities">
+        <item>Đà Lạt</item>
+        <item>Vũng Tàu</item>
+        <item>Phú Quốc</item>
+        <item>Thái Lan</item>
+    </string-array>
+
+    <string-array name="cars">
+        <item>Xe</item>
+        <item>Máy Bay</item>
+        <item>Thuyền</item>
+    </string-array>
 </resources>

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.tourdulich">
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +13,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
+        <activity
+            android:name=".TinTuc"
+            android:exported="false" />
+        <activity
+            android:name=".ThongTinChuaDangNhap"
+            android:exported="false" />
+        <activity
+            android:name=".QRDatVe"
+            android:exported="false" />
+        <activity
+            android:name=".BoLocDatVe"
+            android:exported="false" />
+        <activity
+            android:name=".thong_tin_dat_ve"
+            android:exported="false" />
+        <activity
+            android:name=".DatVe"
+            android:exported="false" />
         <activity
             android:name=".ThongTinCaNhan"
             android:exported="false" />
