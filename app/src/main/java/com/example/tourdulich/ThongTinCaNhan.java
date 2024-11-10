@@ -1,5 +1,6 @@
 package com.example.tourdulich;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -84,6 +86,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
             Toast.makeText(ThongTinCaNhan.this, "Thông tin người dùng không tồn tại",
                     Toast.LENGTH_SHORT).show();
         }else {
+            kiemTraXacNhanEmail(firebaseUser);
             thanhTienTrinh.setVisibility(View.VISIBLE);
             HienThiThongTinUser(firebaseUser);
         }
@@ -98,6 +101,30 @@ public class ThongTinCaNhan extends AppCompatActivity {
         });
     }
 
+    private void kiemTraXacNhanEmail(FirebaseUser firebaseUser) {
+        if(!firebaseUser.isEmailVerified()){
+            showAlertDialog();
+        }
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ThongTinCaNhan.this);
+        builder.setTitle("Xác thực email");
+        builder.setMessage("Bạn chưa xác thực email");
+
+        builder.setPositiveButton("Tiếp tục", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//Mo email o cua so khac
+                startActivity(intent);
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     private void HienThiThongTinUser(FirebaseUser firebaseUser) {
         String userID = firebaseUser.getUid();
         Log.d("TAG", "User ID: " + userID);
@@ -108,6 +135,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
                 LuuThongTinUser thongTinUser = snapshot.getValue(LuuThongTinUser.class);
                 if(thongTinUser != null){
                     tenHoSo = firebaseUser.getDisplayName();
+                    Log.d("TAG", "Tên hiển thị: " + firebaseUser.getDisplayName());
                     email = thongTinUser.email;
                     diaChi = thongTinUser.diaChi;
                     dienThoai = thongTinUser.soDienThoai;

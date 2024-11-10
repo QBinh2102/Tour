@@ -44,7 +44,7 @@
                         android:layout_gravity="center"
                         android:id="@+id/txtTenHoSo"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                        android:textColor="@color/white">
+                        android:textColor="@color/black">
                     </TextView>
 
                 <Button
