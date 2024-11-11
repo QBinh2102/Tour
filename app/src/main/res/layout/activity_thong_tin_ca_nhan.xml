@@ -123,8 +123,54 @@
                         android:textSize="18sp"/>
 
                 </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/white">
 
+                    <ImageView
+                        android:id="@+id/imgViewNgaySinhHoSo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/create_24" />
+
+                    <TextView
+                        android:id="@+id/txtNgaySinhHoSo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/imgViewNgaySinhHoSo"
+                        android:layout_marginStart="50dp"
+                        android:text="Đang tải..."
+                        android:textSize="18sp"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:id="@+id/imgViewGioiTinhHoSo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/search_24" />
+
+                    <TextView
+                        android:id="@+id/txtGioiTinhHoSo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/imgViewGioiTinhHoSo"
+                        android:layout_marginStart="50dp"
+                        android:text="Đang tải..."
+                        android:textSize="18sp"/>
+
+                </RelativeLayout>
                 <Button
+                    android:layout_marginTop="10dp"
                     android:id="@+id/btDangXuat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -38,11 +38,13 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private Button btnDangXuat;
 
     private TextView txtEmail;
+    private TextView txtNgaySinh;
+    private TextView txtGioiTinh;
     private TextView txtTenHoSo;
     private TextView txtDienThoai;
     private TextView txtDiaChi;
     private ProgressBar thanhTienTrinh;
-    private String email, dienThoai, diaChi, tenHoSo;
+    private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo;
     private ImageView imageView;
     private FirebaseAuth xacThucFirebase;
 
@@ -107,6 +109,8 @@ public class ThongTinCaNhan extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtEmailHoSo);
         txtDienThoai = findViewById(R.id.txtDienThoaiHoSo);
         txtDiaChi = findViewById(R.id.txtDiaChiHoSo);
+        txtNgaySinh = findViewById(R.id.txtNgaySinhHoSo);
+        txtGioiTinh = findViewById(R.id.txtGioiTinhHoSo);
         xacThucFirebase = FirebaseAuth.getInstance();
         thanhTienTrinh = findViewById(R.id.thanhTienTrinh);
 
@@ -165,15 +169,18 @@ public class ThongTinCaNhan extends AppCompatActivity {
                 LuuThongTinUser thongTinUser = snapshot.getValue(LuuThongTinUser.class);
                 if(thongTinUser != null){
                     tenHoSo = firebaseUser.getDisplayName();
-                    Log.d("TAG", "Tên hiển thị: " + firebaseUser.getDisplayName());
                     email = thongTinUser.email;
                     diaChi = thongTinUser.diaChi;
                     dienThoai = thongTinUser.soDienThoai;
+                    ngaySinh = thongTinUser.ngaySinh;
+                    gioiTinh = thongTinUser.gioiTinh;
 
                     txtTenHoSo.setText(tenHoSo);
                     txtEmail.setText(email);
                     txtDiaChi.setText(diaChi);
                     txtDienThoai.setText(dienThoai);
+                    txtNgaySinh.setText(ngaySinh);
+                    txtGioiTinh.setText(gioiTinh);
                 }else{
                     Log.d("TAG", "thongTinUser is null");
                 }

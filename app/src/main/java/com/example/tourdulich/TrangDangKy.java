@@ -1,6 +1,7 @@
 package com.example.tourdulich;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -8,9 +9,12 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,6 +36,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +56,10 @@ public class TrangDangKy extends AppCompatActivity {
     private EditText edtTextDiaChiDangKy;
     private EditText edtTextPhoneDangKy;
     private EditText edtTextEmailAddressDangKy;
-
+    private EditText edtTextNgaySinhDangKy;
+    private RadioGroup radioGroupGioiTinh;
+    private RadioButton radioButtonDangKy;
+    private DatePickerDialog picker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +75,34 @@ public class TrangDangKy extends AppCompatActivity {
         edtTextDiaChiDangKy = findViewById(R.id.editTextDiaChiDangKy);
         edtTextPhoneDangKy = findViewById(R.id.editTextPhoneDangKy);
         edtTextEmailAddressDangKy = findViewById(R.id.editTextEmailAddressDangKy);
+        edtTextNgaySinhDangKy = findViewById(R.id.editTextNgaySinhDangKy);
+        //Radio button
+        radioGroupGioiTinh = findViewById(R.id.radioGroupGT);
+        radioGroupGioiTinh.clearCheck();
 
         Button btDangKy = findViewById(R.id.btDangKyTuDangKy);
         btDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int soCuaGTDuocChon = radioGroupGioiTinh.getCheckedRadioButtonId();
+                radioButtonDangKy = findViewById(soCuaGTDuocChon);
+                edtTextNgaySinhDangKy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Calendar calendar = Calendar.getInstance();
+                        int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        int month = calendar.get(Calendar.MONTH);
+                        int year = calendar.get(Calendar.YEAR);
+
+                        picker = new DatePickerDialog(TrangDangKy.this, new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                edtTextNgaySinhDangKy.setText(dayOfMonth + "/" + (month+1) +  "/" + year);
+                            }
+                        },year, month, day);
+                        picker.show();
+                    }
+                });
 
                 String tenDangNhap = edtTextUserNameDangKy.getText().toString();
                 String matKhau = edtTextPasswordDangKy.getText().toString();
@@ -79,6 +110,8 @@ public class TrangDangKy extends AppCompatActivity {
                 String diaChi = edtTextDiaChiDangKy.getText().toString();
                 String soDienThoai = edtTextPhoneDangKy.getText().toString();
                 String email = edtTextEmailAddressDangKy.getText().toString();
+                String ngaySinh = edtTextNgaySinhDangKy.getText().toString();
+                String gioiTinh;
 
                 //Kiem tra so dien thoai co hop li khong
                 //So dien thoai chi hop ly khi bat dau voi 3 so ben duoi va 7 so con lai tu 0->9
@@ -142,14 +175,25 @@ public class TrangDangKy extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                     edtTextEmailAddressDangKy.setError("Vui lòng điền email hợp lệ");
                     edtTextEmailAddressDangKy.requestFocus();
+                }else if (TextUtils.isEmpty(ngaySinh)) {
+                    Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    edtTextNgaySinhDangKy.setError("Vui lòng nhập ngày sinh");
+                    edtTextNgaySinhDangKy.requestFocus();
+                }else if (radioGroupGioiTinh.getCheckedRadioButtonId() == -1) {
+                    Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    radioButtonDangKy.setError("Vui lòng chọn giới tính");
+                    radioButtonDangKy.requestFocus();
                 }else{
+                    gioiTinh = radioButtonDangKy.getText().toString();
                     thanhTienTrinh.setVisibility(View.VISIBLE);
-                    nguoiDangKy(tenDangNhap, matKhau, xacNhanMK, diaChi,soDienThoai, email);
+                    nguoiDangKy(tenDangNhap, matKhau, xacNhanMK, diaChi,soDienThoai, email, ngaySinh, gioiTinh);
                 }
             }
 
             //FirebaseAuth() là một lớp trong Firebase Authentication, được sử dụng để quản lý xác thực người dùng trong ứng dụng
-            private void nguoiDangKy(String tenDangNhap, String matKhau, String xacNhanMK, String diaChi, String soDienThoai, String email) {
+            private void nguoiDangKy(String tenDangNhap, String matKhau, String xacNhanMK, String diaChi, String soDienThoai, String email, String ngaySinh, String gioiTinh) {
                 FirebaseAuth xacThucFirebase = FirebaseAuth.getInstance();
                 xacThucFirebase.createUserWithEmailAndPassword(email, matKhau).addOnCompleteListener(
                         TrangDangKy.this, new OnCompleteListener<AuthResult>() {
@@ -163,7 +207,7 @@ public class TrangDangKy extends AppCompatActivity {
                             nguoiDungFB.updateProfile(thayDoiTTUser);
 
                             //Quan ly du lieu nguoi dung
-                            LuuThongTinUser thongTinUser = new LuuThongTinUser(diaChi, soDienThoai, email);
+                            LuuThongTinUser thongTinUser = new LuuThongTinUser(diaChi, soDienThoai, email, ngaySinh, gioiTinh);
                             DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
                             refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

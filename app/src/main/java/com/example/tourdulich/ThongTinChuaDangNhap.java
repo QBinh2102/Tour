@@ -40,7 +40,7 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
         });
 
         //Chuyển sang ĐĂNG KÝ THÔNG TIN CÁ NHÂN
-        Intent dangKy = new Intent(this, DangKyThongTinCaNhan.class);
+        Intent dangKy = new Intent(this, TrangDangKy.class);
         btnDangKy = findViewById(R.id.btDangKyTuHoSo);
         btnDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
