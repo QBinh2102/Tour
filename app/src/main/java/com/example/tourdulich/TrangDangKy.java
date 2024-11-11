@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -56,10 +57,11 @@ public class TrangDangKy extends AppCompatActivity {
     private EditText edtTextDiaChiDangKy;
     private EditText edtTextPhoneDangKy;
     private EditText edtTextEmailAddressDangKy;
-    private EditText edtTextNgaySinhDangKy;
+    private TextView edtTextNgaySinhDangKy;
     private RadioGroup radioGroupGioiTinh;
     private RadioButton radioButtonDangKy;
     private DatePickerDialog picker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,25 @@ public class TrangDangKy extends AppCompatActivity {
         //Radio button
         radioGroupGioiTinh = findViewById(R.id.radioGroupGT);
         radioGroupGioiTinh.clearCheck();
+
+
+        edtTextNgaySinhDangKy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                picker = new DatePickerDialog(TrangDangKy.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        edtTextNgaySinhDangKy.setText(dayOfMonth + "/" + (month+1) +  "/" + year);
+                    }
+                },year, month, day);
+                picker.show();
+            }
+        });
 
         Button btDangKy = findViewById(R.id.btDangKyTuDangKy);
         btDangKy.setOnClickListener(new View.OnClickListener() {
