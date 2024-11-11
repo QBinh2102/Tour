@@ -16,8 +16,11 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
 
     private Button btnDangNhap;
     private Button btnDangKy;
+
     private LinearLayout btnToiTrangChu;
     private LinearLayout btnToiDatVe;
+    private LinearLayout btnToiTinTuc;
+    private LinearLayout btnToiGiaoDich;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(dangNhap);
+
             }
         });
 
@@ -52,15 +56,40 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(trangChu);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
             }
         });
 
+        //Chuyển sang trang TIN TỨC
+        Intent tinTuc = new Intent(this, TinTuc.class);
+        btnToiTinTuc = findViewById(R.id.btHoSoNullToiTinTuc);
+        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(tinTuc);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        //Chuyển sang trang ĐẶT VÉ
         Intent datVe = new Intent(this, DatVe.class);
         btnToiDatVe = findViewById(R.id.btHoSoNullToiDatVe);
         btnToiDatVe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(datVe);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        //Chuyển sang trang GIAO DỊCH
+        Intent giaoDich = new Intent(this, GiaoDich.class);
+        btnToiGiaoDich = findViewById(R.id.btHoSoNullToiGiaoDich);
+        btnToiGiaoDich.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(giaoDich);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
             }
         });
 

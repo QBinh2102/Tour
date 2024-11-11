@@ -97,7 +97,8 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/white">
 
                     <ScrollView
                         android:layout_width="match_parent"
@@ -154,6 +155,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btDatVeToiTinTuc"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -200,6 +202,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btDatVeToiGiaoDich"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

@@ -24,6 +24,12 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class DatVe extends AppCompatActivity {
+
+    private LinearLayout btnToiHoSo;
+    private LinearLayout btnToiTrangChu;
+    private LinearLayout btnToiTinTuc;
+    private LinearLayout btnToiGiaoDich;
+
     private LinearLayout datesContainer;
     private LinearLayout classesContainer;
 
@@ -31,8 +37,7 @@ public class DatVe extends AppCompatActivity {
     private String selectedCity = ""; // Không lọc thành phố mặc định
     private String selectedClub = ""; // Không lọc câu lạc bộ mặc định
 
-    private LinearLayout btnToiHoSo;
-    private LinearLayout btnToiTrangChu;
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +50,7 @@ public class DatVe extends AppCompatActivity {
             return insets;
         });
 
-
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        //Chuyển Trang Thông Tin Cá Nhân
         if(firebaseUser != null) {
             //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu đã đăng nhập thành công
             Intent ttcn = new Intent(this, ThongTinCaNhan.class);
@@ -55,6 +59,7 @@ public class DatVe extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(ttcn);
+                    overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
                 }
             });
         }else {
@@ -65,16 +70,41 @@ public class DatVe extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(ttcncdn);
+                    overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
                 }
             });
         }
 
+        //Chuyển sang TRANG CHỦ
         Intent trangChu = new Intent(this, TrangChu.class);
         btnToiTrangChu = findViewById(R.id.btDatVeToiTrangChu);
         btnToiTrangChu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(trangChu);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        //Chuyển sang trang TIN TỨC
+        Intent tinTuc = new Intent(this, TinTuc.class);
+        btnToiTinTuc = findViewById(R.id.btDatVeToiTinTuc);
+        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(tinTuc);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        //Chuyển sang trang GIAO DỊCH
+        Intent giaoDich = new Intent(this, GiaoDich.class);
+        btnToiGiaoDich = findViewById(R.id.btDatVeToiGiaoDich);
+        btnToiGiaoDich.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(giaoDich);
+                overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
             }
         });
 

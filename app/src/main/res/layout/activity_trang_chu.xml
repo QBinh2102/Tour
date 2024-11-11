@@ -8,9 +8,9 @@
     tools:context=".TrangChu">
 
     <RelativeLayout
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#CBF0F4">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -23,102 +23,143 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:cardBackgroundColor="#00BCD4">
 
-                    <androidx.cardview.widget.CardView
+                    <TextView
+                        android:id="@+id/textViewWelcome"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="20dp">
+                        android:gravity="center"
+                        android:padding="15dp"
+                        android:text="Trang chủ"
+                        android:textColor="@color/white"
+                        android:textSize="20dp" />
 
-                        <EditText
-                            android:id="@+id/editTextText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
-                            android:ems="10"
-                            android:inputType="text"
-                            android:hint="Search"
-                            android:drawableRight="@drawable/search_24"
-                            android:textColor="@color/black"
-                            android:textColorHint="#96A0AA" />
-                    </androidx.cardview.widget.CardView>
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:cardBackgroundColor="#96D2DB">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:padding="50dp"/>
-                </androidx.cardview.widget.CardView>
+                        android:padding="5dp">
 
-                <LinearLayout
-                    android:padding="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/imageView3"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/plane" />
+                            android:backgroundTint="@color/white"
+                            app:cardCornerRadius="10dp">
 
-                        <ImageView
-                            android:id="@+id/imageView4"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/boat" />
+                            <ImageView
+                                android:id="@+id/imageView3"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/plane" />
+                        </androidx.cardview.widget.CardView>
 
-                        <ImageView
-                            android:id="@+id/imageView5"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/bus" />
+                            android:backgroundTint="@color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <ImageView
+                                android:id="@+id/imageView4"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/boat" />
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <ImageView
+                                android:id="@+id/imageView5"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/bus" />
+                        </androidx.cardview.widget.CardView>
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:padding="5dp">
 
-                        <ImageView
-                            android:id="@+id/imageView6"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/beach" />
+                            android:backgroundTint="@color/white"
+                            app:cardCornerRadius="10dp">
 
-                        <ImageView
-                            android:id="@+id/imageView7"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/island" />
+                            <ImageView
+                                android:id="@+id/imageView6"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/beach" />
+                        </androidx.cardview.widget.CardView>
 
-                        <ImageView
-                            android:id="@+id/imageView8"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/mountain" />
+                            android:backgroundTint="@color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <ImageView
+                                android:id="@+id/imageView7"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/island" />
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white"
+                            app:cardCornerRadius="10dp">
+
+                            <ImageView
+                                android:id="@+id/imageView8"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                app:srcCompat="@drawable/mountain" />
+                        </androidx.cardview.widget.CardView>
+
                     </LinearLayout>
                 </LinearLayout>
 
@@ -132,10 +173,10 @@
                     android:textStyle="bold" />
 
                 <androidx.cardview.widget.CardView
-                    app:cardBackgroundColor="@color/white"
-                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -146,15 +187,15 @@
                             android:id="@+id/imageView9"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:layout_weight="1"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/da_lat" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="7"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="7"
                             android:orientation="vertical">
 
                             <TextView
@@ -163,24 +204,24 @@
                                 android:layout_height="wrap_content"
                                 android:text="Tour du lịch Đà Lạt"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"
-                                android:textSize="17dp"/>
+                                android:textSize="17dp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/textView18"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Giá: 500.000đ"
-                                android:textColor="@color/black"/>
+                                android:textColor="@color/black" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    app:cardBackgroundColor="@color/white"
-                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -191,15 +232,15 @@
                             android:id="@+id/imageView10"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:layout_weight="1"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/osaka_kyoto_phu_si" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="7"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="7"
                             android:orientation="vertical">
 
                             <TextView
@@ -208,8 +249,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Tour du lịch Osaka-Kyoto"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"
-                                android:textSize="17dp" />
+                                android:textSize="17dp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/textView20"
@@ -222,10 +263,10 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    app:cardBackgroundColor="@color/white"
-                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -236,15 +277,15 @@
                             android:id="@+id/imageView11"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:layout_weight="1"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/phu_quoc" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="7"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="7"
                             android:orientation="vertical">
 
                             <TextView
@@ -253,17 +294,17 @@
                                 android:layout_height="wrap_content"
                                 android:text="Tour du lịch đảo Phú Quốc"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"
-                                android:textSize="17dp" />
+                                android:textSize="17dp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    app:cardBackgroundColor="@color/white"
-                    android:layout_margin="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -274,15 +315,15 @@
                             android:id="@+id/imageView12"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
-                            android:layout_weight="1"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
                             app:srcCompat="@drawable/nui_ba_den" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="7"
                             android:layout_marginLeft="5dp"
+                            android:layout_weight="7"
                             android:orientation="vertical">
 
                             <TextView
@@ -291,8 +332,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Tour du lịch núi Bà Đen"
                                 android:textColor="@color/black"
-                                android:textStyle="bold"
-                                android:textSize="17dp" />
+                                android:textSize="17dp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -347,6 +388,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btTrangChuToiTinTuc"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -394,6 +436,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btTrangChuToiGiaoDich"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

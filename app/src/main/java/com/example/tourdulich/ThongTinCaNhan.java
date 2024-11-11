@@ -31,6 +31,12 @@ import com.google.firebase.database.ValueEventListener;
 public class ThongTinCaNhan extends AppCompatActivity {
 
     private LinearLayout btnToiTrangChu;
+    private LinearLayout btnToiDatVe;
+    private LinearLayout btnToiTinTuc;
+    private LinearLayout btnToiGiaoDich;
+
+    private Button btnDangXuat;
+
     private TextView txtEmail;
     private TextView txtTenHoSo;
     private TextView txtDienThoai;
@@ -40,8 +46,6 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private ImageView imageView;
     private FirebaseAuth xacThucFirebase;
 
-    private LinearLayout btnToiDatVe;
-    private Button btnDangXuat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +66,40 @@ public class ThongTinCaNhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(trangChu);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
             }
         });
 
+        //Chuyển sang trang TIN TỨC
+        Intent tinTuc = new Intent(this, TinTuc.class);
+        btnToiTinTuc = findViewById(R.id.btHoSoToiTinTuc);
+        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(tinTuc);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        //Chuyển sang ĐẶT VÉ
         Intent datVe = new Intent(this, DatVe.class);
         btnToiDatVe = findViewById(R.id.btHoSoToiDatVe);
         btnToiDatVe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(datVe);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        //Chuyển sang trang GIAO DỊCH
+        Intent giaoDich = new Intent(this, GiaoDich.class);
+        btnToiGiaoDich = findViewById(R.id.btHoSoToiGiaoDich);
+        btnToiGiaoDich.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(giaoDich);
+                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
             }
         });
 
@@ -91,6 +120,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
             HienThiThongTinUser(firebaseUser);
         }
 
+        //Đăng xuất tài khoản
         btnDangXuat = findViewById(R.id.btDangXuat);
         btnDangXuat.setOnClickListener(new View.OnClickListener() {
             @Override
