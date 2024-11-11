@@ -202,13 +202,13 @@ public class TrangDangKy extends AppCompatActivity {
                 });
             }
         });
-        //Quay lại TRANG CHỦ
-        Intent trangChu = new Intent(this, TrangChu.class);
+        //Quay lại THÔNG TIN CHƯA ĐĂNG NHẬP
+        Intent dkttcn = new Intent(this, DangKyThongTinCaNhan.class);
         btnQuayLai = findViewById(R.id.btQuayLaiTuDangKy);
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(trangChu);
+                startActivity(dkttcn);
             }
         });
 
