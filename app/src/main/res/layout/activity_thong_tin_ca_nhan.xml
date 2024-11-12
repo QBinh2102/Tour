@@ -42,6 +42,7 @@
                         android:hint="Đang tải..."
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center"
+                        android:textAlignment="center"
                         android:id="@+id/txtTenHoSo"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         android:textColor="@color/black">

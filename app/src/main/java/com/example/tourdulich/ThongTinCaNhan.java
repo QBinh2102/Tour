@@ -48,6 +48,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo;
     private ImageView imageView;
     private FirebaseAuth xacThucFirebase;
+    private FirebaseUser firebaseUser = xacThucFirebase.getInstance().getCurrentUser();
 
 
     @Override
@@ -152,7 +153,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
         }
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(ThongTinCaNhan.this);
         builder.setTitle("Xác thực email");
         builder.setMessage("Bạn chưa xác thực email");

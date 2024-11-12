@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/editTextTextEmailAddress"
+                    android:id="@+id/editTextEmailTimTK"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
@@ -60,11 +60,11 @@
                     android:textColorHint="#96A0AA"
                     android:textColor="@color/black"
                     android:ems="10"
-                    android:inputType="phone" />
+                    android:inputType="textEmailAddress" />
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btTiepTucTuQuenMK"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
