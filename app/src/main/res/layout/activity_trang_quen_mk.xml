@@ -27,7 +27,7 @@
                 android:text="Quay lại" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/textView15"
                 android:paddingLeft="20dp"
                 android:textColor="@color/white"
                 android:textSize="30dp"
@@ -36,64 +36,35 @@
                 android:text="Tìm tài khoản" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/textView16"
                 android:paddingLeft="20dp"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nhập số di động của bạn." />
+                android:text="Nhập địa chỉ email của bạn." />
 
             <androidx.cardview.widget.CardView
                 android:layout_margin="20dp"
                 app:cardCornerRadius="10dp"
                 android:backgroundTint="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/editTextPhoneQuenMatKhau"
+                    android:id="@+id/editTextTextEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:hint="Số di động"
+                    android:hint="Email"
                     android:textColorHint="#96A0AA"
                     android:textColor="@color/black"
                     android:ems="10"
                     android:inputType="phone" />
-
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/textView14"
-                android:paddingLeft="20dp"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Xác thực mã OTP" />
-
-            <androidx.cardview.widget.CardView
-                android:layout_margin="20dp"
-                app:cardCornerRadius="10dp"
-                android:backgroundTint="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <EditText
-                    android:id="@+id/editTextNumberOTP"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:hint="Mã OTP"
-                    android:textColorHint="#96A0AA"
-                    android:textColor="@color/black"
-                    android:ems="10"
-                    android:inputType="number" />
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/btTiepTucTuQuenMatKhau"
+                android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -102,16 +73,6 @@
                 android:textColor="@color/white"
                 android:text="Tiếp tục" />
 
-            <TextView
-                android:id="@+id/textViewLinkTimBangMail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="15dp"
-                android:padding="10dp"
-                android:text="Tìm kiếm bằng email"
-                android:linksClickable="true"
-                android:textColor="@color/white" />
         </LinearLayout>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

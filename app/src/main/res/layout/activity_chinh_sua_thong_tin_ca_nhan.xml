@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DangKyThongTinCaNhan">
+    tools:context=".ChinhSuaThongTinCaNhan">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btQuayLaiTuDangKyThongTinCaNhan"
+                android:id="@+id/btQuayLaiTuChinhSuaThongTinCaNhan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -53,14 +53,14 @@
                     android:paddingLeft="5dp"
                     android:text="Họ và Tên: "
                     android:textColor="@color/white"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <androidx.cardview.widget.CardView
                     app:cardCornerRadius="10dp"
                     android:backgroundTint="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="4"
                     android:layout_marginRight="10dp">
 
                     <EditText
@@ -92,23 +92,24 @@
                     android:paddingLeft="5dp"
                     android:text="Ngày sinh: "
                     android:textColor="@color/white"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <androidx.cardview.widget.CardView
                     app:cardCornerRadius="10dp"
                     android:backgroundTint="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="8"
                     android:textColor="@color/black"
                     android:layout_marginRight="10dp">
 
-                    <EditText
-                        android:id="@+id/editTextDate2"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textDate"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:inputType="date" />
+                        android:padding="13dp"
+                        android:text="ngày / tháng / năm" />
+
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
@@ -122,19 +123,19 @@
                     android:id="@+id/textView37"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:text="Giới tính: "
                     android:textColor="@color/white"
-                    android:textSize="25dp"/>
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioButtonNam"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
                     android:checked="true"
                     android:text="Nam"
                     android:textColor="@color/black" />
@@ -143,7 +144,7 @@
                     android:id="@+id/radioButtonNu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="10"
+                    android:layout_weight="5"
                     android:text="Nữ"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black" />
@@ -151,13 +152,13 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/btTiepTucDangKyTTCN"
+                android:id="@+id/btTiepTucChinhSuaTTCN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="#03A9F4"
-                android:text="Tiếp tục"
+                android:text="Cập nhật"
                 android:textColor="@color/white" />
         </LinearLayout>
     </RelativeLayout>

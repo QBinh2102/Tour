@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 public class TrangQuenMK extends AppCompatActivity {
 
     private Button btnQuayLai;
-    private TextView linkFindByMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +30,6 @@ public class TrangQuenMK extends AppCompatActivity {
             public void onClick(View view) {
                 //Start activity MainActivity
                 startActivity(trangDangNhap);
-            }
-        });
-
-        //Chuyển sang TRANG QUÊN MẬT KHẨU BẰNG MAIL
-        Intent trangQuenPassBangMail = new Intent(this, TrangQuenMKBangEmail.class);
-        linkFindByMail = findViewById(R.id.textViewLinkTimBangMail);
-        linkFindByMail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Start activity MainActivity
-                startActivity(trangQuenPassBangMail);
             }
         });
 

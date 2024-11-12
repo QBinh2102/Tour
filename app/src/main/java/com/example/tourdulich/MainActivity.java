@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btnAnHienMK;
     private EditText editTextPass;
     private boolean isPassShow = false;
-    private Button btnQuayLaiTrangChu;
+    private Button btnQuayLai;
     private TextView textQuenPass;
     private static final String TAG = "Người dùng đăng nhập";
 
@@ -73,14 +73,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Quay lại TRANG CHỦ
-        Intent trangChu = new Intent(this, TrangChu.class);
-        btnQuayLaiTrangChu = findViewById(R.id.btQuayLaiTuDangNhap);
-        btnQuayLaiTrangChu.setOnClickListener(new View.OnClickListener() {
+        //Quay lại THÔNG TIN CHƯA ĐĂNG NHẬP
+        Intent ttcdn = new Intent(this, ThongTinChuaDangNhap.class);
+        btnQuayLai = findViewById(R.id.btQuayLaiTuDangNhap);
+        btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Start activity TrangChu
-                startActivity(trangChu);
+                startActivity(ttcdn);
             }
         });
 
@@ -90,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         textQuenPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Start activity TrangQuenMK
                 startActivity(trangQuenPass);
             }
         });

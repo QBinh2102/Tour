@@ -1,8 +1,8 @@
 package com.example.tourdulich;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -27,7 +27,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -82,6 +81,8 @@ public class TrangDangKy extends AppCompatActivity {
         radioGroupGioiTinh = findViewById(R.id.radioGroupGT);
         radioGroupGioiTinh.clearCheck();
 
+        TextView tv = findViewById(R.id.editTextNgaySinhDangKy);
+        tv.setPaintFlags(tv.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
 
         edtTextNgaySinhDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,7 +269,7 @@ public class TrangDangKy extends AppCompatActivity {
             }
         });
         //Quay lại THÔNG TIN CHƯA ĐĂNG NHẬP
-        Intent dkttcn = new Intent(this, DangKyThongTinCaNhan.class);
+        Intent dkttcn = new Intent(this, ThongTinChuaDangNhap.class);
         btnQuayLai = findViewById(R.id.btQuayLaiTuDangKy);
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override

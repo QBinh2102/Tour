@@ -14,7 +14,7 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
-            android:name=".DangKyThongTinCaNhan"
+            android:name=".ChinhSuaThongTinCaNhan"
             android:exported="false" />
         <activity
             android:name=".GiaoDich"

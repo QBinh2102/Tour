@@ -35,6 +35,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private LinearLayout btnToiTinTuc;
     private LinearLayout btnToiGiaoDich;
 
+    private Button btnChinhSua;
     private Button btnDangXuat;
 
     private TextView txtEmail;
@@ -105,6 +106,26 @@ public class ThongTinCaNhan extends AppCompatActivity {
             }
         });
 
+        //Chuyển sang CHỈNH SỬA THÔNG TIN CÁ NHÂN
+        Intent chinhSua = new Intent(this, ChinhSuaThongTinCaNhan.class);
+        btnChinhSua = findViewById(R.id.btChinhSua);
+        btnChinhSua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(chinhSua);
+            }
+        });
+
+        //Đăng xuất tài khoản
+        btnDangXuat = findViewById(R.id.btDangXuat);
+        btnDangXuat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(trangChu);
+            }
+        });
+
         txtTenHoSo = findViewById(R.id.txtTenHoSo);
         txtEmail = findViewById(R.id.txtEmailHoSo);
         txtDienThoai = findViewById(R.id.txtDienThoaiHoSo);
@@ -123,16 +144,6 @@ public class ThongTinCaNhan extends AppCompatActivity {
             thanhTienTrinh.setVisibility(View.VISIBLE);
             HienThiThongTinUser(firebaseUser);
         }
-
-        //Đăng xuất tài khoản
-        btnDangXuat = findViewById(R.id.btDangXuat);
-        btnDangXuat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(trangChu);
-            }
-        });
     }
 
     private void kiemTraXacNhanEmail(FirebaseUser firebaseUser) {

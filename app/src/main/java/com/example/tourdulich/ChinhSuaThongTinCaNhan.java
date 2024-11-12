@@ -1,10 +1,12 @@
 package com.example.tourdulich;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class DangKyThongTinCaNhan extends AppCompatActivity {
+public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
     private Button btnQuayLai;
-    private Button btnTiepTuc;
+    private Button btnCapNhat;
     private RadioButton RbtNam;
     private RadioButton RbtNu;
 
@@ -23,28 +25,22 @@ public class DangKyThongTinCaNhan extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_dang_ky_thong_tin_ca_nhan);
+        setContentView(R.layout.activity_chinh_sua_thong_tin_ca_nhan);
+
+        TextView tv = findViewById(R.id.textDate);
+        tv.setPaintFlags(tv.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
 
         //Quay lại THÔNG TIN CHƯA ĐĂNG NHẬP
-        Intent ttcdn = new Intent(this, ThongTinChuaDangNhap.class);
-        btnQuayLai = findViewById(R.id.btQuayLaiTuDangKyThongTinCaNhan);
+        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
+        btnQuayLai = findViewById(R.id.btQuayLaiTuChinhSuaThongTinCaNhan);
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(ttcdn);
+                startActivity(ttcn);
             }
         });
 
-        //Chuyển sang ĐĂNG KÝ
-        Intent dangKy = new Intent(this, TrangDangKy.class);
-        btnTiepTuc = findViewById(R.id.btTiepTucDangKyTTCN);
-        btnTiepTuc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(dangKy);
-            }
-        });
-
+        //Chọn giới tính
         RbtNam = findViewById(R.id.radioButtonNam);
         RbtNu = findViewById(R.id.radioButtonNu);
         RbtNam.setOnClickListener(new View.OnClickListener() {
