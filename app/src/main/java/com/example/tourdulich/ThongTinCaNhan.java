@@ -36,6 +36,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private LinearLayout btnToiGiaoDich;
 
     private Button btnChinhSua;
+    private Button btnThayDoiMK;
     private Button btnDangXuat;
 
     private TextView txtEmail;
@@ -113,6 +114,16 @@ public class ThongTinCaNhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(chinhSua);
+            }
+        });
+
+        //Chuyển sang THAY ĐỔI MẬT KHẨU
+        Intent thayMK = new Intent(this, DoiMatKhau.class);
+        btnThayDoiMK = findViewById(R.id.btThayDoiMK);
+        btnThayDoiMK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(thayMK);
             }
         });
 
