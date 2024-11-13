@@ -48,7 +48,6 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo;
     private ImageView imageView;
     private FirebaseAuth xacThucFirebase;
-    private FirebaseUser firebaseUser = xacThucFirebase.getInstance().getCurrentUser();
 
 
     @Override
@@ -109,7 +108,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
 
         //Chuyển sang CHỈNH SỬA THÔNG TIN CÁ NHÂN
         Intent chinhSua = new Intent(this, ChinhSuaThongTinCaNhan.class);
-        btnChinhSua = findViewById(R.id.btChinhSua);
+        btnChinhSua = findViewById(R.id.btChinhSuaHoSo);
         btnChinhSua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -48,14 +48,32 @@
                         android:textColor="@color/black">
                     </TextView>
 
-                <Button
-                    android:id="@+id/btChinhSua"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:backgroundTint="#03A9F4"
-                    android:textColor="@color/white"
-                    android:text="Chỉnh sửa" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btChinhSuaHoSo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="#03A9F4"
+                        android:text="Chỉnh sửa hồ sơ"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="#03A9F4"
+                        android:text="Đổi mật khẩu"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -77,6 +95,7 @@
                         android:layout_alignStart="@+id/imgViewEmailHoSo"
                         android:layout_marginStart="50dp"
                         android:text="Đang tải..."
+                        android:textColor="@color/black"
                         android:textSize="18sp"/>
 
                 </RelativeLayout>
@@ -100,6 +119,7 @@
                         android:layout_alignStart="@+id/imgViewDTHoSo"
                         android:layout_marginStart="50dp"
                         android:text="Đang tải..."
+                        android:textColor="@color/black"
                         android:textSize="18sp"/>
 
                 </RelativeLayout>
@@ -124,6 +144,7 @@
                         android:layout_alignStart="@+id/imgViewDiaChiHoSo"
                         android:layout_marginStart="50dp"
                         android:text="Đang tải..."
+                        android:textColor="@color/black"
                         android:textSize="18sp"/>
 
                 </RelativeLayout>
@@ -147,6 +168,7 @@
                         android:layout_alignStart="@+id/imgViewNgaySinhHoSo"
                         android:layout_marginStart="50dp"
                         android:text="Đang tải..."
+                        android:textColor="@color/black"
                         android:textSize="18sp"/>
 
                 </RelativeLayout>
@@ -170,6 +192,7 @@
                         android:layout_alignStart="@+id/imgViewGioiTinhHoSo"
                         android:layout_marginStart="50dp"
                         android:text="Đang tải..."
+                        android:textColor="@color/black"
                         android:textSize="18sp"/>
 
                 </RelativeLayout>

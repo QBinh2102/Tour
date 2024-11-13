@@ -81,6 +81,7 @@ public class TrangDangKy extends AppCompatActivity {
         radioGroupGioiTinh = findViewById(R.id.radioGroupGT);
         radioGroupGioiTinh.clearCheck();
 
+        //Gạch dưới text ngày sinh
         TextView tv = findViewById(R.id.editTextNgaySinhDangKy);
         tv.setPaintFlags(tv.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
 
