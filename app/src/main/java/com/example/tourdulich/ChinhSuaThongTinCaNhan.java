@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
@@ -40,6 +44,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
     private FirebaseAuth xacThucFirebase;
     private FirebaseUser firebaseUser;
+    private DatabaseReference mDatabase;
 
     private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh;
     private EditText edtTen;
@@ -66,6 +71,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
         RbtNu = findViewById(R.id.radioNuChinhSua);
         xacThucFirebase = FirebaseAuth.getInstance();
         firebaseUser = xacThucFirebase.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         //Gạch dưới text ngày sinh
         TextView tv = findViewById(R.id.textDateChinhSua);
@@ -120,12 +126,59 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
             }
         });
 
-
-        //Cập nhật hồ sơ người dùng
+        //Nhấn nút CHỈNH SỬA HỒ SƠ
         btnCapNhat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                tenHoSo = edtTen.getText().toString();
+                diaChi = edtDiaChi.getText().toString();
+                SDT = edtSDT.getText().toString();
+                ngaySinh = txtDate.getText().toString();
+                if(gt){
+                    gioiTinh = "Nam";
+                }else{
+                    gioiTinh = "Nữ";
+                }
+
+                //Kiem tra so dien thoai co hop li khong
+                //So dien thoai chi hop ly khi bat dau voi 3 so ben duoi va 7 so con lai tu 0->9
+                String quyDinhSDT = "(039|038|037|036|035|034|033|032|096|097|098|086|083|084|085|081" +
+                        "|088|082|070|079|077|076|078|090|093|089|052|056|058|092)[0-9]{7}";
+                Matcher mauKiemTraSDT;
+                Pattern sdtHopLe = Pattern.compile(quyDinhSDT);
+                mauKiemTraSDT = sdtHopLe.matcher(SDT);
+
+                //Kiểm lỗi người dùng
+                if(TextUtils.isEmpty(tenHoSo)) {
+                    Toast.makeText(ChinhSuaThongTinCaNhan.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    edtTen.setError("Vui lòng điền tên đăng nhập");
+                    edtTen.requestFocus();
+                } else if (TextUtils.isEmpty(diaChi)) {
+                    Toast.makeText(ChinhSuaThongTinCaNhan.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    edtDiaChi.setError("Vui lòng điền địa chỉ");
+                    edtDiaChi.requestFocus();
+                } else if (TextUtils.isEmpty(SDT)) {
+                    Toast.makeText(ChinhSuaThongTinCaNhan.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    edtSDT.setError("Vui lòng điền số điện thoại");
+                    edtSDT.requestFocus();
+                } else if (SDT.length() != 10) {
+                    Toast.makeText(ChinhSuaThongTinCaNhan.this, "Vui lòng xem lại số điện thoại",
+                            Toast.LENGTH_LONG).show();
+                    edtSDT.setError("Số điện thoại bao gồm 10 số");
+                    edtSDT.requestFocus();
+                } else if (TextUtils.isEmpty(ngaySinh)) {
+                    Toast.makeText(ChinhSuaThongTinCaNhan.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    txtDate.setError("Vui lòng nhập ngày sinh");
+                    txtDate.requestFocus();
+                } else{
+                    UpdateUser(tenHoSo,diaChi,SDT,ngaySinh,gioiTinh);
+                }
+                Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                startActivity(ttcn);
             }
         });
 
@@ -136,7 +189,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
         });
     }
 
-    private void HienThiThongTin(FirebaseUser firebaseUser){
+    //Hiện thông tin người dùng
+    public void HienThiThongTin(FirebaseUser firebaseUser){
         String userID = firebaseUser.getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
         databaseReference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -170,5 +224,16 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //Cập nhật hồ sơ người dùng
+    private void UpdateUser(String username, String diaChi, String dienThoai, String ngaySinh, String gioiTinh){
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+        firebaseUser.updateProfile(profileUpdates);
+        String userID = firebaseUser.getUid();
+        mDatabase.child("Người đã đăng ký").child(userID).child("diaChi").setValue(diaChi);
+        mDatabase.child("Người đã đăng ký").child(userID).child("gioiTinh").setValue(gioiTinh);
+        mDatabase.child("Người đã đăng ký").child(userID).child("ngaySinh").setValue(ngaySinh);
+        mDatabase.child("Người đã đăng ký").child(userID).child("soDienThoai").setValue(dienThoai);
     }
 }
