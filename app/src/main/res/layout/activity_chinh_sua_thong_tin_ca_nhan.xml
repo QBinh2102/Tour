@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#54A8CE">
+        android:background="#D2FAFB">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_margin="10dp"
                 android:paddingLeft="5dp"
                 android:text="Chỉnh sửa thông tin:"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="35dp"
                 android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
                     android:gravity="center"
                     android:paddingRight="30dp"
                     android:text="Username:"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp" />
 
                 <androidx.cardview.widget.CardView
@@ -91,7 +91,7 @@
                     android:gravity="center"
                     android:paddingRight="5dp"
                     android:text="Số điện thoại:"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp" />
 
                 <androidx.cardview.widget.CardView
@@ -128,7 +128,7 @@
                     android:gravity="center"
                     android:paddingRight="61dp"
                     android:text="Địa chỉ:"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp" />
 
                 <androidx.cardview.widget.CardView
@@ -165,7 +165,7 @@
                     android:gravity="center"
                     android:paddingRight="28dp"
                     android:text="Ngày sinh: "
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp"/>
 
                 <androidx.cardview.widget.CardView
@@ -202,7 +202,7 @@
                     android:paddingRight="35dp"
                     android:gravity="center"
                     android:text="Giới tính: "
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20dp"/>
 
                 <RadioButton

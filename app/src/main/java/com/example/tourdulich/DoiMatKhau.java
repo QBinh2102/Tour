@@ -3,26 +3,43 @@ package com.example.tourdulich;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class DoiMatKhau extends AppCompatActivity {
 
     private Button btnQuayLai;
+    private Button btnCapNhat;
     private ImageButton ibtAnHienMK;
     private ImageButton ibtAnHienXacThucMK;
-    private EditText textPass;
+    private EditText textNewPass;
     private EditText textConfirmPass;
-    private boolean isPassShow = false;
+    private boolean isNewPassShow = false;
     private boolean isConfirmPassShow = false;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +48,16 @@ public class DoiMatKhau extends AppCompatActivity {
         setContentView(R.layout.activity_doi_mat_khau);
 
         btnQuayLai = findViewById(R.id.btQuayLaiTuThayDoiMK);
+        btnCapNhat = findViewById(R.id.btCapNhatMK);
         ibtAnHienMK = findViewById(R.id.imgBtAnHienPassThayDoi);
         ibtAnHienXacThucMK = findViewById(R.id.imgBtAnHienXacThucPassThayDoi);
-        textPass = findViewById(R.id.editTextPassThayDoi);
+        textNewPass = findViewById(R.id.editTextPassThayDoi);
         textConfirmPass = findViewById(R.id.editTextPassXacThucThayDoi);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
 
         //Quay lai THÔNG TIN CÁ NHÂN
-        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,19 +65,19 @@ public class DoiMatKhau extends AppCompatActivity {
             }
         });
 
-        //Ẩn hiện password
+        //Ẩn hiện new password
         ibtAnHienMK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isPassShow){
-                    textPass.setInputType(InputType.TYPE_CLASS_TEXT);
+                if(!isNewPassShow){
+                    textNewPass.setInputType(InputType.TYPE_CLASS_TEXT);
                     ibtAnHienMK.setImageResource(R.drawable.eye_24);
                 }else{
-                    textPass.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    textNewPass.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     ibtAnHienMK.setImageResource(R.drawable.visibility_off_24);
                 }
-                isPassShow=!isPassShow;
-                textPass.setSelection(textPass.length());
+                isNewPassShow=!isNewPassShow;
+                textNewPass.setSelection(textNewPass.length());
             }
         });
 
@@ -74,6 +94,40 @@ public class DoiMatKhau extends AppCompatActivity {
                 }
                 isConfirmPassShow=!isConfirmPassShow;
                 textConfirmPass.setSelection(textConfirmPass.length());
+            }
+        });
+
+        //Cập nhật mật khẩu
+        btnCapNhat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(textNewPass.getText().toString())|| textNewPass.getText().toString().length() < 6) {
+                    Toast.makeText(DoiMatKhau.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    textNewPass.setError("Mật khẩu phải từ 6 ký tự trở lên");
+                    textNewPass.requestFocus();
+                } else if (TextUtils.isEmpty(textConfirmPass.getText().toString())|| textConfirmPass.getText().toString().length() < 6) {
+                    Toast.makeText(DoiMatKhau.this, "Vui lòng điền đầy đủ thông tin",
+                            Toast.LENGTH_LONG).show();
+                    textConfirmPass.setError("Mật khẩu phải từ 6 ký tự trở lên");
+                    textConfirmPass.requestFocus();
+                } else if (!textNewPass.getText().toString().equals(textConfirmPass.getText().toString())) {
+                    Toast.makeText(DoiMatKhau.this, "Mật khẩu không khớp. Vui lòng thử lại",
+                            Toast.LENGTH_SHORT).show();
+                    textConfirmPass.setError("Vui lòng nhập lại mật khẩu");
+                    textConfirmPass.requestFocus();
+                    //xóa password đã nhập
+                    textNewPass.clearComposingText();
+                    textConfirmPass.clearComposingText();
+                }else{
+                    user.updatePassword(textConfirmPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(DoiMatKhau.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                            startActivity(ttcn);
+                        }
+                    });
+                }
             }
         });
 
