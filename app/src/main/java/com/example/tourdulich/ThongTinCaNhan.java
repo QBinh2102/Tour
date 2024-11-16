@@ -20,6 +20,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -158,8 +160,23 @@ public class ThongTinCaNhan extends AppCompatActivity {
     }
 
     private void kiemTraXacNhanEmail(FirebaseUser firebaseUser) {
-        if(!firebaseUser.isEmailVerified()){
-            showAlertDialog();
+        if (firebaseUser != null) {
+            firebaseUser.reload()// Reload lại thông tin user để cập nhật trạng thái mới
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                if (!firebaseUser.isEmailVerified()) {
+                                    showAlertDialog();
+                                }
+                            } else {
+                                // Nếu reload không thành công
+                                Toast.makeText(ThongTinCaNhan.this,
+                                            "Lỗi khi tải lại thông tin người dùng",
+                                                  Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }
     }
 
