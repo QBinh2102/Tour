@@ -10,7 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -24,6 +26,11 @@ import com.example.tourdulich.CSDL.TourAdapter;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +49,7 @@ public class DatVe extends AppCompatActivity {
     private ArrayList<SoSao> arraySoSao;
     private ArrayList<BinhLuan> arrayBinhLuan;
     private TourAdapter tourAdapter;
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
 
     private String selectedServiceType = ""; // Không lọc loại dịch vụ mặc định
     private String selectedCity = ""; // Không lọc thành phố mặc định
@@ -53,6 +61,8 @@ public class DatVe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dat_ve);
+
+        arrayTour = new ArrayList<>();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -118,35 +128,53 @@ public class DatVe extends AppCompatActivity {
             }
         });
 
-//        arraySoSao = new ArrayList<>();
-//        arraySoSao.add(new SoSao(2,new Tour("Tour Phú Quốc",R.drawable.phu_quoc,"Thuyền","Thuyền",
-//                "18/12/2024","20/12/2024","1.000.000",20)));
-//        ar
-
         //Show toàn bộ tour
-        showTour();
-        tourAdapter = new TourAdapter(this, arrayTour);
-        lvTour.setAdapter(tourAdapter);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                arrayTour.clear();
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        Tour tour = snapshot.getValue(Tour.class);
+                        if (tour != null) {
+                            arrayTour.add(tour); // Thêm danh mục vào danh sách
+                        }
+                    }
+//                    tourAdapter = new TourAdapter(DatVe.this,arrayTour);
+//                    lvTour.setAdapter(tourAdapter);
+//                    if(tourAdapter==null) {
+//                        tourAdapter = new TourAdapter(DatVe.this, arrayTour);
+//                        lvTour.setAdapter(tourAdapter);
+//                    }else{
+//                        tourAdapter.notifyDataSetChanged();
+//                    }
+                }else{
+                    Toast.makeText(DatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(DatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         TextView filterButton = findViewById(R.id.txtBoLoc);
         filterButton.setOnClickListener(v -> showFilterDialog());
     }
 
-    private void showTour(){
-        lvTour = (ListView) findViewById(R.id.listViewTour);
-        arrayTour = new ArrayList<>();
-        arrayTour.add(new Tour("Tour Đà Lạt",R.drawable.da_lat,"Xe","Xe",
-                "20/12/2024","21/12/2024","500.000",20));
-        arrayTour.add(new Tour("Tour Phú Quốc",R.drawable.phu_quoc,"Thuyền","Thuyền",
-                "18/12/2024","20/12/2024","1.000.000",20));
-        arrayTour.add(new Tour("Tour Hà Nội",R.drawable.ha_noi,"Máy bay","Máy bay",
-                "09/12/2024","14/12/2024","2.000.000",15));
-        arrayTour.add(new Tour("Tour Núi Bà Đen",R.drawable.nui_ba_den,"Núi","Xe",
-                "19/11/2024","19/11/2024","300.000",30));
-        arrayTour.add(new Tour("Tour Osaka-Kyoto",R.drawable.osaka_kyoto_phu_si,"Máy bay","Máy bay",
-                "20/11/2024","25/11/2024","5.000.000",15));
 
-    }
+//        arrayTour.add(new Tour("Tour Đà Lạt",R.drawable.da_lat,"Xe","Xe",
+//                "20/12/2024","21/12/2024","500.000",20));
+//        arrayTour.add(new Tour("Tour Phú Quốc",R.drawable.phu_quoc,"Thuyền","Thuyền",
+//                "18/12/2024","20/12/2024","1.000.000",20));
+//        arrayTour.add(new Tour("Tour Hà Nội",R.drawable.ha_noi,"Máy bay","Máy bay",
+//                "09/12/2024","14/12/2024","2.000.000",15));
+//        arrayTour.add(new Tour("Tour Núi Bà Đen",R.drawable.nui_ba_den,"Núi","Xe",
+//                "19/11/2024","19/11/2024","300.000",30));
+//        arrayTour.add(new Tour("Tour Osaka-Kyoto",R.drawable.osaka_kyoto_phu_si,"Máy bay","Máy bay",
+//                "20/11/2024","25/11/2024","5.000.000",15));
+
+
 
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -190,4 +218,3 @@ public class DatVe extends AppCompatActivity {
     }
 
 }
-

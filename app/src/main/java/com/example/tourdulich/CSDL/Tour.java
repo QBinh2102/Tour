@@ -2,16 +2,16 @@ package com.example.tourdulich.CSDL;
 
 
 public class Tour {
-    public String tenTour;
-    public int hinhTour;
     public String danhMuc;
-    public String phuongTien;
-    public String ngayKhoiHanh;
-    public String ngayKetThuc;
     public String giaTien;
-    public int soSao;
+    public int hinhTour;
+    public String ngayKetThuc;
+    public String ngayKhoiHanh;
+    public String phuongTien;
     public int soBinhLuan;
     public int soLuongVe;
+    public int soSao;
+    public String tenTour;
 
     public Tour(){
 

@@ -12,9 +12,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.tourdulich.CSDL.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class TrangChu extends AppCompatActivity {
 
@@ -27,11 +30,17 @@ public class TrangChu extends AppCompatActivity {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private String hoTen;
 
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trang_chu);
+
+//        Tour tour = new Tour("Tour Phú Quốc",R.drawable.phu_quoc,"Thuyền","Thuyền",
+//                "18/12/2024","20/12/2024","1.000.000",20);
+//        mDatabase.child(mDatabase.push().getKey()).setValue(tour);
 
         //Chuyển Trang Thông Tin Cá Nhân
         if(firebaseUser != null) {
