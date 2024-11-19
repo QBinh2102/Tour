@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ThongTinChuaDangNhap">
+    tools:context=".trang.ThongTinChuaDangNhap">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -187,7 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    app:srcCompat="@drawable/person_24" />
+                    app:srcCompat="@drawable/person_24_white" />
 
                 <TextView
                     android:id="@+id/textView33"
@@ -196,7 +196,7 @@
                     android:layout_weight="4"
                     android:gravity="center"
                     android:text="Hồ sơ"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

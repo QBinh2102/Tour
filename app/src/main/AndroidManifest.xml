@@ -14,50 +14,50 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
-            android:name=".DoiMatKhau"
+            android:name=".trang.DoiMatKhau"
             android:exported="false" />
         <activity
-            android:name=".ChinhSuaThongTinCaNhan"
+            android:name=".trang.ChinhSuaThongTinCaNhan"
             android:exported="false" />
         <activity
-            android:name=".GiaoDich"
+            android:name=".trang.GiaoDich"
             android:exported="false" />
         <activity
-            android:name=".TinTuc"
+            android:name=".trang.TinTuc"
             android:exported="false" />
         <activity
-            android:name=".ThongTinChuaDangNhap"
+            android:name=".trang.ThongTinChuaDangNhap"
             android:exported="false" />
         <activity
             android:name=".QRDatVe"
             android:exported="false" />
         <activity
-            android:name=".BoLocDatVe"
+            android:name=".trang.BoLocDatVe"
             android:exported="false" />
         <activity
             android:name=".thong_tin_dat_ve"
             android:exported="false" />
         <activity
-            android:name=".DatVe"
+            android:name=".trang.DatVe"
             android:exported="false" />
         <activity
-            android:name=".ThongTinCaNhan"
+            android:name=".trang.ThongTinCaNhan"
             android:exported="false" />
         <activity
             android:name=".TrangQuenMKBangEmail"
             android:exported="false" />
         <activity
-            android:name=".TrangDangKy"
+            android:name=".trang.TrangDangKy"
             android:exported="false" />
         <activity
-            android:name=".TrangQuenMK"
+            android:name=".trang.TrangQuenMK"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".trang.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.TourDuLich" />
         <activity
-            android:name=".TrangChu"
+            android:name=".trang.TrangChu"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

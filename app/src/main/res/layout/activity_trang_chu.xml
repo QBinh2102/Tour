@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TrangChu">
+    tools:context=".trang.TrangChu">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -375,7 +375,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    app:srcCompat="@drawable/home_24" />
+                    app:srcCompat="@drawable/home_24_white" />
 
                 <TextView
                     android:id="@+id/textView24"
@@ -384,7 +384,7 @@
                     android:layout_weight="4"
                     android:gravity="center"
                     android:text="Trang chủ"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <LinearLayout
