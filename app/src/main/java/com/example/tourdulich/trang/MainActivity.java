@@ -31,6 +31,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPassShow = false;
     private Button btnQuayLai;
     private TextView textQuenPass;
-    private static final String TAG = "Người dùng đăng nhập";
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
                     if (firebaseUser.isEmailVerified()){
                         Toast.makeText(MainActivity.this, "Đăng nhập thành công",
                                 Toast.LENGTH_SHORT).show();
-
-                        startActivity(new Intent(MainActivity.this, ThongTinCaNhan.class));
+                        String userId = firebaseUser.getUid();
+                        kiemTraVaiTro(userId);
                         finish();
                     }else{
                         firebaseUser.sendEmailVerification();
@@ -176,6 +180,50 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void kiemTraVaiTro(String userId) {
+        // Kiểm tra nếu userId không hợp lệ
+        if (userId == null || userId.isEmpty()) {
+            Toast.makeText(MainActivity.this, "User ID không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Truy xuất vai trò từ Firebase Realtime Database
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký").child(userId);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Lấy giá trị role từ Firebase
+                String role = snapshot.child("role").getValue(String.class);
+                Log.d(TAG, "Role: " + role);
+                // Kiểm tra xem role có tồn tại không
+                if (role != null) {
+                    // Kiểm tra vai trò và chuyển hướng tương ứng
+                    if ("admin".equals(role)) {
+                        // Nếu role là admin, chuyển sang giao diện Admin
+                        startActivity(new Intent(MainActivity.this, TrangChuAdmin.class));
+                    } else {
+                        // Nếu role là user, chuyển sang giao diện User
+                        startActivity(new Intent(MainActivity.this, TrangChu.class));
+                    }
+                    finish();
+                } else {
+                    // Nếu role không tồn tại, hiển thị thông báo
+                    Toast.makeText(MainActivity.this, "Role không tồn tại", Toast.LENGTH_SHORT).show();
+                }
+                // Đóng MainActivity sau khi xử lý
+                finish();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý khi có lỗi trong quá trình truy xuất dữ liệu
+                Toast.makeText(MainActivity.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Xác thực email");
@@ -198,6 +246,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(xacThucFirebase.getCurrentUser() != null){
+            //Gán giá trị cho người dùng mặc định là user
+
             Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, ThongTinCaNhan.class));
             finish();

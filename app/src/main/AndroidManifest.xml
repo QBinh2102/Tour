@@ -14,6 +14,12 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
+            android:name=".trang.TrangChuAdmin"
+            android:exported="false" />
+        <activity
+            android:name=".TrangChuAdmin"
+            android:exported="false" />
+        <activity
             android:name=".trang.DoiMatKhau"
             android:exported="false" />
         <activity

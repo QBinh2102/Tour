@@ -209,12 +209,19 @@ public class ThongTinCaNhan extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LuuThongTinUser thongTinUser = snapshot.getValue(LuuThongTinUser.class);
                 if(thongTinUser != null){
+                    //Gán giá trị cho người mới đăng ký mặc định là user
+                    if(thongTinUser.role == null)
+                    {
+                        thongTinUser.role = "user";
+                        databaseReference.child(userID).setValue(thongTinUser);
+                    }
                     tenHoSo = firebaseUser.getDisplayName();
                     email = thongTinUser.email;
                     diaChi = thongTinUser.diaChi;
                     dienThoai = thongTinUser.soDienThoai;
                     ngaySinh = thongTinUser.ngaySinh;
                     gioiTinh = thongTinUser.gioiTinh;
+                    String role = thongTinUser.role;
 
                     txtTenHoSo.setText(tenHoSo);
                     txtEmail.setText(email);
