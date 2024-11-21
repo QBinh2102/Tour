@@ -2,9 +2,10 @@ package com.example.tourdulich.CSDL;
 
 
 public class Tour {
+    public String idTour;
     public String danhMuc;
     public String giaTien;
-    public int hinhTour;
+    public String hinhTour;
     public String ngayKetThuc;
     public String ngayKhoiHanh;
     public String phuongTien;
@@ -17,8 +18,9 @@ public class Tour {
 
     }
 
-    public Tour(String tenTour, int hinhTour, String danhMuc, String phuongTien,
+    public Tour(String idTour, String tenTour, String hinhTour, String danhMuc, String phuongTien,
                 String ngayKhoiHanh, String ngayKetThuc, String giaTien, int soLuongVe) {
+        this.idTour = idTour;
         this.tenTour = tenTour;
         this.hinhTour = hinhTour;
         this.danhMuc = danhMuc;
@@ -27,7 +29,7 @@ public class Tour {
         this.ngayKetThuc = ngayKetThuc;
         this.giaTien = giaTien;
         this.soSao = 0;
-        soBinhLuan = 0;
+        this.soBinhLuan = 0;
         this.soLuongVe = soLuongVe;
     }
 

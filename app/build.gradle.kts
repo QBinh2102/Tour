@@ -45,6 +45,8 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation("com.google.firebase:firebase-storage")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

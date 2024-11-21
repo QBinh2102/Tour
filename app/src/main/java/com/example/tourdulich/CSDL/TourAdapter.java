@@ -1,6 +1,7 @@
 package com.example.tourdulich.CSDL;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tourdulich.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -19,12 +22,14 @@ public class TourAdapter extends BaseAdapter {
     private List<SoSao> soSaoList;
     private List<BinhLuan> binhLuanList;
     private LayoutInflater inflater;
+    private DatabaseReference tourRef;
 
     public TourAdapter(Context context, List<Tour> tourList) {
         this.context = context;
         this.tourList = tourList;
 //        this.soSaoList = soSaoList;
 //        this.binhLuanList = binhLuanList;
+        this.tourRef = FirebaseDatabase.getInstance().getReference("Tour");
 
         inflater = LayoutInflater.from(context);
     }
@@ -57,7 +62,7 @@ public class TourAdapter extends BaseAdapter {
         TextView txtSoBinhLuan = (TextView) convertView.findViewById(R.id.textViewSoBinhLuan);
 
         Tour tour = tourList.get(position);
-        imgHinh.setImageResource(tour.hinhTour);
+        imgHinh.setImageURI(Uri.parse(tour.hinhTour));
         txtTen.setText(tour.tenTour);
         txtPhuongTien.setText(String.format("Phương tiện: %s",tour.phuongTien));
         txtNgayKhoiHanh.setText(String.format("Ngày khởi hành: %s",tour.ngayKhoiHanh));
