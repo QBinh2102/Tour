@@ -1,6 +1,7 @@
 package com.example.tourdulich.trang;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -61,6 +62,20 @@ public class TrangChu extends AppCompatActivity {
                 }
             });
         }
+
+
+
+            // Kiểm tra lại role từ SharedPreferences
+            SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
+            String role = preferences.getString("role", "user");  // Mặc định là "user" nếu chưa có role
+
+            // Nếu role là admin, chuyển đến TrangChuAdmin
+            if ("admin".equals(role)) {
+                Intent intent = new Intent(TrangChu.this, TrangChuAdmin.class);
+                startActivity(intent);
+                finish();  // Đảm bảo không quay lại TrangChu
+            }
+
 
         //Chuyển sang trang ĐẶT VÉ
         Intent datVe = new Intent(this, DatVe.class);

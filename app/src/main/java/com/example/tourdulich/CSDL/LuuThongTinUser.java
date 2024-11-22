@@ -6,7 +6,7 @@ public class LuuThongTinUser {
     public String email;
     public String ngaySinh;
     public String gioiTinh;
-    public String role;
+    public String role = "user";
 
     public LuuThongTinUser(){};
     public LuuThongTinUser(String diaChi,String soDienThoai,String email, String ngaySinh,

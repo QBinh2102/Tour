@@ -2,6 +2,7 @@ package com.example.tourdulich.trang;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -136,8 +137,18 @@ public class ThongTinCaNhan extends AppCompatActivity {
         btnDangXuat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Đăng xuất khỏi Firebase
                 FirebaseAuth.getInstance().signOut();
+
+                // Xóa dữ liệu role khỏi SharedPreferences khi đăng xuất
+                SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove("role");  // Xóa role khỏi SharedPreferences
+                editor.apply();
+
+                // Quay lại trang chủ
                 startActivity(trangChu);
+                finish();  // Đảm bảo rằng người dùng không quay lại trang này khi bấm nút back
             }
         });
 
@@ -151,10 +162,10 @@ public class ThongTinCaNhan extends AppCompatActivity {
         thanhTienTrinh = findViewById(R.id.thanhTienTrinh);
 
         FirebaseUser firebaseUser = xacThucFirebase.getCurrentUser();
-        if (firebaseUser == null){
+        if (firebaseUser == null) {
             Toast.makeText(ThongTinCaNhan.this, "Thông tin người dùng không tồn tại",
                     Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             kiemTraXacNhanEmail(firebaseUser);
             thanhTienTrinh.setVisibility(View.VISIBLE);
             HienThiThongTinUser(firebaseUser);
@@ -174,15 +185,15 @@ public class ThongTinCaNhan extends AppCompatActivity {
                             } else {
                                 // Nếu reload không thành công
                                 Toast.makeText(ThongTinCaNhan.this,
-                                            "Lỗi khi tải lại thông tin người dùng",
-                                                  Toast.LENGTH_SHORT).show();
+                                        "Lỗi khi tải lại thông tin người dùng",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
         }
     }
 
-    private void showAlertDialog () {
+    private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ThongTinCaNhan.this);
         builder.setTitle("Xác thực email");
         builder.setMessage("Bạn chưa xác thực email");
@@ -208,20 +219,26 @@ public class ThongTinCaNhan extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LuuThongTinUser thongTinUser = snapshot.getValue(LuuThongTinUser.class);
-                if(thongTinUser != null){
-                    //Gán giá trị cho người mới đăng ký mặc định là user
-                    if(thongTinUser.role == null)
-                    {
-                        thongTinUser.role = "user";
+                if (thongTinUser != null) {
+                    // Gán giá trị mặc định cho role nếu chưa tồn tại
+                    if (thongTinUser.role == null) {
+                        thongTinUser.role = "user"; // Gán role mặc định là user nếu chưa có
                         databaseReference.child(userID).setValue(thongTinUser);
                     }
+
+                    // Lưu role vào SharedPreferences
+                    SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("role", thongTinUser.role); // Lưu role
+                    editor.apply();
+
+                    // Cập nhật thông tin người dùng
                     tenHoSo = firebaseUser.getDisplayName();
                     email = thongTinUser.email;
                     diaChi = thongTinUser.diaChi;
                     dienThoai = thongTinUser.soDienThoai;
                     ngaySinh = thongTinUser.ngaySinh;
                     gioiTinh = thongTinUser.gioiTinh;
-                    String role = thongTinUser.role;
 
                     txtTenHoSo.setText(tenHoSo);
                     txtEmail.setText(email);
@@ -229,7 +246,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
                     txtDienThoai.setText(dienThoai);
                     txtNgaySinh.setText(ngaySinh);
                     txtGioiTinh.setText(gioiTinh);
-                }else{
+                } else {
                     Log.d("TAG", "thongTinUser is null");
                 }
                 thanhTienTrinh.setVisibility(View.GONE);
@@ -237,8 +254,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ThongTinCaNhan.this, "Có lỗi xảy ra",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(ThongTinCaNhan.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
                 thanhTienTrinh.setVisibility(View.GONE);
             }
         });
