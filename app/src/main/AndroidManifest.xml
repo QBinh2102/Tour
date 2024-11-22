@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.tourdulich">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +18,6 @@
         tools:targetApi="31">
         <activity
             android:name=".trang.TrangChuAdmin"
-            android:exported="false" />
-        <activity
-            android:name=".TrangChuAdmin"
             android:exported="false" />
         <activity
             android:name=".trang.DoiMatKhau"
@@ -35,22 +35,16 @@
             android:name=".trang.ThongTinChuaDangNhap"
             android:exported="false" />
         <activity
-            android:name=".QRDatVe"
-            android:exported="false" />
-        <activity
             android:name=".trang.BoLocDatVe"
             android:exported="false" />
         <activity
-            android:name=".thong_tin_dat_ve"
+            android:name=".trang.ThongTinDatVe"
             android:exported="false" />
         <activity
             android:name=".trang.DatVe"
             android:exported="false" />
         <activity
             android:name=".trang.ThongTinCaNhan"
-            android:exported="false" />
-        <activity
-            android:name=".TrangQuenMKBangEmail"
             android:exported="false" />
         <activity
             android:name=".trang.TrangDangKy"

@@ -63,6 +63,7 @@ public class DatVe extends AppCompatActivity {
         setContentView(R.layout.activity_dat_ve);
 
         arrayTour = new ArrayList<>();
+        lvTour = findViewById(R.id.listViewTour);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -128,20 +129,26 @@ public class DatVe extends AppCompatActivity {
             }
         });
 
-        //Show toàn bộ tour
+        //Show toàn bộ tour trên firebase
+        showTour();
+
+        TextView filterButton = findViewById(R.id.txtBoLoc);
+        filterButton.setOnClickListener(v -> showFilterDialog());
+    }
+
+    private void showTour(){
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                arrayTour.clear();
                 if(dataSnapshot.exists()){
                     for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                         Tour tour = snapshot.getValue(Tour.class);
                         if (tour != null) {
-                            arrayTour.add(tour); // Thêm danh mục vào danh sách
+                            arrayTour.add(tour); // Thêm tour vào danh sách
                         }
                     }
-//                    tourAdapter = new TourAdapter(DatVe.this,arrayTour);
-//                    lvTour.setAdapter(tourAdapter);
+                    tourAdapter = new TourAdapter(DatVe.this,arrayTour);
+                    lvTour.setAdapter(tourAdapter);
 //                    if(tourAdapter==null) {
 //                        tourAdapter = new TourAdapter(DatVe.this, arrayTour);
 //                        lvTour.setAdapter(tourAdapter);
@@ -157,24 +164,7 @@ public class DatVe extends AppCompatActivity {
                 Toast.makeText(DatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        TextView filterButton = findViewById(R.id.txtBoLoc);
-        filterButton.setOnClickListener(v -> showFilterDialog());
     }
-
-
-//        arrayTour.add(new Tour("Tour Đà Lạt",R.drawable.da_lat,"Xe","Xe",
-//                "20/12/2024","21/12/2024","500.000",20));
-//        arrayTour.add(new Tour("Tour Phú Quốc",R.drawable.phu_quoc,"Thuyền","Thuyền",
-//                "18/12/2024","20/12/2024","1.000.000",20));
-//        arrayTour.add(new Tour("Tour Hà Nội",R.drawable.ha_noi,"Máy bay","Máy bay",
-//                "09/12/2024","14/12/2024","2.000.000",15));
-//        arrayTour.add(new Tour("Tour Núi Bà Đen",R.drawable.nui_ba_den,"Núi","Xe",
-//                "19/11/2024","19/11/2024","300.000",30));
-//        arrayTour.add(new Tour("Tour Osaka-Kyoto",R.drawable.osaka_kyoto_phu_si,"Máy bay","Máy bay",
-//                "20/11/2024","25/11/2024","5.000.000",15));
-
-
 
     private void showFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

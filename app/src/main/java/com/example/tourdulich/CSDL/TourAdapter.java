@@ -9,6 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import android.net.Uri;
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.example.tourdulich.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -51,9 +55,9 @@ public class TourAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.danh_sach_tour,null);
+        convertView = inflater.inflate(R.layout.tour_items,null);
 
-        ImageView imgHinh = (ImageView) convertView.findViewById(R.id.imageViewHinhTour);
+        ImageView imgHinh = (ImageView) convertView.findViewById(R.id.imageViewHinhTourItem);
         TextView txtTen = (TextView) convertView.findViewById(R.id.textViewTenTour);
         TextView txtPhuongTien = (TextView) convertView.findViewById(R.id.textViewPhuongTien);
         TextView txtNgayKhoiHanh = (TextView) convertView.findViewById(R.id.textViewNgayKhoiHanh);
@@ -62,7 +66,12 @@ public class TourAdapter extends BaseAdapter {
         TextView txtSoBinhLuan = (TextView) convertView.findViewById(R.id.textViewSoBinhLuan);
 
         Tour tour = tourList.get(position);
-        imgHinh.setImageURI(Uri.parse(tour.hinhTour));
+        Uri imageUri = Uri.parse(tour.hinhTour);
+        Glide.with(context)
+                .load(imageUri)
+                .into(imgHinh);
+//        Uri uri = Uri.parse(tour.hinhTour);
+//        imgHinh.setImageURI(uri);
         txtTen.setText(tour.tenTour);
         txtPhuongTien.setText(String.format("Phương tiện: %s",tour.phuongTien));
         txtNgayKhoiHanh.setText(String.format("Ngày khởi hành: %s",tour.ngayKhoiHanh));

@@ -30,17 +30,12 @@ public class TrangChu extends AppCompatActivity {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private String hoTen;
 
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trang_chu);
-
-//        Tour tour = new Tour("Tour Phú Quốc",R.drawable.phu_quoc,"Thuyền","Thuyền",
-//                "18/12/2024","20/12/2024","1.000.000",20);
-//        mDatabase.child(mDatabase.push().getKey()).setValue(tour);
 
         //Chuyển Trang Thông Tin Cá Nhân
         if(firebaseUser != null) {

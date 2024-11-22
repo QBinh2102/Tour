@@ -3,17 +3,21 @@ package com.example.tourdulich.trang;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -46,8 +50,10 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     private FirebaseAuth xacThucFirebase;
     private FirebaseUser firebaseUser;
     private DatabaseReference mDatabase;
+    private Uri imageUri;
 
     private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh;
+    private ImageView imgHinhDaiDien;
     private EditText edtTen;
     private EditText edtSDT;
     private EditText edtDiaChi;
@@ -55,6 +61,17 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
     private DatePickerDialog picker;
 
+
+    private final ActivityResultLauncher<Intent> selectImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    imageUri = uri;
+                    imgHinhDaiDien.setVisibility(View.VISIBLE);
+                    imgHinhDaiDien.setImageURI(uri);
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +82,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
         btnQuayLai = findViewById(R.id.btQuayLaiTuChinhSuaTTCN);
         btnCapNhat = findViewById(R.id.btCapNhatChinhSua);
         edtTen = findViewById(R.id.editTextTenChinhSua);
+        imgHinhDaiDien = findViewById(R.id.imageViewHinhChinhSua);
         edtSDT = findViewById(R.id.editTextPhoneChinhSua);
         edtDiaChi = findViewById(R.id.editTextDiaChiChinhSua);
         txtDate = findViewById(R.id.textDateChinhSua);
@@ -105,6 +123,16 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                 gt=false;
                 RbtNam.setChecked(false);
                 RbtNu.setChecked(true);
+            }
+        });
+
+        imgHinhDaiDien.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                // Sử dụng ActivityResultLauncher thay cho startActivityForResult
+                selectImage.launch(intent);
             }
         });
 

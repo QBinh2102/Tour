@@ -34,6 +34,7 @@
                         android:padding="15dp"
                         android:text="Trang chủ"
                         android:textColor="@color/white"
+                        android:textStyle="bold"
                         android:textSize="20dp" />
 
                 </androidx.cardview.widget.CardView>

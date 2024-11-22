@@ -19,7 +19,31 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="#00BCD4">
+
+                    <TextView
+                        android:id="@+id/textView43"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="15dp"
+                        android:text="Lịch sử giao dịch"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="20dp" />
+
+                </androidx.cardview.widget.CardView>
+
+                <ListView
+                    android:id="@+id/listViewLSGD"
+                    android:layout_width="match_parent"
+                    android:layout_height="618dp" />
+            </LinearLayout>
         </ScrollView>
     </RelativeLayout>
 
