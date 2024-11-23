@@ -170,7 +170,7 @@ public class TinTuc extends AppCompatActivity {
     private void uploadImage(Uri uri){
 
         FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
-        StorageReference imgRef = reference.getReference().child("imagesUser/"+System.currentTimeMillis()+"."+getFileExtension(uri));
+        StorageReference imgRef = reference.getReference().child("imagesTour/"+System.currentTimeMillis()+"."+getFileExtension(uri));
         imgRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

@@ -3,24 +3,21 @@ package com.example.tourdulich.trang;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.tourdulich.CSDL.BinhLuan;
-import com.example.tourdulich.CSDL.SoSao;
 import com.example.tourdulich.CSDL.Tour;
 import com.example.tourdulich.CSDL.TourAdapter;
 import com.example.tourdulich.R;
@@ -32,10 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class DatVe extends AppCompatActivity {
 
@@ -46,8 +41,6 @@ public class DatVe extends AppCompatActivity {
 
     private ListView lvTour;
     private ArrayList<Tour> arrayTour;
-    private ArrayList<SoSao> arraySoSao;
-    private ArrayList<BinhLuan> arrayBinhLuan;
     private TourAdapter tourAdapter;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
 
@@ -131,6 +124,17 @@ public class DatVe extends AppCompatActivity {
 
         //Show toàn bộ tour trên firebase
         showTour();
+
+        lvTour.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Tour tour = arrayTour.get(position);
+
+                Intent intent = new Intent(DatVe.this, ThongTinDatVe.class);
+                intent.putExtra("tour_item", tour);
+                startActivity(intent);
+            }
+        });
 
         TextView filterButton = findViewById(R.id.txtBoLoc);
         filterButton.setOnClickListener(v -> showFilterDialog());

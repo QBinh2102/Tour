@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,8 @@ public class GiaoDich extends AppCompatActivity {
     private LinearLayout btnToiTinTuc;
     private LinearLayout btnToiHoSo;
 
+    private ListView lvTourGD;
+
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
@@ -29,6 +32,10 @@ public class GiaoDich extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_giao_dich);
+
+        lvTourGD = findViewById(R.id.listViewLSGD);
+
+        showLSGD();
 
         //Chuyển Trang Thông Tin Cá Nhân
         if(firebaseUser != null) {
@@ -93,5 +100,9 @@ public class GiaoDich extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    private void showLSGD() {
+
     }
 }

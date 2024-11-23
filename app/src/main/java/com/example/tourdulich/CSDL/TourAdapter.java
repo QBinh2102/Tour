@@ -23,8 +23,6 @@ public class TourAdapter extends BaseAdapter {
 
     private Context context;
     private List<Tour> tourList;
-    private List<SoSao> soSaoList;
-    private List<BinhLuan> binhLuanList;
     private LayoutInflater inflater;
     private DatabaseReference tourRef;
 
@@ -79,11 +77,10 @@ public class TourAdapter extends BaseAdapter {
 //        double soSao = soSaoList.stream().filter(sosao->sosao.tenTour.equals(tour.tenTour)).mapToDouble(value -> value.soSao).sum();
 //        int tongSao = (int) soSaoList.stream().filter(sosao->sosao.tenTour.equals(tour.tenTour)).count();
 //        String sao = String.valueOf((double) (soSao/tongSao));
-        double soSao = 0;
-        txtSoSao.setText(String.format("%.2f/5 sao",soSao));
+        txtSoSao.setText(String.format("%.2f/5 sao",tour.soSao));
 //        int binhLuan = (int) binhLuanList.stream().filter(binhluan->binhluan.tenTour.equals(tour.tenTour)).count();
 //        String countBL = String.valueOf(binhLuan);
-        txtSoBinhLuan.setText(String.format("%s comments", 0));
+        txtSoBinhLuan.setText(String.format("%d comments", tour.soBinhLuan));
 
         return convertView;
     }
