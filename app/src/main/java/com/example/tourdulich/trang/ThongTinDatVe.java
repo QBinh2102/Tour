@@ -2,7 +2,9 @@ package com.example.tourdulich.trang;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
@@ -14,9 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.tourdulich.Adapter.ImageAdapter;
+import com.example.tourdulich.Adapter.TourAdapter;
 import com.example.tourdulich.CSDL.Tour;
 import com.example.tourdulich.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ThongTinDatVe extends AppCompatActivity {
@@ -29,6 +39,15 @@ public class ThongTinDatVe extends AppCompatActivity {
     private TextView thoiGian;
     private TextView phuongTien;
     private TextView soVe;
+
+    private ViewPager2 viewPager2;
+    private ArrayList<Uri> imageUris = new ArrayList<>();
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+
+
+    private ImageAdapter imgAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +72,15 @@ public class ThongTinDatVe extends AppCompatActivity {
         phuongTien = findViewById(R.id.textViewTTPhuongTien);
         soVe = findViewById(R.id.textViewTTSoVe);
 
+        viewPager2 = findViewById(R.id.viewPager2);
+
+        storage = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
+        storageRef = storage.getReference().child("imagesTour/Tour Đà Lạt");
+
         //Show thông tin tour
         showThongTinTour(tour);
+
+        getImageUris();
 
 
         // Khởi tạo TextView "Quay lại" và thiết lập sự kiện onClick
@@ -69,6 +95,34 @@ public class ThongTinDatVe extends AppCompatActivity {
         });
 
     }
+
+    private void getImageUris() {
+        storageRef.listAll()
+                .addOnSuccessListener(listResult -> {
+                    // Lặp qua tất cả các item (ảnh)
+                    for (StorageReference item : listResult.getItems()) {
+                        item.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUris.add(uri); // Thêm Uri vào danh sách
+                                    if (imageUris.size() == listResult.getItems().size()) {
+                                        setupViewPager(); // Sau khi có đủ Uri, thiết lập ViewPager2
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("FirebaseStorage", "Error getting Uri: ", e);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirebaseStorage", "Error listing files: ", e);
+                });
+    }
+
+    private void setupViewPager() {
+        ImageAdapter adapter = new ImageAdapter(imageUris);
+        viewPager2.setAdapter(adapter);
+    }
+
 
     private void showThongTinTour(Tour tour) {
         tenTour.setText(tour.tenTour);

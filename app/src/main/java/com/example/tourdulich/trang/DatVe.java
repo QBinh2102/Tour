@@ -19,7 +19,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.tourdulich.CSDL.Tour;
-import com.example.tourdulich.CSDL.TourAdapter;
+import com.example.tourdulich.Adapter.TourAdapter;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class DatVe extends AppCompatActivity {
@@ -54,15 +53,14 @@ public class DatVe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dat_ve);
-
-        arrayTour = new ArrayList<>();
-        lvTour = findViewById(R.id.listViewTour);
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        arrayTour = new ArrayList<>();
+        lvTour = findViewById(R.id.listViewTour);
 
         //Chuyển Trang Thông Tin Cá Nhân
         if(firebaseUser != null) {
