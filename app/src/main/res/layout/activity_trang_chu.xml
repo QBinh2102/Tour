@@ -10,7 +10,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CBF0F4">
+        android:background="#CBF0F4"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout2">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -34,8 +35,8 @@
                         android:padding="15dp"
                         android:text="Trang chủ"
                         android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
                 </androidx.cardview.widget.CardView>
 

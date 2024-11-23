@@ -3,6 +3,7 @@ package com.example.tourdulich.trang;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.tourdulich.CSDL.LuuThongTinUser;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,8 +52,9 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private TextView txtTenHoSo;
     private TextView txtDienThoai;
     private TextView txtDiaChi;
+    private ImageView imgHinhDaiDien;
     private ProgressBar thanhTienTrinh;
-    private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo;
+    private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo, hinh;
     private ImageView imageView;
     private FirebaseAuth xacThucFirebase;
 
@@ -153,6 +156,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
         });
 
         txtTenHoSo = findViewById(R.id.txtTenHoSo);
+        imgHinhDaiDien = findViewById(R.id.ivAvatarProfile);
         txtEmail = findViewById(R.id.txtEmailHoSo);
         txtDienThoai = findViewById(R.id.txtDienThoaiHoSo);
         txtDiaChi = findViewById(R.id.txtDiaChiHoSo);
@@ -234,6 +238,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
 
                     // Cập nhật thông tin người dùng
                     tenHoSo = firebaseUser.getDisplayName();
+                    Uri imgUri = Uri.parse(thongTinUser.hinhDaiDien);
                     email = thongTinUser.email;
                     diaChi = thongTinUser.diaChi;
                     dienThoai = thongTinUser.soDienThoai;
@@ -241,6 +246,9 @@ public class ThongTinCaNhan extends AppCompatActivity {
                     gioiTinh = thongTinUser.gioiTinh;
 
                     txtTenHoSo.setText(tenHoSo);
+                    Glide.with(ThongTinCaNhan.this)
+                            .load(imgUri)
+                            .into(imgHinhDaiDien);
                     txtEmail.setText(email);
                     txtDiaChi.setText(diaChi);
                     txtDienThoai.setText(dienThoai);

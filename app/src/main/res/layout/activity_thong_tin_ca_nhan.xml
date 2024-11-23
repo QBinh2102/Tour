@@ -30,9 +30,7 @@
                         android:id="@+id/ivAvatarProfile"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/person_24">
-                    </ImageView>
+                        android:layout_gravity="center"></ImageView>
 
                 </androidx.cardview.widget.CardView>
                     <TextView

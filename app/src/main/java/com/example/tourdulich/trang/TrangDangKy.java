@@ -236,7 +236,10 @@ public class TrangDangKy extends AppCompatActivity {
                             nguoiDungFB.updateProfile(thayDoiTTUser);
 
                             //Quan ly du lieu nguoi dung
-                            LuuThongTinUser thongTinUser = new LuuThongTinUser(diaChi, soDienThoai, email, ngaySinh, gioiTinh);
+                            String id = nguoiDungFB.getUid();
+                            //Hình mặc định của user
+                            String hinh = "https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesUser%2F1732333793835.jpg?alt=media&token=054bb7bf-9135-415c-bc16-abaceff9d8ff";
+                            LuuThongTinUser thongTinUser = new LuuThongTinUser(id,hinh,diaChi, soDienThoai, email, ngaySinh, gioiTinh);
                             DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
                             refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

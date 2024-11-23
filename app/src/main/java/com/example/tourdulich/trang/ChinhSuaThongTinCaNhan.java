@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.tourdulich.CSDL.LuuThongTinUser;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,6 +55,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private Uri imageUri;
 
+    private Uri hinh;
     private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh;
     private ImageView imgHinhDaiDien;
     private EditText edtTen;
@@ -62,16 +66,20 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     private DatePickerDialog picker;
 
 
+    // Khai báo ActivityResultLauncher
     private final ActivityResultLauncher<Intent> selectImage = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    imageUri = uri;
-                    imgHinhDaiDien.setVisibility(View.VISIBLE);
-                    imgHinhDaiDien.setImageURI(uri);
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    if(o.getResultCode() == RESULT_OK){
+                        if(o.getData()!=null) {
+                            imageUri = o.getData().getData();
+                            imgHinhDaiDien.setImageURI(imageUri);
+                        }
+                    }
                 }
-            });
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,10 +134,12 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
             }
         });
 
+        //Chọn hình ảnh
         imgHinhDaiDien.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 // Sử dụng ActivityResultLauncher thay cho startActivityForResult
                 selectImage.launch(intent);
@@ -204,7 +214,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                     txtDate.setError("Vui lòng nhập ngày sinh");
                     txtDate.requestFocus();
                 } else{
-                    UpdateUser(tenHoSo,diaChi,SDT,ngaySinh,gioiTinh);
+                    String hinh = String.valueOf(imageUri);
+                    UpdateUser(hinh,tenHoSo,diaChi,SDT,ngaySinh,gioiTinh);
                 }
                 Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                 startActivity(ttcn);
@@ -227,12 +238,16 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LuuThongTinUser thongTinUser = snapshot.getValue(LuuThongTinUser.class);
                 tenHoSo = firebaseUser.getDisplayName();
+                hinh = Uri.parse(thongTinUser.hinhDaiDien);
                 diaChi = thongTinUser.diaChi;
                 SDT = thongTinUser.soDienThoai;
                 ngaySinh = thongTinUser.ngaySinh;
                 gioiTinh = thongTinUser.gioiTinh;
 
                 edtTen.setText(tenHoSo);
+                Glide.with(ChinhSuaThongTinCaNhan.this)
+                        .load(hinh)
+                        .into(imgHinhDaiDien);
                 edtDiaChi.setText(diaChi);
                 edtSDT.setText(SDT);
                 txtDate.setText(ngaySinh);
@@ -256,10 +271,11 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     }
 
     //Cập nhật hồ sơ người dùng
-    private void UpdateUser(String username, String diaChi, String dienThoai, String ngaySinh, String gioiTinh){
+    private void UpdateUser(String hinh, String username, String diaChi, String dienThoai, String ngaySinh, String gioiTinh){
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
         firebaseUser.updateProfile(profileUpdates);
         String userID = firebaseUser.getUid();
+        mDatabase.child("Người đã đăng ký").child(userID).child("hinhDaiDien").setValue(hinh);
         mDatabase.child("Người đã đăng ký").child(userID).child("diaChi").setValue(diaChi);
         mDatabase.child("Người đã đăng ký").child(userID).child("gioiTinh").setValue(gioiTinh);
         mDatabase.child("Người đã đăng ký").child(userID).child("ngaySinh").setValue(ngaySinh);
