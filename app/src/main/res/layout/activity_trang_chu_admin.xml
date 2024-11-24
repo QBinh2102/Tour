@@ -5,11 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".trang.TrangChuAdmin">
+    tools:context=".trang.TrangChu">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CBF0F4">
+        android:background="#CBF0F4"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout2">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -33,16 +35,17 @@
                         android:padding="15dp"
                         android:text="Trang chủ"
                         android:textColor="@color/white"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
+                    android:id="@+id/layoutDanhMuc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="20dp">
-
                     <ImageView
                         android:id="@+id/imgViewPopupMenu"
                         android:layout_width="50dp"
@@ -65,7 +68,7 @@
                             app:cardCornerRadius="10dp">
 
                             <ImageView
-                                android:id="@+id/imageView3"
+                                android:id="@+id/imgVMayBay"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
@@ -82,7 +85,7 @@
                             app:cardCornerRadius="10dp">
 
                             <ImageView
-                                android:id="@+id/imageView4"
+                                android:id="@+id/imgVTauThuy"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
@@ -99,7 +102,7 @@
                             app:cardCornerRadius="10dp">
 
                             <ImageView
-                                android:id="@+id/imageView5"
+                                android:id="@+id/imgVXe"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
@@ -124,7 +127,7 @@
                             app:cardCornerRadius="10dp">
 
                             <ImageView
-                                android:id="@+id/imageView6"
+                                android:id="@+id/imgVBien"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
@@ -141,7 +144,7 @@
                             app:cardCornerRadius="10dp">
 
                             <ImageView
-                                android:id="@+id/imageView7"
+                                android:id="@+id/imgVDao"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
@@ -158,7 +161,7 @@
                             app:cardCornerRadius="10dp">
 
                             <ImageView
-                                android:id="@+id/imageView8"
+                                android:id="@+id/imgVRung"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
@@ -167,7 +170,6 @@
                         </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <TextView
@@ -492,4 +494,5 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
