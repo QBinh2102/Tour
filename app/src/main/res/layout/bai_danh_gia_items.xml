@@ -20,11 +20,10 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView23"
+                    android:id="@+id/imageViewHinhUserBDG"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:layout_margin="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -38,7 +37,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView57"
+                            android:id="@+id/textViewTenUserBDG"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -47,7 +46,7 @@
                             android:textColor="@color/black"/>
 
                         <TextView
-                            android:id="@+id/textView59"
+                            android:id="@+id/textViewSoSaoBDG"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="số sao"
@@ -55,7 +54,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/textView58"
+                        android:id="@+id/textViewThoiGianBDG"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -65,7 +64,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView56"
+                android:id="@+id/textViewNoiDungBDG"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="5dp"

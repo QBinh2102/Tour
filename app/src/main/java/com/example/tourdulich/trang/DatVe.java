@@ -129,11 +129,11 @@ public class DatVe extends AppCompatActivity {
         //Show toàn bộ tour trên firebase
         showTour();
 
+        //Chuyển sang thông tin đặt vé
         lvTour.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tour tour = arrayTour.get(position);
-
                 Intent intent = new Intent(DatVe.this, ThongTinDatVe.class);
                 intent.putExtra("tour_item", tour);
                 startActivity(intent);

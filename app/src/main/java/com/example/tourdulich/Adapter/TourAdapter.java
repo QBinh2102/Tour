@@ -16,21 +16,21 @@ import com.example.tourdulich.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TourAdapter extends BaseAdapter {
 
     private Context context;
     private List<Tour> tourList;
     private LayoutInflater inflater;
-    private DatabaseReference tourRef;
 
     public TourAdapter(Context context, List<Tour> tourList) {
         this.context = context;
         this.tourList = tourList;
 //        this.soSaoList = soSaoList;
 //        this.binhLuanList = binhLuanList;
-        this.tourRef = FirebaseDatabase.getInstance().getReference("Tour");
 
         inflater = LayoutInflater.from(context);
     }
@@ -67,20 +67,33 @@ public class TourAdapter extends BaseAdapter {
         Glide.with(context)
                 .load(imageUri)
                 .into(imgHinh);
-//        Uri uri = Uri.parse(tour.hinhTour);
-//        imgHinh.setImageURI(uri);
         txtTen.setText(tour.tenTour);
         txtPhuongTien.setText(String.format("Phương tiện: %s",tour.phuongTien));
         txtNgayKhoiHanh.setText(String.format("Ngày khởi hành: %s",tour.ngayKhoiHanh));
-        txtGia.setText(String.format("Giá: %s",tour.giaTien));
+        String formattedPrice = formatPrice(String.valueOf(tour.giaTien));
+        txtGia.setText(String.format("Giá: %s",formattedPrice));
 //        double soSao = soSaoList.stream().filter(sosao->sosao.tenTour.equals(tour.tenTour)).mapToDouble(value -> value.soSao).sum();
 //        int tongSao = (int) soSaoList.stream().filter(sosao->sosao.tenTour.equals(tour.tenTour)).count();
 //        String sao = String.valueOf((double) (soSao/tongSao));
         txtSoSao.setText(String.format("%.2f/5 sao",tour.soSao));
 //        int binhLuan = (int) binhLuanList.stream().filter(binhluan->binhluan.tenTour.equals(tour.tenTour)).count();
 //        String countBL = String.valueOf(binhLuan);
-        txtSoBinhLuan.setText(String.format("%d comments", tour.soBinhLuan));
+        txtSoBinhLuan.setText(String.format("%d bình luận", tour.soBinhLuan));
 
         return convertView;
+    }
+
+    private String formatPrice(String price) {
+        try {
+            // Xóa tất cả các dấu phẩy và khoảng trắng, rồi chia giá thành các phần
+            long priceValue = Long.parseLong(price);  // Chuyển giá sang long để xử lý
+
+            // Sử dụng NumberFormat để định dạng giá tiền
+            NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+            String formatted = numberFormat.format(priceValue);
+            return formatted.replace(',', ' ');
+        } catch (NumberFormatException e) {
+            return price;  // Nếu không thể chuyển đổi, giữ nguyên giá gốc
+        }
     }
 }
