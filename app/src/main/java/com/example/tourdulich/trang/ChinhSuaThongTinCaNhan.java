@@ -52,11 +52,10 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
     private FirebaseAuth xacThucFirebase;
     private FirebaseUser firebaseUser;
-    private DatabaseReference mDatabase;
     private Uri imageUri;
 
     private Uri hinh;
-    private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh;
+    private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh, email;
     private ImageView imgHinhDaiDien;
     private EditText edtTen;
     private EditText edtSDT;
@@ -73,8 +72,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                 public void onActivityResult(ActivityResult o) {
                     if(o.getResultCode() == RESULT_OK){
                         if(o.getData()!=null) {
-                            imageUri = o.getData().getData();
-                            imgHinhDaiDien.setImageURI(imageUri);
+                            hinh = o.getData().getData();
+                            imgHinhDaiDien.setImageURI(hinh);
                         }
                     }
                 }
@@ -98,7 +97,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
         RbtNu = findViewById(R.id.radioNuChinhSua);
         xacThucFirebase = FirebaseAuth.getInstance();
         firebaseUser = xacThucFirebase.getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         //Gạch dưới text ngày sinh
         TextView tv = findViewById(R.id.textDateChinhSua);
@@ -214,8 +213,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                     txtDate.setError("Vui lòng nhập ngày sinh");
                     txtDate.requestFocus();
                 } else{
-                    String hinh = String.valueOf(imageUri);
-                    UpdateUser(hinh,tenHoSo,diaChi,SDT,ngaySinh,gioiTinh);
+                    String img = String.valueOf(hinh);
+                    UpdateUser(img,tenHoSo,email,diaChi,SDT,ngaySinh,gioiTinh);
                 }
                 Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                 startActivity(ttcn);
@@ -243,6 +242,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                 SDT = thongTinUser.soDienThoai;
                 ngaySinh = thongTinUser.ngaySinh;
                 gioiTinh = thongTinUser.gioiTinh;
+                email = thongTinUser.email;
 
                 edtTen.setText(tenHoSo);
                 Glide.with(ChinhSuaThongTinCaNhan.this)
@@ -271,14 +271,17 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     }
 
     //Cập nhật hồ sơ người dùng
-    private void UpdateUser(String hinh, String username, String diaChi, String dienThoai, String ngaySinh, String gioiTinh){
+    private void UpdateUser(String hinh, String username, String email, String diaChi, String dienThoai, String ngaySinh, String gioiTinh){
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
         firebaseUser.updateProfile(profileUpdates);
         String userID = firebaseUser.getUid();
-        mDatabase.child("Người đã đăng ký").child(userID).child("hinhDaiDien").setValue(hinh);
-        mDatabase.child("Người đã đăng ký").child(userID).child("diaChi").setValue(diaChi);
-        mDatabase.child("Người đã đăng ký").child(userID).child("gioiTinh").setValue(gioiTinh);
-        mDatabase.child("Người đã đăng ký").child(userID).child("ngaySinh").setValue(ngaySinh);
-        mDatabase.child("Người đã đăng ký").child(userID).child("soDienThoai").setValue(dienThoai);
+        LuuThongTinUser user = new LuuThongTinUser(userID,hinh,diaChi,dienThoai,email,ngaySinh,gioiTinh);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
+        mDatabase.child(userID).setValue(user);
+//        mDatabase.child(userID).child("hinhDaiDien").setValue(hinh);
+//        mDatabase.child(userID).child("diaChi").setValue(diaChi);
+//        mDatabase.child(userID).child("gioiTinh").setValue(gioiTinh);
+//        mDatabase.child(userID).child("ngaySinh").setValue(ngaySinh);
+//        mDatabase.child(userID).child("soDienThoai").setValue(dienThoai);
     }
 }

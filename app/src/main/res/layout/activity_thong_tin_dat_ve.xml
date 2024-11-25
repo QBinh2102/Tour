@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -10,6 +10,7 @@
 
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -37,18 +38,18 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager2"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"/>
+                android:layout_height="200dp" />
 
             <TextView
                 android:id="@+id/textViewTTTenTour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
+                android:hint="Tour"
                 android:textAlignment="center"
-                android:text="Tên tour"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="30dp"/>
+                android:textSize="30dp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,14 +78,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 sao"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/textViewTTSoBinhLuan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="0 bình luận"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -95,17 +96,17 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="Giới thiệu:"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="25dp"/>
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textViewTTGioiThieu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Giới thiệu tour"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:hint="Giới thiệu tour"
                 android:textColor="@color/black"
                 android:textSize="20dp" />
 
@@ -115,9 +116,9 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="Chi tiết:"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="25dp" />
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textViewTTThoiGian"
@@ -158,9 +159,9 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="Bình luận và đánh giá:"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="25dp" />
+                android:textSize="25dp"
+                android:textStyle="bold" />
 
             <ListView
                 android:id="@+id/listViewBinhLuanTour"
@@ -173,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
                 android:text="Xem tất cả bình luận"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/btDatVe"
@@ -187,4 +188,14 @@
         </LinearLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/white"
+        tools:ignore="MissingConstraints" />
+
+</RelativeLayout>

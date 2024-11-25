@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +46,7 @@ public class ThongTinDatVe extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageRef;
 
-
-    private ImageAdapter imgAdapter;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -73,14 +73,16 @@ public class ThongTinDatVe extends AppCompatActivity {
         soVe = findViewById(R.id.textViewTTSoVe);
 
         viewPager2 = findViewById(R.id.viewPager2);
+        progressBar = findViewById(R.id.progressBar);
+
+        progressBar.setVisibility(View.VISIBLE);
 
         storage = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
-        storageRef = storage.getReference().child("imagesTour/Tour Đà Lạt");
+        storageRef = storage.getReference().child("imagesTour/"+tour.tenTour);
 
         //Show thông tin tour
-        showThongTinTour(tour);
+        getImageUris(tour);
 
-        getImageUris();
 
 
         // Khởi tạo TextView "Quay lại" và thiết lập sự kiện onClick
@@ -96,7 +98,7 @@ public class ThongTinDatVe extends AppCompatActivity {
 
     }
 
-    private void getImageUris() {
+    private void getImageUris(Tour tour) {
         storageRef.listAll()
                 .addOnSuccessListener(listResult -> {
                     // Lặp qua tất cả các item (ảnh)
@@ -105,22 +107,25 @@ public class ThongTinDatVe extends AppCompatActivity {
                                 .addOnSuccessListener(uri -> {
                                     imageUris.add(uri); // Thêm Uri vào danh sách
                                     if (imageUris.size() == listResult.getItems().size()) {
-                                        setupViewPager(); // Sau khi có đủ Uri, thiết lập ViewPager2
+                                        setupViewPager(tour); // Sau khi có đủ Uri, thiết lập ViewPager2
                                     }
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("FirebaseStorage", "Error getting Uri: ", e);
                                 });
                     }
+
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FirebaseStorage", "Error listing files: ", e);
                 });
     }
 
-    private void setupViewPager() {
+    private void setupViewPager(Tour tour) {
         ImageAdapter adapter = new ImageAdapter(imageUris);
         viewPager2.setAdapter(adapter);
+        showThongTinTour(tour);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 

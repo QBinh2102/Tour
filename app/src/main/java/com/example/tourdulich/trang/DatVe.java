@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,12 +43,13 @@ public class DatVe extends AppCompatActivity {
     private ArrayList<Tour> arrayTour;
     private TourAdapter tourAdapter;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     private String selectedServiceType = ""; // Không lọc loại dịch vụ mặc định
     private String selectedCity = ""; // Không lọc thành phố mặc định
     private String selectedClub = ""; // Không lọc câu lạc bộ mặc định
 
-    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +63,13 @@ public class DatVe extends AppCompatActivity {
 
         arrayTour = new ArrayList<>();
         lvTour = findViewById(R.id.listViewTour);
+        progressBar = findViewById(R.id.progressBar2);
+
+        progressBar.setVisibility(View.VISIBLE);
+
 
         //Chuyển Trang Thông Tin Cá Nhân
-        if(firebaseUser != null) {
+        if (firebaseUser != null) {
             //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu đã đăng nhập thành công
             Intent ttcn = new Intent(this, ThongTinCaNhan.class);
             btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
@@ -74,7 +80,7 @@ public class DatVe extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
                 }
             });
-        }else {
+        } else {
             //Chuyển sang TRANG THÔNG TIN CÁ NHÂN nếu chưa đăng nhập
             Intent ttcncdn = new Intent(this, ThongTinChuaDangNhap.class);
             btnToiHoSo = findViewById(R.id.btDatVeToiHoSo);
@@ -138,29 +144,27 @@ public class DatVe extends AppCompatActivity {
         filterButton.setOnClickListener(v -> showFilterDialog());
     }
 
-    private void showTour(){
+
+
+    private void showTour() {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Tour tour = snapshot.getValue(Tour.class);
                         if (tour != null) {
                             arrayTour.add(tour); // Thêm tour vào danh sách
                         }
                     }
-                    tourAdapter = new TourAdapter(DatVe.this,arrayTour);
+                    tourAdapter = new TourAdapter(DatVe.this, arrayTour);
                     lvTour.setAdapter(tourAdapter);
-//                    if(tourAdapter==null) {
-//                        tourAdapter = new TourAdapter(DatVe.this, arrayTour);
-//                        lvTour.setAdapter(tourAdapter);
-//                    }else{
-//                        tourAdapter.notifyDataSetChanged();
-//                    }
-                }else{
+                    progressBar.setVisibility(View.INVISIBLE);
+                } else {
                     Toast.makeText(DatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(DatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();

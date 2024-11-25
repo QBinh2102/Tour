@@ -54,9 +54,9 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private TextView txtDiaChi;
     private ImageView imgHinhDaiDien;
     private ProgressBar thanhTienTrinh;
-    private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo, hinh;
-    private ImageView imageView;
+    private String email, dienThoai, diaChi, ngaySinh, gioiTinh, tenHoSo;
     private FirebaseAuth xacThucFirebase;
+    private FirebaseUser firebaseUser;
 
 
     @Override
@@ -163,9 +163,10 @@ public class ThongTinCaNhan extends AppCompatActivity {
         txtNgaySinh = findViewById(R.id.txtNgaySinhHoSo);
         txtGioiTinh = findViewById(R.id.txtGioiTinhHoSo);
         xacThucFirebase = FirebaseAuth.getInstance();
+        firebaseUser = xacThucFirebase.getCurrentUser();
         thanhTienTrinh = findViewById(R.id.thanhTienTrinh);
 
-        FirebaseUser firebaseUser = xacThucFirebase.getCurrentUser();
+
         if (firebaseUser == null) {
             Toast.makeText(ThongTinCaNhan.this, "Thông tin người dùng không tồn tại",
                     Toast.LENGTH_SHORT).show();
