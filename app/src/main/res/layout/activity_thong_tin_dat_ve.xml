@@ -71,26 +71,6 @@
                         android:textColor="@color/black"
                         android:textSize="20dp" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textViewTTSoSao"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 sao"
-                            android:textColor="@color/black" />
-
-                        <TextView
-                            android:id="@+id/textViewTTSoBinhLuan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0 bình luận"
-                            android:textColor="@color/black" />
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -181,7 +161,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textView45"
+                            android:id="@+id/textViewTTTrungBinhSao"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -190,16 +170,7 @@
                             android:textSize="50dp"/>
 
                         <TextView
-                            android:id="@+id/textView48"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="10dp"
-                            android:text="số sao"
-                            android:textColor="@color/black"/>
-
-                        <TextView
-                            android:id="@+id/textView50"
+                            android:id="@+id/textViewTTSoBinhLuan"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -229,12 +200,13 @@
                                 android:textColor="@color/black"/>
 
                             <ProgressBar
-                                android:id="@+id/progressBar3"
+                                android:id="@+id/progressBar5Sao"
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:paddingRight="20dp"/>
+                                android:paddingRight="20dp"
+                                android:progress="0" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -252,12 +224,13 @@
                                 android:textColor="@color/black" />
 
                             <ProgressBar
-                                android:id="@+id/progressBar4"
+                                android:id="@+id/progressBar4Sao"
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:paddingRight="20dp" />
+                                android:paddingRight="20dp"
+                                android:progress="0"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -275,12 +248,13 @@
                                 android:textColor="@color/black"/>
 
                             <ProgressBar
-                                android:id="@+id/progressBar5"
+                                android:id="@+id/progressBar3Sao"
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:paddingRight="20dp" />
+                                android:paddingRight="20dp"
+                                android:progress="0"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -298,12 +272,13 @@
                                 android:textColor="@color/black" />
 
                             <ProgressBar
-                                android:id="@+id/progressBar6"
+                                android:id="@+id/progressBar2Sao"
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:paddingRight="20dp" />
+                                android:paddingRight="20dp"
+                                android:progress="0"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -321,12 +296,13 @@
                                 android:textColor="@color/black" />
 
                             <ProgressBar
-                                android:id="@+id/progressBar7"
+                                android:id="@+id/progressBar1Sao"
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:paddingRight="20dp"/>
+                                android:paddingRight="20dp"
+                                android:progress="0"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

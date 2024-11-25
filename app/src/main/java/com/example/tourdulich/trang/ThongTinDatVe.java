@@ -43,14 +43,20 @@ public class ThongTinDatVe extends AppCompatActivity {
 
     private TextView tenTour;
     private TextView giaTour;
-    private TextView soSao;
     private TextView soBinhLuan;
     private TextView gioiThieu;
     private TextView thoiGian;
     private TextView phuongTien;
     private TextView soVe;
+    private TextView tbSao;
     private Button btnDatVe;
     private ListView lvBinhLuan;
+    private ProgressBar sao1;
+    private ProgressBar sao2;
+    private ProgressBar sao3;
+    private ProgressBar sao4;
+    private ProgressBar sao5;
+
 
     private ViewPager2 viewPager2;
     private ArrayList<Uri> imageUris = new ArrayList<>();
@@ -81,13 +87,18 @@ public class ThongTinDatVe extends AppCompatActivity {
 
         tenTour = findViewById(R.id.textViewTTTenTour);
         giaTour = findViewById(R.id.textViewTTGiaTour);
-        soSao = findViewById(R.id.textViewTTSoSao);
         soBinhLuan = findViewById(R.id.textViewTTSoBinhLuan);
         gioiThieu = findViewById(R.id.textViewTTGioiThieu);
         thoiGian = findViewById(R.id.textViewTTThoiGian);
         phuongTien = findViewById(R.id.textViewTTPhuongTien);
         soVe = findViewById(R.id.textViewTTSoVe);
         btnDatVe = findViewById(R.id.btDatVe);
+        tbSao = findViewById(R.id.textViewTTTrungBinhSao);
+        sao1 = findViewById(R.id.progressBar1Sao);
+        sao2 = findViewById(R.id.progressBar2Sao);
+        sao3 = findViewById(R.id.progressBar3Sao);
+        sao4 = findViewById(R.id.progressBar4Sao);
+        sao5 = findViewById(R.id.progressBar5Sao);
 
         lvBinhLuan = findViewById(R.id.listViewBinhLuanTour);
         viewPager2 = findViewById(R.id.viewPager2);
@@ -159,10 +170,11 @@ public class ThongTinDatVe extends AppCompatActivity {
 
 
     private void showThongTinTour(Tour tour) {
+
         tenTour.setText(tour.tenTour);
         String formattedPrice = formatPrice(String.valueOf(tour.giaTien));
         giaTour.setText(String.format("Giá: %s",formattedPrice));
-        soSao.setText(String.format("%.2f sao",tour.soSao));
+        tbSao.setText(String.format("%.1f",tour.soSao));
         soBinhLuan.setText(String.format("%d bình luận", tour.soBinhLuan));
         gioiThieu.setText(tour.gioiThieu);
         thoiGian.setText(String.format("Thời gian: %s - %s", tour.ngayKhoiHanh,tour.ngayKetThuc));
@@ -171,15 +183,41 @@ public class ThongTinDatVe extends AppCompatActivity {
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int countTong = 0;
+                int soSao1 = 0;
+                int soSao2 = 0;
+                int soSao3 = 0;
+                int soSao4 = 0;
+                int soSao5 = 0;
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
                         if(baiDanhGia.idTour.equals(tour.idTour)){
                             baiDanhGias.add(baiDanhGia);
+
+                            if(baiDanhGia.soSao!=0){
+                                countTong++;
+                                if(baiDanhGia.soSao == 1){
+                                    soSao1++;
+                                } else if (baiDanhGia.soSao == 2) {
+                                    soSao2++;
+                                } else if (baiDanhGia.soSao == 3) {
+                                    soSao3++;
+                                } else if (baiDanhGia.soSao == 4) {
+                                    soSao4++;
+                                } else if (baiDanhGia.soSao == 5) {
+                                    soSao5++;
+                                }
+                            }
                         }
                     }
                     DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
                     lvBinhLuan.setAdapter(danhGiaAdapter);
+                    sao1.setProgress((soSao1/countTong)*100);
+                    sao2.setProgress((soSao2/countTong)*100);
+                    sao3.setProgress((soSao3/countTong)*100);
+                    sao4.setProgress((soSao4*countTong)*100);
+                    sao5.setProgress((soSao5/countTong)*100);
                     progressBar.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(ThongTinDatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
