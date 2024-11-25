@@ -7,7 +7,8 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,6 +30,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textViewTenUserBDG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="5dp"
+                        android:text="Tên user"
+                        android:textColor="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -37,29 +46,23 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textViewTenUserBDG"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:paddingRight="5dp"
-                            android:text="Tên user"
-                            android:textColor="@color/black"/>
-
-                        <TextView
                             android:id="@+id/textViewSoSaoBDG"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
                             android:text="số sao"
+                            android:textColor="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textViewThoiGianBDG"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="thời gian bình luận"
                             android:textColor="@color/black"/>
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textViewThoiGianBDG"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="thời gian bình luận"
-                        android:textColor="@color/black"/>
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -67,9 +70,10 @@
                 android:id="@+id/textViewNoiDungBDG"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                android:hint="nội dung bình luận" />
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:hint="nội dung bình luận"
+                android:textColor="@color/black"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

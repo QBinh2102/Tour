@@ -236,7 +236,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LuuThongTinUser thongTinUser = snapshot.getValue(LuuThongTinUser.class);
-                tenHoSo = firebaseUser.getDisplayName();
+                tenHoSo = thongTinUser.tenNguoiDung;
                 hinh = Uri.parse(thongTinUser.hinhDaiDien);
                 diaChi = thongTinUser.diaChi;
                 SDT = thongTinUser.soDienThoai;
@@ -275,7 +275,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
         firebaseUser.updateProfile(profileUpdates);
         String userID = firebaseUser.getUid();
-        LuuThongTinUser user = new LuuThongTinUser(userID,hinh,diaChi,dienThoai,email,ngaySinh,gioiTinh);
+        LuuThongTinUser user = new LuuThongTinUser(userID,username,hinh,diaChi,dienThoai,email,ngaySinh,gioiTinh);
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
         mDatabase.child(userID).setValue(user);
 //        mDatabase.child(userID).child("hinhDaiDien").setValue(hinh);

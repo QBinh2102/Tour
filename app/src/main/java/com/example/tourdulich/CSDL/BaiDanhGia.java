@@ -8,6 +8,7 @@ public class BaiDanhGia {
     public int tongTien;
     public int soSao;
     public String binhLuan;
+    public String thoiGian;
 
     public BaiDanhGia(){}
 
@@ -19,5 +20,6 @@ public class BaiDanhGia {
         this.tongTien = tongTien;
         this.soSao = 0;
         this.binhLuan = "";
+        this.thoiGian = "";
     }
 }

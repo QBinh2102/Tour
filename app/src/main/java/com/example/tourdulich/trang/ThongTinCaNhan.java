@@ -238,7 +238,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
                     editor.apply();
 
                     // Cập nhật thông tin người dùng
-                    tenHoSo = firebaseUser.getDisplayName();
+                    tenHoSo = thongTinUser.tenNguoiDung;
                     Uri imgUri = Uri.parse(thongTinUser.hinhDaiDien);
                     email = thongTinUser.email;
                     diaChi = thongTinUser.diaChi;

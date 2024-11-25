@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,11 +18,19 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.tourdulich.Adapter.DanhGiaAdapter;
 import com.example.tourdulich.Adapter.ImageAdapter;
+import com.example.tourdulich.Adapter.TourAdapter;
+import com.example.tourdulich.CSDL.BaiDanhGia;
 import com.example.tourdulich.CSDL.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -41,15 +50,18 @@ public class ThongTinDatVe extends AppCompatActivity {
     private TextView phuongTien;
     private TextView soVe;
     private Button btnDatVe;
+    private ListView lvBinhLuan;
 
     private ViewPager2 viewPager2;
     private ArrayList<Uri> imageUris = new ArrayList<>();
     private FirebaseStorage storage;
     private StorageReference storageRef;
+    private ArrayList<BaiDanhGia> baiDanhGias = new ArrayList<>();
 
     private ProgressBar progressBar;
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
 
 
     @Override
@@ -77,6 +89,7 @@ public class ThongTinDatVe extends AppCompatActivity {
         soVe = findViewById(R.id.textViewTTSoVe);
         btnDatVe = findViewById(R.id.btDatVe);
 
+        lvBinhLuan = findViewById(R.id.listViewBinhLuanTour);
         viewPager2 = findViewById(R.id.viewPager2);
         progressBar = findViewById(R.id.progressBar);
 
@@ -152,9 +165,32 @@ public class ThongTinDatVe extends AppCompatActivity {
         soSao.setText(String.format("%.2f sao",tour.soSao));
         soBinhLuan.setText(String.format("%d bình luận", tour.soBinhLuan));
         gioiThieu.setText(tour.gioiThieu);
-        thoiGian.setText(String.format("Thời gian: %s-%s", tour.ngayKhoiHanh,tour.ngayKetThuc));
+        thoiGian.setText(String.format("Thời gian: %s - %s", tour.ngayKhoiHanh,tour.ngayKetThuc));
         phuongTien.setText(String.format("Phương tiện: %s", tour.phuongTien));
         soVe.setText(String.format("Số vé còn lại: %d",tour.soLuongVe));
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
+                        if(baiDanhGia.idTour.equals(tour.idTour)){
+                            baiDanhGias.add(baiDanhGia);
+                        }
+                    }
+                    DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
+                    lvBinhLuan.setAdapter(danhGiaAdapter);
+                    progressBar.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(ThongTinDatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(ThongTinDatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private String formatPrice(String price) {
