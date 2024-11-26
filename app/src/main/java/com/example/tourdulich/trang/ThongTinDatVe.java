@@ -70,6 +70,7 @@ public class ThongTinDatVe extends AppCompatActivity {
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private DatabaseReference bdgRef = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
+    private DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
 
 
     @Override
@@ -86,6 +87,8 @@ public class ThongTinDatVe extends AppCompatActivity {
         //Lấy thông tin tour khi chọn từ ĐẶT VÉ
         Intent intent = getIntent();
         Tour tour = (Tour) intent.getSerializableExtra("tour_item");
+
+
 
         tenTour = findViewById(R.id.textViewTTTenTour);
         giaTour = findViewById(R.id.textViewTTGiaTour);
@@ -148,8 +151,8 @@ public class ThongTinDatVe extends AppCompatActivity {
                     Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
                     xbl.putExtra("tour", tour);
                     startActivity(xbl);
-                }else {
-                    //Đã đăng nhập
+                }else { //Đã đăng nhập
+                    //Đã đặt vé
                     bdgRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -163,7 +166,6 @@ public class ThongTinDatVe extends AppCompatActivity {
                                         startActivity(xbl);
                                     }
                                 }
-
                             }
                         }
 
@@ -176,6 +178,9 @@ public class ThongTinDatVe extends AppCompatActivity {
                     Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
                     xbl.putExtra("tour", tour);
                     startActivity(xbl);
+//                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
+//                    xbl.putExtra("tour", tour);
+//                    startActivity(xbl);
                 }
             }
         });
@@ -215,71 +220,87 @@ public class ThongTinDatVe extends AppCompatActivity {
 
     private void showThongTinTour(Tour tour) {
 
-        tenTour.setText(tour.tenTour);
-        String formattedPrice = formatPrice(String.valueOf(tour.giaTien));
-        giaTour.setText(String.format("Giá: %s",formattedPrice));
-        tbSao.setText(String.format("%.1f",tour.soSao));
-        soBinhLuan.setText(String.format("%d bình luận", tour.soBinhLuan));
-        gioiThieu.setText(tour.gioiThieu);
-        thoiGian.setText(String.format("Thời gian: %s - %s", tour.ngayKhoiHanh,tour.ngayKetThuc));
-        phuongTien.setText(String.format("Phương tiện: %s", tour.phuongTien));
-        soVe.setText(String.format("Số vé còn lại: %d",tour.soLuongVe));
-        bdgRef.addValueEventListener(new ValueEventListener() {
+        tourRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int countTong = 0;
-                int soSao1 = 0;
-                int soSao2 = 0;
-                int soSao3 = 0;
-                int soSao4 = 0;
-                int soSao5 = 0;
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
-                        if(baiDanhGia.idTour.equals(tour.idTour)){
-                            baiDanhGias.add(baiDanhGia);
-                            if(baiDanhGia.soSao!=0){
-                                countTong++;
-                                if(baiDanhGia.soSao == 1){
-                                    soSao1++;
-                                } else if (baiDanhGia.soSao == 2) {
-                                    soSao2++;
-                                } else if (baiDanhGia.soSao == 3) {
-                                    soSao3++;
-                                } else if (baiDanhGia.soSao == 4) {
-                                    soSao4++;
-                                } else if (baiDanhGia.soSao == 5) {
-                                    soSao5++;
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        Tour currentTour = dataSnapshot.getValue(Tour.class);
+                        if(currentTour.idTour.equals(tour.idTour)) {
+                            tenTour.setText(currentTour.tenTour);
+                            String formattedPrice = formatPrice(String.valueOf(currentTour.giaTien));
+                            giaTour.setText(String.format("Giá: %s", formattedPrice));
+                            tbSao.setText(String.format("%.1f", currentTour.soSao));
+                            soBinhLuan.setText(String.format("%d bình luận", currentTour.soBinhLuan));
+                            gioiThieu.setText(currentTour.gioiThieu);
+                            thoiGian.setText(String.format("Thời gian: %s - %s", currentTour.ngayKhoiHanh, currentTour.ngayKetThuc));
+                            phuongTien.setText(String.format("Phương tiện: %s", currentTour.phuongTien));
+                            soVe.setText(String.format("Số vé còn lại: %d", currentTour.soLuongVe));
+                            bdgRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    int countTong = 0;
+                                    int soSao1 = 0;
+                                    int soSao2 = 0;
+                                    int soSao3 = 0;
+                                    int soSao4 = 0;
+                                    int soSao5 = 0;
+                                    if (dataSnapshot.exists()) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
+                                            if (baiDanhGia.idTour.equals(currentTour.idTour)) {
+                                                baiDanhGias.add(baiDanhGia);
+                                                if (baiDanhGia.soSao != 0) {
+                                                    countTong++;
+                                                    if (baiDanhGia.soSao == 1) {
+                                                        soSao1++;
+                                                    } else if (baiDanhGia.soSao == 2) {
+                                                        soSao2++;
+                                                    } else if (baiDanhGia.soSao == 3) {
+                                                        soSao3++;
+                                                    } else if (baiDanhGia.soSao == 4) {
+                                                        soSao4++;
+                                                    } else if (baiDanhGia.soSao == 5) {
+                                                        soSao5++;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (countTong != 0) {
+                                            DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
+                                            lvBinhLuan.setAdapter(danhGiaAdapter);
+                                            sao1.setProgress((soSao1 / countTong) * 100);
+                                            sao2.setProgress((soSao2 / countTong) * 100);
+                                            sao3.setProgress((soSao3 / countTong) * 100);
+                                            sao4.setProgress((soSao4 * countTong) * 100);
+                                            sao5.setProgress((soSao5 / countTong) * 100);
+                                        } else {
+                                            sao1.setProgress(0);
+                                            sao2.setProgress(0);
+                                            sao3.setProgress(0);
+                                            sao4.setProgress(0);
+                                            sao5.setProgress(0);
+                                        }
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                            }
+
+                                @Override
+                                public void onCancelled(DatabaseError error) {
+                                    Toast.makeText(ThongTinDatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
-                    if(countTong!=0) {
-                        DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
-                        lvBinhLuan.setAdapter(danhGiaAdapter);
-                        sao1.setProgress((soSao1 / countTong) * 100);
-                        sao2.setProgress((soSao2 / countTong) * 100);
-                        sao3.setProgress((soSao3 / countTong) * 100);
-                        sao4.setProgress((soSao4 * countTong) * 100);
-                        sao5.setProgress((soSao5 / countTong) * 100);
-                    }else{
-                        sao1.setProgress(0);
-                        sao2.setProgress(0);
-                        sao3.setProgress(0);
-                        sao4.setProgress(0);
-                        sao5.setProgress(0);
-                    }
-                    progressBar.setVisibility(View.INVISIBLE);
-                }else{
-                    Toast.makeText(ThongTinDatVe.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(ThongTinDatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private String formatPrice(String price) {

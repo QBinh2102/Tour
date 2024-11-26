@@ -122,7 +122,7 @@ public class ChiTietDatVe extends AppCompatActivity {
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 String idUser = User.getUid();
                 String idTour = tour.idTour;
-                String idBDG = auth.getUid();
+                String idBDG = auth.getUid() + System.currentTimeMillis();
                 int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
                 int giaVe = Integer.parseInt(tour.giaTien);
                 int tongTien = giaVe * soVeDat;
@@ -132,10 +132,10 @@ public class ChiTietDatVe extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(ChiTietDatVe.this,"Đặt vé thành công",Toast.LENGTH_SHORT).show();
-                        DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
-                        tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe-soVeDat);
                         Intent datVe = new Intent(ChiTietDatVe.this,DatVe.class);
                         startActivity(datVe);
+                        DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
+                        tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe-soVeDat);
                     }
                 });
             }

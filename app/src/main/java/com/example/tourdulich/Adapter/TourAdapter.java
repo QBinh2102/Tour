@@ -59,7 +59,11 @@ public class TourAdapter extends BaseAdapter {
         TextView txtPhuongTien = (TextView) convertView.findViewById(R.id.textViewPhuongTien);
         TextView txtNgayKhoiHanh = (TextView) convertView.findViewById(R.id.textViewNgayKhoiHanh);
         TextView txtGia = (TextView) convertView.findViewById(R.id.textViewGiaTour);
-        TextView txtSoSao = (TextView) convertView.findViewById(R.id.textViewSoSao);
+        ImageView sao1 = (ImageView) convertView.findViewById(R.id.imageViewSao1TourItem);
+        ImageView sao2 = (ImageView) convertView.findViewById(R.id.imageViewSao2TourItem);
+        ImageView sao3 = (ImageView) convertView.findViewById(R.id.imageViewSao3TourItem);
+        ImageView sao4 = (ImageView) convertView.findViewById(R.id.imageViewSao4TourItem);
+        ImageView sao5 = (ImageView) convertView.findViewById(R.id.imageViewSao5TourItem);
         TextView txtSoBinhLuan = (TextView) convertView.findViewById(R.id.textViewSoBinhLuan);
 
         Tour tour = tourList.get(position);
@@ -75,9 +79,74 @@ public class TourAdapter extends BaseAdapter {
 //        double soSao = soSaoList.stream().filter(sosao->sosao.tenTour.equals(tour.tenTour)).mapToDouble(value -> value.soSao).sum();
 //        int tongSao = (int) soSaoList.stream().filter(sosao->sosao.tenTour.equals(tour.tenTour)).count();
 //        String sao = String.valueOf((double) (soSao/tongSao));
-        txtSoSao.setText(String.format("%.2f/5 sao",tour.soSao));
-//        int binhLuan = (int) binhLuanList.stream().filter(binhluan->binhluan.tenTour.equals(tour.tenTour)).count();
-//        String countBL = String.valueOf(binhLuan);
+        double soSao = tour.soSao;
+        if(soSao==0){
+            sao1.setImageResource(R.drawable.star_border_24);
+            sao2.setImageResource(R.drawable.star_border_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao>0&&soSao<1) {
+            sao1.setImageResource(R.drawable.star_half_24);
+            sao2.setImageResource(R.drawable.star_border_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao==1) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_border_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao>1&&soSao<2) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_half_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        }else if (soSao==2) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao>2&&soSao<3) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_half_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao==3) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao>3&&soSao<4) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_half_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao==4) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (soSao>4&&soSao<5) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_24);
+            sao5.setImageResource(R.drawable.star_half_24);
+        } else if (soSao==5) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_24);
+            sao5.setImageResource(R.drawable.star_24);
+        }
         txtSoBinhLuan.setText(String.format("%d bình luận", tour.soBinhLuan));
 
         return convertView;

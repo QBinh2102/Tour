@@ -66,13 +66,16 @@ public class DanhGiaAdapter extends BaseAdapter {
 
         ImageView imgHDD = convertView.findViewById(R.id.imageViewHinhUserBDG);
         TextView txtTen = convertView.findViewById(R.id.textViewTenUserBDG);
-        TextView txtSoSao = convertView.findViewById(R.id.textViewSoSaoBDG);
+        ImageView sao1 = convertView.findViewById(R.id.imageView1Sao);
+        ImageView sao2 = convertView.findViewById(R.id.imageView2Sao);
+        ImageView sao3 = convertView.findViewById(R.id.imageView3Sao);
+        ImageView sao4 = convertView.findViewById(R.id.imageView4Sao);
+        ImageView sao5 = convertView.findViewById(R.id.imageView5Sao);
         TextView txtThoiGian = convertView.findViewById(R.id.textViewThoiGianBDG);
         TextView txtNoiDung = convertView.findViewById(R.id.textViewNoiDungBDG);
 
         BaiDanhGia baiDanhGia = baiDanhGias.get(position);
         String idUser = baiDanhGia.idUser;
-//        //firebaseUser.getDisplayName();
         userRef.child(idUser).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -88,7 +91,37 @@ public class DanhGiaAdapter extends BaseAdapter {
                 //
             }
         });
-        txtSoSao.setText(String.format(baiDanhGia.soSao+" sao"));
+        if(baiDanhGia.soSao==1){
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_border_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (baiDanhGia.soSao==2) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_border_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (baiDanhGia.soSao==3) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_border_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (baiDanhGia.soSao==4) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_24);
+            sao5.setImageResource(R.drawable.star_border_24);
+        } else if (baiDanhGia.soSao==5) {
+            sao1.setImageResource(R.drawable.star_24);
+            sao2.setImageResource(R.drawable.star_24);
+            sao3.setImageResource(R.drawable.star_24);
+            sao4.setImageResource(R.drawable.star_24);
+            sao5.setImageResource(R.drawable.star_24);
+        }
         txtNoiDung.setText(baiDanhGia.binhLuan);
         txtThoiGian.setText(baiDanhGia.thoiGian);
 

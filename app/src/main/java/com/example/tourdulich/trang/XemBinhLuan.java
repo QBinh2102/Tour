@@ -2,6 +2,7 @@ package com.example.tourdulich.trang;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -33,11 +34,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class XemBinhLuan extends AppCompatActivity {
 
     private Button btnQuayLai;
+    private Button btnXoaDanhGia;
+    private Button btnDangDanhGia;
     private ImageView imgHinh;
     private TextView txtTen;
     private ImageView sao1;
@@ -52,7 +57,9 @@ public class XemBinhLuan extends AppCompatActivity {
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private DatabaseReference bdgRef = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
+    private DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
 
+    private String idBaiDanhGiaCaNhan;
 
 
     @Override
@@ -67,6 +74,8 @@ public class XemBinhLuan extends AppCompatActivity {
         });
 
         btnQuayLai = findViewById(R.id.btQuayLaiTuDanhGia);
+        btnXoaDanhGia = findViewById(R.id.btXoaDanhGia);
+        btnDangDanhGia = findViewById(R.id.btDangDanhGia);
         imgHinh = findViewById(R.id.imageViewHinhUserDG);
         txtTen = findViewById(R.id.textViewTenUserDG);
         sao1 = findViewById(R.id.imageViewSao1);
@@ -89,7 +98,41 @@ public class XemBinhLuan extends AppCompatActivity {
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(XemBinhLuan.this,ThongTinDatVe.class);
+                bdgRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            int tongSao = 0;
+                            int luongSao = 0;
+                            int soBinhLuan = 0;
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
+                                if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.soSao != 0) {
+                                    tongSao += baiDanhGia.soSao;
+                                    luongSao++;
+                                    if (baiDanhGia.binhLuan != "") {
+                                        soBinhLuan++;
+                                    }
+                                }
+                            }
+                            double tongSoSao = Double.parseDouble(String.valueOf(tongSao));
+                            double soLuongSao = Double.parseDouble(String.valueOf(luongSao));
+                            if(soLuongSao!=0) {
+                                double tbSao = tongSoSao / soLuongSao;
+                                tourRef.child(tour.idTour).child("soSao").setValue(tbSao);
+                            }else
+                                tourRef.child(tour.idTour).child("soSao").setValue(0);
+                            tourRef.child(tour.idTour).child("soBinhLuan").setValue(soBinhLuan);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                Intent intent = new Intent(XemBinhLuan.this, ThongTinDatVe.class);
                 intent.putExtra("tour_item",tour);
                 startActivity(intent);
             }
@@ -105,6 +148,10 @@ public class XemBinhLuan extends AppCompatActivity {
                 sao4.setImageResource(R.drawable.star_border_24);
                 sao5.setImageResource(R.drawable.star_border_24);
                 soSao = 1;
+                btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnXoaDanhGia.setClickable(true);
+                btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnDangDanhGia.setClickable(true);
             }
         });
         sao2.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +163,10 @@ public class XemBinhLuan extends AppCompatActivity {
                 sao4.setImageResource(R.drawable.star_border_24);
                 sao5.setImageResource(R.drawable.star_border_24);
                 soSao = 2;
+                btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnXoaDanhGia.setClickable(true);
+                btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnDangDanhGia.setClickable(true);
             }
         });
         sao3.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +178,10 @@ public class XemBinhLuan extends AppCompatActivity {
                 sao4.setImageResource(R.drawable.star_border_24);
                 sao5.setImageResource(R.drawable.star_border_24);
                 soSao = 3;
+                btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnXoaDanhGia.setClickable(true);
+                btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnDangDanhGia.setClickable(true);
             }
         });
         sao4.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +193,10 @@ public class XemBinhLuan extends AppCompatActivity {
                 sao4.setImageResource(R.drawable.star_24);
                 sao5.setImageResource(R.drawable.star_border_24);
                 soSao = 4;
+                btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnXoaDanhGia.setClickable(true);
+                btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnDangDanhGia.setClickable(true);
             }
         });
         sao5.setOnClickListener(new View.OnClickListener() {
@@ -149,9 +208,51 @@ public class XemBinhLuan extends AppCompatActivity {
                 sao4.setImageResource(R.drawable.star_24);
                 sao5.setImageResource(R.drawable.star_24);
                 soSao = 5;
+                btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnXoaDanhGia.setClickable(true);
+                btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                btnDangDanhGia.setClickable(true);
             }
         });
 
+        //Xóa bình luận cá nhân
+        btnXoaDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sao1.setImageResource(R.drawable.star_border_24);
+                sao2.setImageResource(R.drawable.star_border_24);
+                sao3.setImageResource(R.drawable.star_border_24);
+                sao4.setImageResource(R.drawable.star_border_24);
+                sao5.setImageResource(R.drawable.star_border_24);
+                noiDung.setText("");
+                btnXoaDanhGia.setTextColor(Color.parseColor("#9AADBD"));
+                btnXoaDanhGia.setClickable(false);
+                btnDangDanhGia.setTextColor(Color.parseColor("#9AADBD"));
+                btnDangDanhGia.setClickable(false);
+                soSao = 0;
+                bdgRef.child(idBaiDanhGiaCaNhan).child("soSao").setValue(0);
+                bdgRef.child(idBaiDanhGiaCaNhan).child("binhLuan").setValue("");
+                bdgRef.child(idBaiDanhGiaCaNhan).child("thoiGian").setValue("");
+            }
+        });
+        btnXoaDanhGia.setClickable(false);
+
+        btnDangDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bdgRef.child(idBaiDanhGiaCaNhan).child("soSao").setValue(soSao);
+                String binhLuan = String.valueOf(noiDung.getText());
+                bdgRef.child(idBaiDanhGiaCaNhan).child("binhLuan").setValue(binhLuan);
+                Calendar calendar = Calendar.getInstance();
+                String dd = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+                String MM = String.valueOf(calendar.get(Calendar.MONTH)+1);
+                String yyyy = String.valueOf(calendar.get(Calendar.YEAR));
+                String format = String.format("%s/%s/%s",dd,MM,yyyy);
+                bdgRef.child(idBaiDanhGiaCaNhan).child("thoiGian").setValue(format);
+                Toast.makeText(XemBinhLuan.this, "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnDangDanhGia.setClickable(false);
 
     }
 
@@ -175,48 +276,69 @@ public class XemBinhLuan extends AppCompatActivity {
                 bdgRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()){
-                            for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
-                                if(baiDanhGia.idTour.equals(tour.idTour)&&baiDanhGia.idUser.equals(user.id)){
-                                    if(baiDanhGia.soSao==1){
+                                if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(user.id)) {
+                                    idBaiDanhGiaCaNhan = baiDanhGia.idBaiDanhGia;
+                                    if (baiDanhGia.soSao == 1) {
                                         sao1.setImageResource(R.drawable.star_24);
                                         sao2.setImageResource(R.drawable.star_border_24);
                                         sao3.setImageResource(R.drawable.star_border_24);
                                         sao4.setImageResource(R.drawable.star_border_24);
                                         sao5.setImageResource(R.drawable.star_border_24);
                                         soSao = 1;
-                                    } else if (baiDanhGia.soSao==2) {
+                                        btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnXoaDanhGia.setClickable(true);
+                                        btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnDangDanhGia.setClickable(true);
+                                    } else if (baiDanhGia.soSao == 2) {
                                         sao1.setImageResource(R.drawable.star_24);
                                         sao2.setImageResource(R.drawable.star_24);
                                         sao3.setImageResource(R.drawable.star_border_24);
                                         sao4.setImageResource(R.drawable.star_border_24);
                                         sao5.setImageResource(R.drawable.star_border_24);
                                         soSao = 2;
-                                    } else if (baiDanhGia.soSao==3) {
+                                        btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnXoaDanhGia.setClickable(true);
+                                        btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnDangDanhGia.setClickable(true);
+                                    } else if (baiDanhGia.soSao == 3) {
                                         sao1.setImageResource(R.drawable.star_24);
                                         sao2.setImageResource(R.drawable.star_24);
                                         sao3.setImageResource(R.drawable.star_24);
                                         sao4.setImageResource(R.drawable.star_border_24);
                                         sao5.setImageResource(R.drawable.star_border_24);
                                         soSao = 3;
-                                    } else if (baiDanhGia.soSao==4) {
+                                        btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnXoaDanhGia.setClickable(true);
+                                        btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnDangDanhGia.setClickable(true);
+                                    } else if (baiDanhGia.soSao == 4) {
                                         sao1.setImageResource(R.drawable.star_24);
                                         sao2.setImageResource(R.drawable.star_24);
                                         sao3.setImageResource(R.drawable.star_24);
                                         sao4.setImageResource(R.drawable.star_24);
                                         sao5.setImageResource(R.drawable.star_border_24);
                                         soSao = 4;
-                                    } else if (baiDanhGia.soSao==5) {
+                                        btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnXoaDanhGia.setClickable(true);
+                                        btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnDangDanhGia.setClickable(true);
+                                    } else if (baiDanhGia.soSao == 5) {
                                         sao1.setImageResource(R.drawable.star_24);
                                         sao2.setImageResource(R.drawable.star_24);
                                         sao3.setImageResource(R.drawable.star_24);
                                         sao4.setImageResource(R.drawable.star_24);
                                         sao5.setImageResource(R.drawable.star_24);
                                         soSao = 5;
+                                        btnXoaDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnXoaDanhGia.setClickable(true);
+                                        btnDangDanhGia.setTextColor(Color.parseColor("#FFFFFFFF"));
+                                        btnDangDanhGia.setClickable(true);
                                     }
 
-                                    if(baiDanhGia.binhLuan!=""){
+                                    if (baiDanhGia.binhLuan != "") {
                                         noiDung.setText(baiDanhGia.binhLuan);
                                     }
                                 }
@@ -246,10 +368,10 @@ public class XemBinhLuan extends AppCompatActivity {
         bdgRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
-                        if(!baiDanhGia.idUser.equals(userID)&&baiDanhGia.idTour.equals(tour.idTour)){
+                        if (!baiDanhGia.idUser.equals(userID) && baiDanhGia.idTour.equals(tour.idTour)) {
                             baiDanhGias.add(baiDanhGia);
                         }
                     }
