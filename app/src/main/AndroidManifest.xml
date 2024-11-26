@@ -18,6 +18,12 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
+            android:name=".trang.XemBinhLuanChuaDangNhap"
+            android:exported="false" />
+        <activity
+            android:name=".trang.XemBinhLuan"
+            android:exported="false" />
+        <activity
             android:name=".trang.ChiTietDatVe"
             android:exported="false" />
         <activity

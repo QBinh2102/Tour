@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -50,6 +51,7 @@ public class ThongTinDatVe extends AppCompatActivity {
     private TextView soVe;
     private TextView tbSao;
     private Button btnDatVe;
+    private Button btnXemBinhLuan;
     private ListView lvBinhLuan;
     private ProgressBar sao1;
     private ProgressBar sao2;
@@ -67,7 +69,7 @@ public class ThongTinDatVe extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
+    private DatabaseReference bdgRef = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
 
 
     @Override
@@ -93,6 +95,7 @@ public class ThongTinDatVe extends AppCompatActivity {
         phuongTien = findViewById(R.id.textViewTTPhuongTien);
         soVe = findViewById(R.id.textViewTTSoVe);
         btnDatVe = findViewById(R.id.btDatVe);
+        btnXemBinhLuan = findViewById(R.id.btXemTatCaBinhLuan);
         tbSao = findViewById(R.id.textViewTTTrungBinhSao);
         sao1 = findViewById(R.id.progressBar1Sao);
         sao2 = findViewById(R.id.progressBar2Sao);
@@ -132,6 +135,47 @@ public class ThongTinDatVe extends AppCompatActivity {
                     startActivity(ctdv);
                 }else{
                     Toast.makeText(ThongTinDatVe.this,"Bạn cần đăng nhập trước khi đặt vé!!!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //Xem tất cả bình luận
+        btnXemBinhLuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Chưa đăng nhập
+                if(firebaseUser==null){
+                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
+                    xbl.putExtra("tour", tour);
+                    startActivity(xbl);
+                }else {
+                    //Đã đăng nhập
+                    bdgRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
+                                    //Đã đặt vé
+                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(firebaseUser.getUid())) {
+                                        Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
+                                        xbl.putExtra("tour", tour);
+                                        startActivity(xbl);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(ThongTinDatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    //Chưa đặt vé
+                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
+                    xbl.putExtra("tour", tour);
+                    startActivity(xbl);
                 }
             }
         });
@@ -180,7 +224,7 @@ public class ThongTinDatVe extends AppCompatActivity {
         thoiGian.setText(String.format("Thời gian: %s - %s", tour.ngayKhoiHanh,tour.ngayKetThuc));
         phuongTien.setText(String.format("Phương tiện: %s", tour.phuongTien));
         soVe.setText(String.format("Số vé còn lại: %d",tour.soLuongVe));
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        bdgRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int countTong = 0;
@@ -194,7 +238,6 @@ public class ThongTinDatVe extends AppCompatActivity {
                         BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
                         if(baiDanhGia.idTour.equals(tour.idTour)){
                             baiDanhGias.add(baiDanhGia);
-
                             if(baiDanhGia.soSao!=0){
                                 countTong++;
                                 if(baiDanhGia.soSao == 1){
@@ -211,16 +254,24 @@ public class ThongTinDatVe extends AppCompatActivity {
                             }
                         }
                     }
-                    DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
-                    lvBinhLuan.setAdapter(danhGiaAdapter);
-                    sao1.setProgress((soSao1/countTong)*100);
-                    sao2.setProgress((soSao2/countTong)*100);
-                    sao3.setProgress((soSao3/countTong)*100);
-                    sao4.setProgress((soSao4*countTong)*100);
-                    sao5.setProgress((soSao5/countTong)*100);
+                    if(countTong!=0) {
+                        DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
+                        lvBinhLuan.setAdapter(danhGiaAdapter);
+                        sao1.setProgress((soSao1 / countTong) * 100);
+                        sao2.setProgress((soSao2 / countTong) * 100);
+                        sao3.setProgress((soSao3 / countTong) * 100);
+                        sao4.setProgress((soSao4 * countTong) * 100);
+                        sao5.setProgress((soSao5 / countTong) * 100);
+                    }else{
+                        sao1.setProgress(0);
+                        sao2.setProgress(0);
+                        sao3.setProgress(0);
+                        sao4.setProgress(0);
+                        sao5.setProgress(0);
+                    }
                     progressBar.setVisibility(View.INVISIBLE);
-                } else {
-                    Toast.makeText(ThongTinDatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(ThongTinDatVe.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
                 }
             }
 
