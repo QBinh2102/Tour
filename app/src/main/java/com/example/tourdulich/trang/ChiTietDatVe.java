@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,8 +23,11 @@ import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -43,6 +47,7 @@ public class ChiTietDatVe extends AppCompatActivity {
     private ImageView imgTour;
     private ImageView btnGiamSoVe;
     private ImageView btnTangSoVe;
+
 
     private FirebaseStorage storage;
     private StorageReference storageRef;
@@ -78,7 +83,7 @@ public class ChiTietDatVe extends AppCompatActivity {
         showThongTinTour(tour);
 
         Intent ql = new Intent(this, ThongTinDatVe.class);
-        ql.putExtra("tour_item",tour);
+        ql.putExtra("tour_item", tour);
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +95,7 @@ public class ChiTietDatVe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int currentQuantity = Integer.parseInt(txtSoLuongVeDat.getText().toString());
-                if(currentQuantity!=1) {
+                if (currentQuantity != 1) {
                     int newQuantity = currentQuantity - 1;
                     txtSoLuongVeDat.setText(String.valueOf(newQuantity));
                     int giaVe = Integer.parseInt(tour.giaTien);
@@ -105,7 +110,7 @@ public class ChiTietDatVe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int currentQuantity = Integer.parseInt(txtSoLuongVeDat.getText().toString());
-                if(currentQuantity<tour.soLuongVe) {
+                if (currentQuantity < tour.soLuongVe) {
                     int newQuantity = currentQuantity + 1;
                     txtSoLuongVeDat.setText(String.valueOf(newQuantity));
                     int giaVe = Integer.parseInt(tour.giaTien);
@@ -119,25 +124,56 @@ public class ChiTietDatVe extends AppCompatActivity {
         btnThanhToan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                String idUser = User.getUid();
-                String idTour = tour.idTour;
-                String idBDG = auth.getUid() + System.currentTimeMillis();
-                int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
-                int giaVe = Integer.parseInt(tour.giaTien);
-                int tongTien = giaVe * soVeDat;
-                BaiDanhGia baiDanhGia = new BaiDanhGia(idBDG, idUser, idTour, soVeDat, tongTien);
+//                final int[] flag = {0};
+//                DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
+//                refDuLieu.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                            BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
+//                            if (tmp.idUser.equals(User.getUid()) && tmp.idTour.equals(tour.idTour)) {
+//                                flag[0] = 1;
+//                                int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
+//                                int giaVe = Integer.parseInt(tour.giaTien);
+//                                int tongTien = giaVe * soVeDat;
+//                                refDuLieu.child(tmp.idBaiDanhGia).child("soVe").setValue(tmp.soVe + soVeDat);
+//                                refDuLieu.child(tmp.idBaiDanhGia).child("tongTien").setValue(tmp.tongTien + tongTien);
+//                                Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
+//                                Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
+//                                startActivity(datVe);
+//                                DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
+//                                tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+//                            }
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Toast.makeText(ChiTietDatVe.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                if (flag[0]==0) {
                 DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
-                refDuLieu.child(idBDG).setValue(baiDanhGia).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(ChiTietDatVe.this,"Đặt vé thành công",Toast.LENGTH_SHORT).show();
-                        Intent datVe = new Intent(ChiTietDatVe.this,DatVe.class);
-                        startActivity(datVe);
-                        DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
-                        tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe-soVeDat);
-                    }
-                });
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    String idUser = User.getUid();
+                    String idTour = tour.idTour;
+                    String idBDG = auth.getUid() + System.currentTimeMillis();
+                    int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
+                    int giaVe = Integer.parseInt(tour.giaTien);
+                    int tongTien = giaVe * soVeDat;
+                    BaiDanhGia baiDanhGia = new BaiDanhGia(idBDG, idUser, idTour, soVeDat, tongTien);
+                    refDuLieu.child(idBDG).setValue(baiDanhGia).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
+                            Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
+                            startActivity(datVe);
+                            DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
+                            tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                        }
+                    });
+//                }
             }
         });
     }
@@ -145,8 +181,8 @@ public class ChiTietDatVe extends AppCompatActivity {
     private void showThongTinTour(Tour tour) {
         Uri uri = Uri.parse(tour.hinhTour);
         Glide.with(ChiTietDatVe.this)
-                        .load(uri)
-                                .into(imgTour);
+                .load(uri)
+                .into(imgTour);
         txtTen.setText(tour.tenTour);
         txtGia.setText(tour.giaTien);
         txtNgayKhoiHanh.setText(tour.ngayKhoiHanh);

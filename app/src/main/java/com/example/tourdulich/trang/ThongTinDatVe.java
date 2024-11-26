@@ -267,13 +267,13 @@ public class ThongTinDatVe extends AppCompatActivity {
                                             }
                                         }
                                         if (countTong != 0) {
-                                            DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, 3);
+                                            DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(ThongTinDatVe.this, baiDanhGias, baiDanhGias.size());
                                             lvBinhLuan.setAdapter(danhGiaAdapter);
-                                            sao1.setProgress((soSao1 / countTong) * 100);
-                                            sao2.setProgress((soSao2 / countTong) * 100);
-                                            sao3.setProgress((soSao3 / countTong) * 100);
-                                            sao4.setProgress((soSao4 * countTong) * 100);
-                                            sao5.setProgress((soSao5 / countTong) * 100);
+                                            sao1.setProgress((soSao1*100) / countTong);
+                                            sao2.setProgress((soSao2*100) / countTong);
+                                            sao3.setProgress((soSao3*100) / countTong);
+                                            sao4.setProgress((soSao4*100) / countTong);
+                                            sao5.setProgress((soSao5*100) / countTong);
                                         } else {
                                             sao1.setProgress(0);
                                             sao2.setProgress(0);
