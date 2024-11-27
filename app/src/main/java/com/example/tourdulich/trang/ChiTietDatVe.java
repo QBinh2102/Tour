@@ -48,6 +48,10 @@ public class ChiTietDatVe extends AppCompatActivity {
     private ImageView btnGiamSoVe;
     private ImageView btnTangSoVe;
 
+    DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
+
+    //Kiểm tra bài đánh giá đã tồn tại
+    boolean flag = false;
 
     private FirebaseStorage storage;
     private StorageReference storageRef;
@@ -124,56 +128,55 @@ public class ChiTietDatVe extends AppCompatActivity {
         btnThanhToan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final int[] flag = {0};
-//                DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
-//                refDuLieu.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                            BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
-//                            if (tmp.idUser.equals(User.getUid()) && tmp.idTour.equals(tour.idTour)) {
-//                                flag[0] = 1;
-//                                int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
-//                                int giaVe = Integer.parseInt(tour.giaTien);
-//                                int tongTien = giaVe * soVeDat;
-//                                refDuLieu.child(tmp.idBaiDanhGia).child("soVe").setValue(tmp.soVe + soVeDat);
-//                                refDuLieu.child(tmp.idBaiDanhGia).child("tongTien").setValue(tmp.tongTien + tongTien);
-//                                Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
-//                                Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
-//                                startActivity(datVe);
-//                                DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
-//                                tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
-//                            }
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        Toast.makeText(ChiTietDatVe.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                if (flag[0]==0) {
-                DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    String idUser = User.getUid();
-                    String idTour = tour.idTour;
-                    String idBDG = auth.getUid() + System.currentTimeMillis();
-                    int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
-                    int giaVe = Integer.parseInt(tour.giaTien);
-                    int tongTien = giaVe * soVeDat;
-                    BaiDanhGia baiDanhGia = new BaiDanhGia(idBDG, idUser, idTour, soVeDat, tongTien);
-                    refDuLieu.child(idBDG).setValue(baiDanhGia).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
-                            Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
-                            startActivity(datVe);
-                            DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
-                            tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                refDuLieu.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
+                            if (tmp.idTour.equals(tour.idTour)) {
+                                if(tmp.idUser.equals(User.getUid())) {
+                                    flag = true;
+                                    int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
+                                    int giaVe = Integer.parseInt(tour.giaTien);
+                                    int tongTien = giaVe * soVeDat;
+                                    DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
+                                    tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                                    refDuLieu.child(tmp.idBaiDanhGia).child("soVe").setValue(tmp.soVe + soVeDat);
+                                    refDuLieu.child(tmp.idBaiDanhGia).child("tongTien").setValue(tmp.tongTien + tongTien);
+                                    Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
+                                    Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
+                                    startActivity(datVe);
+                                    break;
+                                }
+                            }
                         }
-                    });
-//                }
+                        if (!flag) {
+                            FirebaseAuth auth = FirebaseAuth.getInstance();
+                            String idUser = User.getUid();
+                            String idTour = tour.idTour;
+                            String idBDG = auth.getUid() + System.currentTimeMillis();
+                            int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
+                            int giaVe = Integer.parseInt(tour.giaTien);
+                            int tongTien = giaVe * soVeDat;
+                            BaiDanhGia baiDanhGia = new BaiDanhGia(idBDG, idUser, idTour, soVeDat, tongTien);
+                            refDuLieu.child(idBDG).setValue(baiDanhGia).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
+                                    tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                                    Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
+                                    Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
+                                    startActivity(datVe);
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(ChiTietDatVe.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
