@@ -4,12 +4,18 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TrangChuAdmin extends AppCompatActivity {
     private TextView lbWelcome;
@@ -49,10 +57,13 @@ public class TrangChuAdmin extends AppCompatActivity {
     private Uri selectedImageUri; // Dùng để lưu trữ URI của ảnh được chọn
     private LinearLayout danhMucContainer;
     ArrayList<ImageView> danhMucList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trang_chu_admin);
+
+        loadDanhMuc();
 
         ImageView imgViewMayBay = findViewById(R.id.imgVMayBay);
         ImageView imgViewTauThuy = findViewById(R.id.imgVTauThuy);
@@ -60,7 +71,6 @@ public class TrangChuAdmin extends AppCompatActivity {
         ImageView imgViewBien = findViewById(R.id.imgVBien);
         ImageView imgViewDao = findViewById(R.id.imgVDao);
         ImageView imgViewRung = findViewById(R.id.imgVRung);
-
 
         // Gọi hàm suaDanhMuc khi người dùng click vào bất kỳ ImageView nào
         imgViewMayBay.setOnClickListener(v -> suaDanhMuc(imgViewMayBay));
@@ -78,6 +88,7 @@ public class TrangChuAdmin extends AppCompatActivity {
                     }
                 }
         );
+
         // Kiểm tra trạng thái đăng nhập khi mở trang
         if (firebaseUser == null) {
             Intent intent = new Intent(TrangChuAdmin.this, ThongTinChuaDangNhap.class);
@@ -95,7 +106,6 @@ public class TrangChuAdmin extends AppCompatActivity {
             // Mở trang chủ User
             setContentView(R.layout.activity_trang_chu);
         }
-
         // Hiển thị thông tin người dùng
         lbWelcome = findViewById(R.id.textViewWelcome);
         hoTen = firebaseUser.getDisplayName();
@@ -161,27 +171,122 @@ public class TrangChuAdmin extends AppCompatActivity {
             });
             btnXoa.setOnClickListener(v -> {
                 // Xử lý xóa danh mục
-                ImageView imageView = (ImageView) v; // Lấy ImageView từ view bấm vào (v)
-                xoaDanhMuc(imageView);
-                dialog.dismiss();
+                    xoaDanhMuc();
+               // dialog.dismiss();
             });
             // Hiển thị dialog
             dialog.show();
         });
     }
-    private void xoaDanhMuc(final ImageView danhMuc) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Xóa danh mục?");
-        builder.setMessage("Bạn có chắc chắn muốn xóa danh mục này?");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadDanhMuc();
+    }
+    private void loadDanhMuc() {
+        LinearLayout container = findViewById(R.id.layoutDanhMuc);
+        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
+        String danhMucList = sharedPreferences.getString("danhMucList", "");
 
+        // Nếu có danh mục đã lưu, chia chuỗi danh mục và thêm vào layout
+        if (!danhMucList.isEmpty()) {
+            String[] categories = danhMucList.split(",");
+            for (String category : categories) {
+                addDanhMucToLayout(category);
+            }
+        }
+    }
+
+
+
+    private List<View> selectedItems = new ArrayList<>();
+
+    private void xoaDanhMuc() {
+        // Tạo một dialog để chọn các danh mục cần xóa
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chọn danh mục cần xóa");
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        // Lưu trữ các item đã chọn
+        Set<View> selectedItems = new HashSet<>();
+
+        // Lấy tất cả danh mục từ layout
+        LinearLayout danhMucLayout = findViewById(R.id.layoutDanhMuc);
+        if (danhMucLayout == null) {
+            Log.e("MainActivity", "layoutDanhMuc not found.");
+            return;
+        }
+
+        int childCount = danhMucLayout.getChildCount();
+        Log.d("MainActivity", "Number of children in layoutDanhMuc: " + childCount);
+
+        // Thêm checkbox cho mỗi danh mục
+        for (int i = 0; i < childCount; i++) {
+            View danhMuc = danhMucLayout.getChildAt(i);
+            if (danhMuc instanceof CardView) {
+                CheckBox checkBox = new CheckBox(this);
+                checkBox.setText(((CardView) danhMuc).getTag().toString());  // Đặt tên danh mục vào checkbox
+
+                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        selectedItems.add(danhMuc);  // Thêm danh mục vào danh sách đã chọn
+                    } else {
+                        selectedItems.remove(danhMuc);  // Xóa danh mục khỏi danh sách
+                    }
+                });
+
+                layout.addView(checkBox);
+            } else {
+                Log.e("MainActivity", "Child is not an instance of CardView.");
+            }
+        }
+
+        builder.setView(layout);
+
+        // Thêm nút "Xóa" và "Hủy"
         builder.setPositiveButton("Xóa", (dialog, which) -> {
-            // Xóa danh mục khỏi layout
-            LinearLayout danhMucLayout = findViewById(R.id.layoutDanhMuc); // Layout chứa các danh mục
-            danhMucLayout.removeView(danhMuc);
+            if (!selectedItems.isEmpty()) {
+                // Hỏi người dùng có chắc chắn muốn xóa không
+                AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(this);
+                confirmBuilder.setTitle("Xóa danh mục?");
+                confirmBuilder.setMessage("Bạn có chắc chắn muốn xóa các danh mục đã chọn?");
+
+                confirmBuilder.setPositiveButton("Xóa", (confirmDialog, confirmWhich) -> {
+                    // Xóa các danh mục đã chọn
+                    try {
+                        for (View item : selectedItems) {
+                            LinearLayout parentLayout = (LinearLayout) item.getParent();
+                            if (parentLayout != null) {
+                                Log.d("MainActivity", "Removing view: " + item.toString());
+                                parentLayout.removeView(item);  // Xóa khỏi layout
+                            } else {
+                                Log.e("MainActivity", "Parent layout is null.");
+                            }
+                        }
+                        selectedItems.clear();  // Xóa danh sách đã chọn
+                        Toast.makeText(this, "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.e("MainActivity", "Error removing views: " + e.getMessage(), e);
+                    }
+                    confirmDialog.dismiss(); // Đóng dialog xác nhận xóa
+                });
+
+                confirmBuilder.setNegativeButton("Hủy", (confirmDialog, confirmWhich) -> {
+                    confirmDialog.dismiss(); // Đóng dialog xác nhận xóa nếu hủy
+                });
+                confirmBuilder.show();
+            } else {
+                Toast.makeText(this, "Vui lòng chọn danh mục để xóa", Toast.LENGTH_SHORT).show();
+            }
         });
-        builder.setNegativeButton("Hủy", null);
+        builder.setNegativeButton("Hủy", (dialog, which) -> {
+            dialog.dismiss(); // Đóng dialog nếu hủy
+        });
         builder.show();
     }
+
 
 
     private static final int PICK_IMAGE_REQUEST = 1;  // Mã yêu cầu để chọn ảnh
@@ -219,6 +324,7 @@ public class TrangChuAdmin extends AppCompatActivity {
         builder.setNegativeButton("Hủy", null);
         builder.show();
     }
+
     // Hàm chọn ảnh
     private void chonHinhAnh(Consumer<Uri> callback) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -226,6 +332,7 @@ public class TrangChuAdmin extends AppCompatActivity {
         // Kết quả xử lý
         imagePickerCallback = callback;
     }
+
     // Callback ảnh
     private Consumer<Uri> imagePickerCallback;
 
@@ -239,7 +346,6 @@ public class TrangChuAdmin extends AppCompatActivity {
     }
 
 
-
     private void themDanhMuc() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Thêm danh mục mới");
@@ -251,35 +357,85 @@ public class TrangChuAdmin extends AppCompatActivity {
         layout.addView(editText);
 
         builder.setView(layout);
+
         builder.setPositiveButton("Thêm", (dialog, which) -> {
             String newCategory = editText.getText().toString().trim();
             if (!newCategory.isEmpty()) {
-                // Tạo một ImageView mới (hoặc CardView) để đại diện cho danh mục
-                ImageView newImageView = new ImageView(this);
-                newImageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                newImageView.setImageResource(R.drawable.danh_muc_mac_dinh); // Đặt icon mặc định mỗi khi thêm mới
+                SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                // Thêm ImageView vào danhMucList
-                danhMucList.add(newImageView);
+                String danhMucList = sharedPreferences.getString("danhMucList", "");
+                danhMucList = danhMucList + (danhMucList.isEmpty() ? "" : ",") + newCategory;
 
-                // Thêm ImageView vào giao diện
-                LinearLayout danhMucLayout = findViewById(R.id.layoutDanhMuc); // Đảm bảo bạn có layout để chứa danh mục
-                danhMucLayout.addView(newImageView);
+                editor.putString("danhMucList", danhMucList);
+                editor.apply();
+
+                addDanhMucToLayout(newCategory);
             } else {
                 Toast.makeText(this, "Vui lòng nhập tên danh mục!", Toast.LENGTH_SHORT).show();
             }
         });
+
         builder.setNegativeButton("Hủy", null);
         builder.show();
     }
 
+    private void addDanhMucToLayout(String danhMuc) {
+        LinearLayout container = findViewById(R.id.layoutDanhMuc);
+        LinearLayout currentRow = null;
 
+        if (container.getChildCount() == 0 || ((LinearLayout) container.getChildAt(container.getChildCount() - 1)).getChildCount() >= 3) {
+            currentRow = new LinearLayout(this);
+            currentRow.setOrientation(LinearLayout.HORIZONTAL);
+            currentRow.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            currentRow.setPadding(5, 5, 5, 5);
+            container.addView(currentRow);
+        } else {
+            currentRow = (LinearLayout) container.getChildAt(container.getChildCount() - 1);
+        }
 
+        CardView cardView = new CardView(this);
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1.0f
+        );
+        cardParams.setMargins(10, 5, 10, 5); // Tạo không gian giữa các CardView
+        cardView.setLayoutParams(cardParams);
+        cardView.setCardElevation(0);
+        cardView.setRadius(10f);
+        cardView.setPadding(0, 0, 0, 0);
+        cardView.setCardBackgroundColor(Color.WHITE);
 
+        // Sử dụng FrameLayout để dễ dàng căn giữa
+        FrameLayout frameLayout = new FrameLayout(this);
+        FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        );
+        frameLayout.setLayoutParams(frameParams);
 
+        ImageView imageView = new ImageView(this);
+        FrameLayout.LayoutParams imageParams = new FrameLayout.LayoutParams(
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 46, getResources().getDisplayMetrics())
+        );
+        imageParams.gravity = Gravity.CENTER; // Căn giữa icon
+        imageView.setLayoutParams(imageParams);
+        imageView.setImageResource(R.drawable.danh_muc_mac_dinh);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        frameLayout.addView(imageView);
+        cardView.addView(frameLayout);
+
+        currentRow.addView(cardView);
+    }
 
     @Override
-    protected void onStart() {
+        protected void onStart () {
         super.onStart();
         // Kiểm tra lại nếu người dùng chưa đăng nhập, điều hướng về trang đăng nhập
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -289,4 +445,4 @@ public class TrangChuAdmin extends AppCompatActivity {
             finish();
         }
     }
-}
+    }
