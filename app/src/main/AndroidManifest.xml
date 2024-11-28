@@ -9,6 +9,7 @@
 
     <application
         android:allowBackup="true"
+        android:configChanges="locale|keyboard|keyboardHidden"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -16,8 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TourDuLich"
-        android:configChanges="locale|keyboard|keyboardHidden"
         tools:targetApi="31">
+        <activity
+            android:name=".trang.HuyVe"
+            android:exported="false" />
         <activity
             android:name=".trang.XemBinhLuanChuaDangNhap"
             android:exported="false" />

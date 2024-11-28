@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -34,9 +33,6 @@ public class DanhGiaAdapter extends BaseAdapter {
     private int count;
     private LuuThongTinUser user;
     private DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser firebaseUser;
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đăng ký");
 
     public DanhGiaAdapter(Context context, ArrayList<BaiDanhGia> baiDanhGias, int count) {
         this.context = context;

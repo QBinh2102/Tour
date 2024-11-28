@@ -1,12 +1,15 @@
 package com.example.tourdulich.trang;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -29,6 +32,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.tourdulich.CSDL.LuuThongTinUser;
 import com.example.tourdulich.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -37,6 +43,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 import java.util.regex.Matcher;
@@ -54,7 +65,9 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private Uri imageUri;
 
+
     private Uri hinh;
+    String name;
     private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh, email;
     private ImageView imgHinhDaiDien;
     private EditText edtTen;
@@ -216,8 +229,6 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                     String img = String.valueOf(hinh);
                     UpdateUser(img,tenHoSo,email,diaChi,SDT,ngaySinh,gioiTinh);
                 }
-                Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                startActivity(ttcn);
             }
         });
 
@@ -272,16 +283,60 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
     //Cập nhật hồ sơ người dùng
     private void UpdateUser(String hinh, String username, String email, String diaChi, String dienThoai, String ngaySinh, String gioiTinh){
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
-        firebaseUser.updateProfile(profileUpdates);
-        String userID = firebaseUser.getUid();
-        LuuThongTinUser user = new LuuThongTinUser(userID,username,hinh,diaChi,dienThoai,email,ngaySinh,gioiTinh);
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
-        mDatabase.child(userID).setValue(user);
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setTitle("Đang cập nhật...");
+        pd.show();
+
+        FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
+        //Đặt tên hình trên storage
+        name = System.currentTimeMillis()+"."+getFileExtension(Uri.parse(hinh));
+        StorageReference imgRef = reference.getReference().child("imagesUser/"+firebaseUser.getUid()+"/"+name);
+        imgRef.putFile(Uri.parse(hinh)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                pd.dismiss();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                firebaseUser.updateProfile(profileUpdates);
+                String userID = firebaseUser.getUid();
+                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+                        LuuThongTinUser user = new LuuThongTinUser(userID,username,String.valueOf(uri),diaChi,dienThoai,email,ngaySinh,gioiTinh);
+                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
+                        mDatabase.child(userID).setValue(user);
+
+                    }
+                });
+                Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                Intent ttcn = new Intent(ChinhSuaThongTinCaNhan.this, TrangChu.class);
+                startActivity(ttcn);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
+                //
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                pd.setMessage("Progress: " + (int) progressPercent + "%");
+            }
+        });
+
+
 //        mDatabase.child(userID).child("hinhDaiDien").setValue(hinh);
 //        mDatabase.child(userID).child("diaChi").setValue(diaChi);
 //        mDatabase.child(userID).child("gioiTinh").setValue(gioiTinh);
 //        mDatabase.child(userID).child("ngaySinh").setValue(ngaySinh);
 //        mDatabase.child(userID).child("soDienThoai").setValue(dienThoai);
+    }
+
+    private String getFileExtension(Uri mUri){
+        ContentResolver cr = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(mUri));
     }
 }

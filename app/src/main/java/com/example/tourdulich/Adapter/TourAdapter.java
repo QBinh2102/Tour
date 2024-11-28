@@ -86,61 +86,61 @@ public class TourAdapter extends BaseAdapter {
             sao3.setImageResource(R.drawable.star_border_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao>0&&soSao<1) {
+        } else if (soSao>0&&soSao<0.8) {
             sao1.setImageResource(R.drawable.star_half_24);
             sao2.setImageResource(R.drawable.star_border_24);
             sao3.setImageResource(R.drawable.star_border_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao==1) {
+        } else if (soSao>=0.8&&soSao<1.2) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_border_24);
             sao3.setImageResource(R.drawable.star_border_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao>1&&soSao<2) {
+        } else if (soSao>=1.2&&soSao<1.8) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_half_24);
             sao3.setImageResource(R.drawable.star_border_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        }else if (soSao==2) {
+        } else if (soSao>=1.8&&soSao<2.2) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_border_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao>2&&soSao<3) {
+        } else if (soSao>=2.2&&soSao<2.8) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_half_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao==3) {
+        } else if (soSao>=2.8&&soSao<3.2) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_24);
             sao4.setImageResource(R.drawable.star_border_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao>3&&soSao<4) {
+        } else if (soSao>=3.2&&soSao<3.8) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_24);
             sao4.setImageResource(R.drawable.star_half_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao==4) {
+        } else if (soSao>=3.8&&soSao<4.2) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_24);
             sao4.setImageResource(R.drawable.star_24);
             sao5.setImageResource(R.drawable.star_border_24);
-        } else if (soSao>4&&soSao<5) {
+        } else if (soSao>=4.2&&soSao<4.8) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_24);
             sao4.setImageResource(R.drawable.star_24);
             sao5.setImageResource(R.drawable.star_half_24);
-        } else if (soSao==5) {
+        } else if (soSao>=4.8) {
             sao1.setImageResource(R.drawable.star_24);
             sao2.setImageResource(R.drawable.star_24);
             sao3.setImageResource(R.drawable.star_24);

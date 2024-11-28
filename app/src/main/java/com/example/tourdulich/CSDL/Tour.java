@@ -17,9 +17,7 @@ public class Tour implements Serializable {
     public double soSao;
     public String tenTour;
 
-    public Tour(){
-
-    }
+    public Tour(){}
 
     public Tour(String idTour, String tenTour, String hinhTour, String danhMuc, String phuongTien,
                 String gioiThieu, String ngayKhoiHanh, String ngayKetThuc, String giaTien, int soLuongVe) {

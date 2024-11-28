@@ -1,6 +1,8 @@
 package com.example.tourdulich.CSDL;
 
-public class BaiDanhGia {
+import java.io.Serializable;
+
+public class BaiDanhGia implements Serializable {
     public String idBaiDanhGia;
     public String idUser;
     public String idTour;
