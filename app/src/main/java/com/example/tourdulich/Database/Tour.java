@@ -1,4 +1,4 @@
-package com.example.tourdulich.CSDL;
+package com.example.tourdulich.Database;
 
 
 import java.io.Serializable;

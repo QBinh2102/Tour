@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
-import com.example.tourdulich.CSDL.Tour;
+import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -29,8 +27,6 @@ public class TourAdapter extends BaseAdapter {
     public TourAdapter(Context context, List<Tour> tourList) {
         this.context = context;
         this.tourList = tourList;
-//        this.soSaoList = soSaoList;
-//        this.binhLuanList = binhLuanList;
 
         inflater = LayoutInflater.from(context);
     }

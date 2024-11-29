@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -25,7 +25,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.tourdulich.CSDL.LuuThongTinUser;
+import com.example.tourdulich.Database.LuuThongTinUser;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -225,71 +225,71 @@ public class TrangDangKy extends AppCompatActivity {
                 FirebaseAuth xacThucFirebase = FirebaseAuth.getInstance();
                 xacThucFirebase.createUserWithEmailAndPassword(email, matKhau).addOnCompleteListener(
                         TrangDangKy.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        thanhTienTrinh.setVisibility(View.GONE);
-                        if (task.isSuccessful()){
-                            FirebaseUser nguoiDungFB = xacThucFirebase.getCurrentUser();
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                thanhTienTrinh.setVisibility(View.GONE);
+                                if (task.isSuccessful()){
+                                    FirebaseUser nguoiDungFB = xacThucFirebase.getCurrentUser();
 
-                            //Thay doi thong tin ho so nguoi dung
-                            UserProfileChangeRequest thayDoiTTUser = new UserProfileChangeRequest.Builder().setDisplayName(tenDangNhap).build();
-                            nguoiDungFB.updateProfile(thayDoiTTUser);
+                                    //Thay doi thong tin ho so nguoi dung
+                                    UserProfileChangeRequest thayDoiTTUser = new UserProfileChangeRequest.Builder().setDisplayName(tenDangNhap).build();
+                                    nguoiDungFB.updateProfile(thayDoiTTUser);
 
-                            //Quan ly du lieu nguoi dung
-                            String id = nguoiDungFB.getUid();
-                            //Hình mặc định của user
-                            String hinh = "https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesUser%2F1732333793835.jpg?alt=media&token=054bb7bf-9135-415c-bc16-abaceff9d8ff";
-                            LuuThongTinUser thongTinUser = new LuuThongTinUser(id,tenDangNhap,hinh,diaChi, soDienThoai, email, ngaySinh, gioiTinh);
-                            DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
-                            refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        nguoiDungFB.sendEmailVerification();
-                                        Toast.makeText(TrangDangKy.this, "Đăng ký thành công! Vui lòng xác thực email.", Toast.LENGTH_LONG).show();
-                                        // Thêm logic kiểm tra role để điều hướng
-                                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
-                                        String userID = nguoiDungFB.getUid();
-                                        databaseReference.child(userID).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String role = snapshot.getValue(String.class);
-                                                Intent intent;
-                                                if (role != null && role.equals("admin")) {
-                                                    intent = new Intent(TrangDangKy.this, TrangChuAdmin.class);
-                                                } else {
-                                                    intent = new Intent(TrangDangKy.this, MainActivity.class);
-                                                }
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
-                                                finish();
+                                    //Quan ly du lieu nguoi dung
+                                    String id = nguoiDungFB.getUid();
+                                    //Hình mặc định của user
+                                    String hinh = "https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesUser%2F1732333793835.jpg?alt=media&token=054bb7bf-9135-415c-bc16-abaceff9d8ff";
+                                    LuuThongTinUser thongTinUser = new LuuThongTinUser(id,tenDangNhap,hinh,diaChi, soDienThoai, email, ngaySinh, gioiTinh);
+                                    DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
+                                    refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                nguoiDungFB.sendEmailVerification();
+                                                Toast.makeText(TrangDangKy.this, "Đăng ký thành công! Vui lòng xác thực email.", Toast.LENGTH_LONG).show();
+                                                // Thêm logic kiểm tra role để điều hướng
+                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
+                                                String userID = nguoiDungFB.getUid();
+                                                databaseReference.child(userID).child("role").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        String role = snapshot.getValue(String.class);
+                                                        Intent intent;
+                                                        if (role != null && role.equals("admin")) {
+                                                            intent = new Intent(TrangDangKy.this, TrangChuAdmin.class);
+                                                        } else {
+                                                            intent = new Intent(TrangDangKy.this, MainActivity.class);
+                                                        }
+                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        Toast.makeText(TrangDangKy.this, "Không thể lấy thông tin vai trò người dùng.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            } else {
+                                                Toast.makeText(TrangDangKy.this, "Đăng ký thất bại. Vui lòng thử lại.", Toast.LENGTH_LONG).show();
                                             }
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(TrangDangKy.this, "Không thể lấy thông tin vai trò người dùng.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(TrangDangKy.this, "Đăng ký thất bại. Vui lòng thử lại.", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }else {
+                                    try {
+                                        throw task.getException();
+                                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                                        edtTextEmailAddressDangKy.setError("Email không hợp lệ vui lòng thử lại");
+                                        edtTextEmailAddressDangKy.requestFocus();
+                                    } catch (FirebaseAuthUserCollisionException e) {
+                                        edtTextEmailAddressDangKy.setError("Email này đã được sử dụng vui lòng thử lại");
+                                        edtTextEmailAddressDangKy.requestFocus();
+                                    } catch (Exception e) {
+                                        Toast.makeText( TrangDangKy.this,"Đã xảy ra lỗi: "+ e.getMessage(), Toast.LENGTH_LONG).show();
                                     }
+                                    thanhTienTrinh.setVisibility(View.GONE);
                                 }
-                            });
-                        }else {
-                            try {
-                                throw task.getException();
-                            } catch (FirebaseAuthInvalidCredentialsException e) {
-                                edtTextEmailAddressDangKy.setError("Email không hợp lệ vui lòng thử lại");
-                                edtTextEmailAddressDangKy.requestFocus();
-                            } catch (FirebaseAuthUserCollisionException e) {
-                                edtTextEmailAddressDangKy.setError("Email này đã được sử dụng vui lòng thử lại");
-                                edtTextEmailAddressDangKy.requestFocus();
-                            } catch (Exception e) {
-                                Toast.makeText( TrangDangKy.this,"Đã xảy ra lỗi: "+ e.getMessage(), Toast.LENGTH_LONG).show();
                             }
-                            thanhTienTrinh.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                        });
             }
         });
         //Quay lại THÔNG TIN CHƯA ĐĂNG NHẬP

@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.DialogInterface;
 import android.content.Intent;

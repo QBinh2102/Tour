@@ -1,6 +1,5 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -22,9 +21,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.tourdulich.Adapter.DanhGiaAdapter;
-import com.example.tourdulich.CSDL.BaiDanhGia;
-import com.example.tourdulich.CSDL.LuuThongTinUser;
-import com.example.tourdulich.CSDL.Tour;
+import com.example.tourdulich.Database.BaiDanhGia;
+import com.example.tourdulich.Database.LuuThongTinUser;
+import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +33,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 

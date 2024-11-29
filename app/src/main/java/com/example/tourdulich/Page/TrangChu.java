@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,12 +13,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.tourdulich.CSDL.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class TrangChu extends AppCompatActivity {
 

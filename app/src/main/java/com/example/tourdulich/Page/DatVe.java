@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.tourdulich.CSDL.Tour;
+import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.Adapter.TourAdapter;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;

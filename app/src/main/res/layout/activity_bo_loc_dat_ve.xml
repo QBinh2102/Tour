@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@color/white"
-    tools:context=".trang.BoLocDatVe">
+    tools:context=".Dialog.BoLocDatVe">
 
     <TextView
         android:id="@+id/txtReturn"

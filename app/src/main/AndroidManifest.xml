@@ -19,62 +19,62 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
-            android:name=".trang.SuaVaXoaDanhMuc"
+            android:name=".Page.SuaVaXoaDanhMuc"
             android:exported="false" />
         <activity
-            android:name=".trang.HuyVe"
+            android:name=".Page.HuyVe"
             android:exported="false" />
         <activity
-            android:name=".trang.XemBinhLuanChuaDangNhap"
+            android:name=".Page.XemBinhLuanChuaDangNhap"
             android:exported="false" />
         <activity
-            android:name=".trang.XemBinhLuan"
+            android:name=".Page.XemBinhLuan"
             android:exported="false" />
         <activity
-            android:name=".trang.ChiTietDatVe"
+            android:name=".Page.ChiTietDatVe"
             android:exported="false" />
         <activity
-            android:name=".trang.TrangChuAdmin"
+            android:name=".Page.TrangChuAdmin"
             android:exported="false" />
         <activity
-            android:name=".trang.DoiMatKhau"
+            android:name=".Page.DoiMatKhau"
             android:exported="false" />
         <activity
-            android:name=".trang.ChinhSuaThongTinCaNhan"
+            android:name=".Page.ChinhSuaThongTinCaNhan"
             android:exported="false" />
         <activity
-            android:name=".trang.GiaoDich"
+            android:name=".Page.GiaoDich"
             android:exported="false" />
         <activity
-            android:name=".trang.TinTuc"
+            android:name=".Page.TinTuc"
             android:exported="false" />
         <activity
-            android:name=".trang.ThongTinChuaDangNhap"
+            android:name=".Page.ThongTinChuaDangNhap"
             android:exported="false" />
         <activity
-            android:name=".trang.BoLocDatVe"
+            android:name=".Dialog.BoLocDatVe"
             android:exported="false" />
         <activity
-            android:name=".trang.ThongTinDatVe"
+            android:name=".Page.ThongTinDatVe"
             android:exported="false" />
         <activity
-            android:name=".trang.DatVe"
+            android:name=".Page.DatVe"
             android:exported="false" />
         <activity
-            android:name=".trang.ThongTinCaNhan"
+            android:name=".Page.ThongTinCaNhan"
             android:exported="false" />
         <activity
-            android:name=".trang.TrangDangKy"
+            android:name=".Page.TrangDangKy"
             android:exported="false" />
         <activity
-            android:name=".trang.TrangQuenMK"
+            android:name=".Page.TrangQuenMK"
             android:exported="false" />
         <activity
-            android:name=".trang.MainActivity"
+            android:name=".Page.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.TourDuLich" />
         <activity
-            android:name=".trang.TrangChu"
+            android:name=".Page.TrangChu"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

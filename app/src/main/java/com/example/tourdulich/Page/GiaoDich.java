@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.tourdulich.Adapter.GiaoDichAdapter;
-import com.example.tourdulich.CSDL.BaiDanhGia;
+import com.example.tourdulich.Database.BaiDanhGia;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

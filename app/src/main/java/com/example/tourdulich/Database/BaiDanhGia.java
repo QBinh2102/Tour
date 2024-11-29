@@ -1,4 +1,4 @@
-package com.example.tourdulich.CSDL;
+package com.example.tourdulich.Database;
 
 import java.io.Serializable;
 
@@ -11,6 +11,7 @@ public class BaiDanhGia implements Serializable {
     public int soSao;
     public String binhLuan;
     public String thoiGian;
+    public String trangThai;
 
     public BaiDanhGia(){}
 
@@ -23,5 +24,6 @@ public class BaiDanhGia implements Serializable {
         this.soSao = 0;
         this.binhLuan = "";
         this.thoiGian = "";
+        this.trangThai="Đã thanh toán";
     }
 }

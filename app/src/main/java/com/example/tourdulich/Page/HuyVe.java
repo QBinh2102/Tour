@@ -1,10 +1,15 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,8 +23,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.tourdulich.CSDL.BaiDanhGia;
-import com.example.tourdulich.CSDL.Tour;
+import com.example.tourdulich.Database.BaiDanhGia;
+import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,6 +49,7 @@ public class HuyVe extends AppCompatActivity {
     private TextView txtTongTienMua;
 
     private DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
+    private DatabaseReference bdgRef = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
 
 
 
@@ -82,6 +88,13 @@ public class HuyVe extends AppCompatActivity {
                 startActivity(ql);
             }
         });
+
+        btnHuyVe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog(bdg);
+            }
+        });
     }
 
     private void showThongTin(BaiDanhGia bdg) {
@@ -115,6 +128,48 @@ public class HuyVe extends AppCompatActivity {
                 Toast.makeText(HuyVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void openDialog(BaiDanhGia bdg) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_xac_nhan_huy_ve);
+
+        Window window = dialog.getWindow();
+        if(window == null){
+            return;
+        }
+
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+        window.setAttributes(windowAttributes);
+
+        dialog.setCancelable(false);
+
+        Button btnHuy = dialog.findViewById(R.id.btHuyHuyVe);
+        Button btnXacNhan = dialog.findViewById(R.id.btXacNhanHuyVe);
+
+        btnHuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btnXacNhan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bdgRef.child(bdg.idBaiDanhGia).removeValue();
+                Toast.makeText(HuyVe.this, "Hủy tour thành công!!!", Toast.LENGTH_SHORT).show();
+                Intent gd = new Intent(HuyVe.this,GiaoDich.class);
+                startActivity(gd);
+            }
+        });
+
+        dialog.show();
     }
 
     private String formatPrice(String price) {

@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -21,9 +21,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.tourdulich.Adapter.DanhGiaAdapter;
 import com.example.tourdulich.Adapter.ImageAdapter;
-import com.example.tourdulich.Adapter.TourAdapter;
-import com.example.tourdulich.CSDL.BaiDanhGia;
-import com.example.tourdulich.CSDL.Tour;
+import com.example.tourdulich.Database.BaiDanhGia;
+import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

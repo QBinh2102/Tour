@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.tourdulich.CSDL.LuuThongTinUser;
+import com.example.tourdulich.Database.LuuThongTinUser;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

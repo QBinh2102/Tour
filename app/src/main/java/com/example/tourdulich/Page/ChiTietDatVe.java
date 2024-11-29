@@ -1,4 +1,4 @@
-package com.example.tourdulich.trang;
+package com.example.tourdulich.Page;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,8 +17,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.tourdulich.CSDL.BaiDanhGia;
-import com.example.tourdulich.CSDL.Tour;
+import com.example.tourdulich.Database.BaiDanhGia;
+import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
