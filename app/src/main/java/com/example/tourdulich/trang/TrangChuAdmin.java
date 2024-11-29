@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,7 +100,6 @@ public class TrangChuAdmin extends AppCompatActivity {
         //Kiểm tra vai trò của user -> chuyển đúng giao diện của từng vai trò
         SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
         String role = preferences.getString("role", "user"); // Default là "user" nếu không tìm thấy role
-
         if (role.equals("admin")) {
             // Mở trang chủ Admin
             setContentView(R.layout.activity_trang_chu_admin);
@@ -155,7 +156,6 @@ public class TrangChuAdmin extends AppCompatActivity {
             // Đặt sự kiện cho các nút trong dialog
             Button btnCong = dialog.findViewById(R.id.menu_add);
             Button btnSua = dialog.findViewById(R.id.menu_edit);
-            Button btnXoa = dialog.findViewById(R.id.menu_delete);
 
             // Thiết lập sự kiện cho các nút
             btnCong.setOnClickListener(v -> {
@@ -164,16 +164,15 @@ public class TrangChuAdmin extends AppCompatActivity {
                 dialog.dismiss();
             });
             btnSua.setOnClickListener(v -> {
-                // Xử lý sửa danh mục
-                ImageView imageView = (ImageView) v; // Lấy ImageView từ view bấm vào (v)
-                suaDanhMuc(imageView);
-                dialog.dismiss();
+                try {
+                    // Xử lý sửa danh mục
+                    suaDanhMuc(v); // Truyền trực tiếp view bấm vào hàm sửa danh mục
+                } catch (Exception e) {
+                    Log.e("MainActivity", "Error in btnSua OnClickListener: " + e.getMessage(), e);
+                    Toast.makeText(this, "Đã xảy ra lỗi khi mở dialog sửa danh mục!", Toast.LENGTH_SHORT).show();
+                }
             });
-            btnXoa.setOnClickListener(v -> {
-                // Xử lý xóa danh mục
-                    xoaDanhMuc();
-               // dialog.dismiss();
-            });
+
             // Hiển thị dialog
             dialog.show();
         });
@@ -183,10 +182,12 @@ public class TrangChuAdmin extends AppCompatActivity {
         super.onResume();
         loadDanhMuc();
     }
+
+    //Hiện những danh mục đã thêm
     private void loadDanhMuc() {
         LinearLayout container = findViewById(R.id.layoutDanhMuc);
         SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        String danhMucList = sharedPreferences.getString("danhMucList", "");
+        String danhMucList = sharedPreferences.getString("danhMucList", "");  // Đảm bảo tên khóa phải giống nhau
 
         // Nếu có danh mục đã lưu, chia chuỗi danh mục và thêm vào layout
         if (!danhMucList.isEmpty()) {
@@ -198,139 +199,15 @@ public class TrangChuAdmin extends AppCompatActivity {
     }
 
 
-
-    private List<View> selectedItems = new ArrayList<>();
-
-    private void xoaDanhMuc() {
-        // Tạo một dialog để chọn các danh mục cần xóa
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chọn danh mục cần xóa");
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        // Lưu trữ các item đã chọn
-        Set<View> selectedItems = new HashSet<>();
-
-        // Lấy tất cả danh mục từ layout
-        LinearLayout danhMucLayout = findViewById(R.id.layoutDanhMuc);
-        if (danhMucLayout == null) {
-            Log.e("MainActivity", "layoutDanhMuc not found.");
-            return;
-        }
-
-        int childCount = danhMucLayout.getChildCount();
-        Log.d("MainActivity", "Number of children in layoutDanhMuc: " + childCount);
-
-        // Thêm checkbox cho mỗi danh mục
-        for (int i = 0; i < childCount; i++) {
-            View danhMuc = danhMucLayout.getChildAt(i);
-            if (danhMuc instanceof CardView) {
-                CheckBox checkBox = new CheckBox(this);
-                checkBox.setText(((CardView) danhMuc).getTag().toString());  // Đặt tên danh mục vào checkbox
-
-                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        selectedItems.add(danhMuc);  // Thêm danh mục vào danh sách đã chọn
-                    } else {
-                        selectedItems.remove(danhMuc);  // Xóa danh mục khỏi danh sách
-                    }
-                });
-
-                layout.addView(checkBox);
-            } else {
-                Log.e("MainActivity", "Child is not an instance of CardView.");
-            }
-        }
-
-        builder.setView(layout);
-
-        // Thêm nút "Xóa" và "Hủy"
-        builder.setPositiveButton("Xóa", (dialog, which) -> {
-            if (!selectedItems.isEmpty()) {
-                // Hỏi người dùng có chắc chắn muốn xóa không
-                AlertDialog.Builder confirmBuilder = new AlertDialog.Builder(this);
-                confirmBuilder.setTitle("Xóa danh mục?");
-                confirmBuilder.setMessage("Bạn có chắc chắn muốn xóa các danh mục đã chọn?");
-
-                confirmBuilder.setPositiveButton("Xóa", (confirmDialog, confirmWhich) -> {
-                    // Xóa các danh mục đã chọn
-                    try {
-                        for (View item : selectedItems) {
-                            LinearLayout parentLayout = (LinearLayout) item.getParent();
-                            if (parentLayout != null) {
-                                Log.d("MainActivity", "Removing view: " + item.toString());
-                                parentLayout.removeView(item);  // Xóa khỏi layout
-                            } else {
-                                Log.e("MainActivity", "Parent layout is null.");
-                            }
-                        }
-                        selectedItems.clear();  // Xóa danh sách đã chọn
-                        Toast.makeText(this, "Danh mục đã được xóa", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        Log.e("MainActivity", "Error removing views: " + e.getMessage(), e);
-                    }
-                    confirmDialog.dismiss(); // Đóng dialog xác nhận xóa
-                });
-
-                confirmBuilder.setNegativeButton("Hủy", (confirmDialog, confirmWhich) -> {
-                    confirmDialog.dismiss(); // Đóng dialog xác nhận xóa nếu hủy
-                });
-                confirmBuilder.show();
-            } else {
-                Toast.makeText(this, "Vui lòng chọn danh mục để xóa", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("Hủy", (dialog, which) -> {
-            dialog.dismiss(); // Đóng dialog nếu hủy
-        });
-        builder.show();
-    }
-
-
-
     private static final int PICK_IMAGE_REQUEST = 1;  // Mã yêu cầu để chọn ảnh
 
-    private void suaDanhMuc(final ImageView danhMuc) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sửa danh mục");
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        EditText editText = new EditText(this);
-        editText.setText(danhMuc.getContentDescription());
-        layout.addView(editText);
-
-        Button btnChonIcon = new Button(this);
-        btnChonIcon.setText("Đổi biểu tượng");
-        layout.addView(btnChonIcon);
-
-        final Uri[] selectedIconUri = {null};
-        btnChonIcon.setOnClickListener(v -> chonHinhAnh(uri -> selectedIconUri[0] = uri));
-
-        builder.setView(layout);
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
-            String newCategoryName = editText.getText().toString().trim();
-            if (!newCategoryName.isEmpty()) {
-                danhMuc.setContentDescription(newCategoryName);
-                if (selectedIconUri[0] != null) {
-                    danhMuc.setImageURI(selectedIconUri[0]);
-                }
-            } else {
-                Toast.makeText(this, "Tên danh mục không được để trống!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.setNegativeButton("Hủy", null);
-        builder.show();
-    }
-
-    // Hàm chọn ảnh
-    private void chonHinhAnh(Consumer<Uri> callback) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        imagePickerLauncher.launch(intent);
-        // Kết quả xử lý
-        imagePickerCallback = callback;
+    private void suaDanhMuc(View view) {
+        String category = "Danh mục cần sửa"; // Lấy thông tin danh mục bạn muốn sửa (có thể lấy từ view hoặc dữ liệu liên quan)
+        Intent intent = new Intent(TrangChuAdmin.this, SuaVaXoaDanhMuc.class);
+        intent.putExtra("category", category); // Truyền dữ liệu vào intent
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
     }
 
     // Callback ảnh
@@ -364,26 +241,33 @@ public class TrangChuAdmin extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                String danhMucList = sharedPreferences.getString("danhMucList", "");
-                danhMucList = danhMucList + (danhMucList.isEmpty() ? "" : ",") + newCategory;
+                String danhMucList = sharedPreferences.getString("DanhMucList", "");
+                // Kiểm tra và thêm danh mục mới vào danh sách
+                if (!danhMucList.isEmpty()) {
+                    danhMucList = danhMucList + "," + newCategory;
+                } else {
+                    danhMucList = newCategory;
+                }
 
-                editor.putString("danhMucList", danhMucList);
+                editor.putString("DanhMucList", danhMucList);
                 editor.apply();
 
                 addDanhMucToLayout(newCategory);
+                loadDanhMuc();// Thêm danh mục mới vào layout
             } else {
                 Toast.makeText(this, "Vui lòng nhập tên danh mục!", Toast.LENGTH_SHORT).show();
             }
         });
-
         builder.setNegativeButton("Hủy", null);
         builder.show();
     }
+
 
     private void addDanhMucToLayout(String danhMuc) {
         LinearLayout container = findViewById(R.id.layoutDanhMuc);
         LinearLayout currentRow = null;
 
+        // Ensure that if the container is empty or the last row has 3 items, we create a new row
         if (container.getChildCount() == 0 || ((LinearLayout) container.getChildAt(container.getChildCount() - 1)).getChildCount() >= 3) {
             currentRow = new LinearLayout(this);
             currentRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -397,20 +281,20 @@ public class TrangChuAdmin extends AppCompatActivity {
             currentRow = (LinearLayout) container.getChildAt(container.getChildCount() - 1);
         }
 
+        // Create a CardView for the new category
         CardView cardView = new CardView(this);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 1.0f
         );
-        cardParams.setMargins(10, 5, 10, 5); // Tạo không gian giữa các CardView
+        cardParams.setMargins(10, 5, 10, 5);
         cardView.setLayoutParams(cardParams);
         cardView.setCardElevation(0);
         cardView.setRadius(10f);
         cardView.setPadding(0, 0, 0, 0);
         cardView.setCardBackgroundColor(Color.WHITE);
 
-        // Sử dụng FrameLayout để dễ dàng căn giữa
         FrameLayout frameLayout = new FrameLayout(this);
         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -423,7 +307,7 @@ public class TrangChuAdmin extends AppCompatActivity {
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()),
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 46, getResources().getDisplayMetrics())
         );
-        imageParams.gravity = Gravity.CENTER; // Căn giữa icon
+        imageParams.gravity = Gravity.CENTER;
         imageView.setLayoutParams(imageParams);
         imageView.setImageResource(R.drawable.danh_muc_mac_dinh);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
@@ -433,6 +317,7 @@ public class TrangChuAdmin extends AppCompatActivity {
 
         currentRow.addView(cardView);
     }
+
 
     @Override
         protected void onStart () {

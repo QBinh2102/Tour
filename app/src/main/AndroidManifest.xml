@@ -19,6 +19,9 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
+            android:name=".trang.SuaVaXoaDanhMuc"
+            android:exported="false" />
+        <activity
             android:name=".trang.HuyVe"
             android:exported="false" />
         <activity
