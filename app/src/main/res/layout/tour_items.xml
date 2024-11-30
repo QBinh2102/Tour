@@ -115,7 +115,7 @@
                         android:id="@+id/textViewSoBinhLuan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="0 bình luận"
+                        android:text="0 đánh giá"
                         android:textColor="@color/black" />
                 </LinearLayout>
             </LinearLayout>

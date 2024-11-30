@@ -33,16 +33,16 @@
                     android:id="@+id/textViewTenTourGiaoDich"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="2dp"
                     android:layout_gravity="center_vertical"
+                    android:paddingLeft="2dp"
+                    android:paddingBottom="5dp"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -53,9 +53,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="2dp"
-                            android:paddingBottom="10dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingLeft="2dp">
 
                             <ImageView
                                 android:id="@+id/imageViewSao1GDItems"
@@ -93,7 +92,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="2dp"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black" />
 
                     </LinearLayout>
 
@@ -107,16 +106,25 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Số lượng vé: "
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black" />
 
                         <TextView
                             android:id="@+id/textViewTongTienGDItems"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Tổng tiền:"
-                            android:textColor="@color/black"/>
+                            android:text="Tổng tiền: "
+                            android:textColor="@color/black" />
+
                     </LinearLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewTrangThaiGDItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="2dp"
+                    android:text="Trạng thái: "
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 

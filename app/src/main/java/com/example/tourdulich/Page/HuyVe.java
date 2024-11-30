@@ -47,6 +47,7 @@ public class HuyVe extends AppCompatActivity {
     private TextView txtNgayKetThuc;
     private TextView txtSoVeMua;
     private TextView txtTongTienMua;
+    private TextView txtTrangThai;
 
     private DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
     private DatabaseReference bdgRef = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
@@ -74,6 +75,7 @@ public class HuyVe extends AppCompatActivity {
         txtNgayKetThuc = findViewById(R.id.textViewNKTTourHuyVe);
         txtSoVeMua = findViewById(R.id.textViewSoVeDaMua);
         txtTongTienMua = findViewById(R.id.textViewTongTienDaMua);
+        txtTrangThai = findViewById(R.id.textViewTrangThaiGiaoDich);
 
         Intent intent = getIntent();
         BaiDanhGia bdg = (BaiDanhGia) intent.getSerializableExtra("gd_item");
@@ -92,7 +94,11 @@ public class HuyVe extends AppCompatActivity {
         btnHuyVe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog(bdg);
+                if(bdg.trangThai.equals("Đã thanh toán")) {
+                    openDialog(bdg);
+                } else if (bdg.trangThai.equals("Đã hủy vé")) {
+                    Toast.makeText(HuyVe.this,"Bạn đã hủy vé!!!",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -118,6 +124,7 @@ public class HuyVe extends AppCompatActivity {
                             txtSoVeMua.setText(String.format("Số vé đã mua: %d",bdg.soVe));
                             String Price = formatPrice(String.valueOf(bdg.tongTien));
                             txtTongTienMua.setText(String.format("Tổng tiền: %s", Price));
+                            txtTrangThai.setText(String.format("Trạng thái: %s", bdg.trangThai));
                         }
                     }
                 }
@@ -162,7 +169,59 @@ public class HuyVe extends AppCompatActivity {
         btnXacNhan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bdgRef.child(bdg.idBaiDanhGia).removeValue();
+                bdgRef.child(bdg.idBaiDanhGia).child("trangThai").setValue("Đã hủy vé");
+                bdgRef.child(bdg.idBaiDanhGia).child("soSao").setValue(0);
+                bdgRef.child(bdg.idBaiDanhGia).child("binhLuan").setValue("");
+                tourRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                Tour tour = dataSnapshot.getValue(Tour.class);
+                                if(tour.idTour.equals(bdg.idTour)) {
+                                    tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe+bdg.soVe);
+                                    bdgRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                int tongSao = 0;
+                                                int luongSao = 0;
+                                                int soBinhLuan = 0;
+                                                for (DataSnapshot data : snapshot.getChildren()) {
+                                                    BaiDanhGia danhGia = data.getValue(BaiDanhGia.class);
+                                                    if (danhGia.idTour.equals(tour.idTour)&&danhGia.trangThai.equals("Đã thanh toán")) {
+                                                        tongSao += danhGia.soSao;
+                                                        luongSao++;
+                                                        if(danhGia.binhLuan!="")
+                                                            soBinhLuan++;
+                                                    }
+                                                }
+                                                double tongSoSao = Double.parseDouble(String.valueOf(tongSao));
+                                                double soLuongSao = Double.parseDouble(String.valueOf(luongSao));
+                                                if(soLuongSao!=0) {
+                                                    double tbSao = tongSoSao / soLuongSao;
+                                                    tourRef.child(tour.idTour).child("soSao").setValue(tbSao);
+                                                }else
+                                                    tourRef.child(tour.idTour).child("soSao").setValue(0);
+                                                tourRef.child(tour.idTour).child("soBinhLuan").setValue(soBinhLuan);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
                 Toast.makeText(HuyVe.this, "Hủy tour thành công!!!", Toast.LENGTH_SHORT).show();
                 Intent gd = new Intent(HuyVe.this,GiaoDich.class);
                 startActivity(gd);

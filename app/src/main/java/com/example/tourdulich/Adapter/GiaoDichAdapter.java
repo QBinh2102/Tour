@@ -68,12 +68,14 @@ public class GiaoDichAdapter extends BaseAdapter {
         TextView soBinhLuan = (TextView) convertView.findViewById(R.id.textViewSoBinhLuanGDItems);
         TextView soVe = (TextView) convertView.findViewById(R.id.textViewSoLuongVeGDItems);
         TextView tongTien = (TextView) convertView.findViewById(R.id.textViewTongTienGDItems);
+        TextView trangThai = (TextView) convertView.findViewById(R.id.textViewTrangThaiGDItems);
 
         BaiDanhGia baiDanhGia = baiDanhGias.get(position);
         String tourId = baiDanhGia.idTour;
         soVe.setText(String.format("Số lượng vé: x%d",baiDanhGia.soVe));
         String formattedPrice = formatPrice(String.valueOf(baiDanhGia.tongTien));
         tongTien.setText(String.format("Tổng tiền: %s",formattedPrice));
+        trangThai.setText(String.format("Trạng thái: %s",baiDanhGia.trangThai));
         tourRef.child(tourId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -83,7 +85,7 @@ public class GiaoDichAdapter extends BaseAdapter {
                         .load(uri)
                         .into(hinh);
                 ten.setText(tour.tenTour);
-                soBinhLuan.setText(String.format("%d bình luận",tour.soBinhLuan));
+                soBinhLuan.setText(String.format("%d đánh giá",tour.soBinhLuan));
                 double soSao = tour.soSao;
                 if(soSao==0){
                     sao1.setImageResource(R.drawable.star_border_24);

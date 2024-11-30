@@ -143,7 +143,7 @@ public class TourAdapter extends BaseAdapter {
             sao4.setImageResource(R.drawable.star_24);
             sao5.setImageResource(R.drawable.star_24);
         }
-        txtSoBinhLuan.setText(String.format("%d bình luận", tour.soBinhLuan));
+        txtSoBinhLuan.setText(String.format("%d đánh giá", tour.soBinhLuan));
 
         return convertView;
     }

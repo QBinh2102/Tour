@@ -152,14 +152,15 @@ public class ThongTinDatVe extends AppCompatActivity {
                     startActivity(xbl);
                 }else { //Đã đăng nhập
                     //Đã đặt vé
-                    bdgRef.addValueEventListener(new ValueEventListener() {
+                    bdgRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
                                     //Đã đặt vé
-                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(firebaseUser.getUid())) {
+                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(firebaseUser.getUid())
+                                            && baiDanhGia.trangThai.equals("Đã thanh toán")) {
                                         Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
                                         xbl.putExtra("tour", tour);
                                         startActivity(xbl);
@@ -230,7 +231,7 @@ public class ThongTinDatVe extends AppCompatActivity {
                             String formattedPrice = formatPrice(String.valueOf(currentTour.giaTien));
                             giaTour.setText(String.format("Giá: %s", formattedPrice));
                             tbSao.setText(String.format("%.1f", currentTour.soSao));
-                            soBinhLuan.setText(String.format("%d bình luận", currentTour.soBinhLuan));
+                            soBinhLuan.setText(String.format("%d đánh giá", currentTour.soBinhLuan));
                             gioiThieu.setText(currentTour.gioiThieu);
                             thoiGian.setText(String.format("Thời gian: %s - %s", currentTour.ngayKhoiHanh, currentTour.ngayKetThuc));
                             phuongTien.setText(String.format("Phương tiện: %s", currentTour.phuongTien));
@@ -247,7 +248,7 @@ public class ThongTinDatVe extends AppCompatActivity {
                                     if (dataSnapshot.exists()) {
                                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                             BaiDanhGia baiDanhGia = snapshot.getValue(BaiDanhGia.class);
-                                            if (baiDanhGia.idTour.equals(currentTour.idTour)) {
+                                            if (baiDanhGia.idTour.equals(currentTour.idTour)&&baiDanhGia.trangThai.equals("Đã thanh toán")) {
                                                 baiDanhGias.add(baiDanhGia);
                                                 if (baiDanhGia.soSao != 0) {
                                                     countTong++;

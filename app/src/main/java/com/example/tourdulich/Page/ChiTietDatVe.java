@@ -133,8 +133,8 @@ public class ChiTietDatVe extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
-                            if (tmp.idTour.equals(tour.idTour)) {
-                                if(tmp.idUser.equals(User.getUid())) {
+                            if (tmp.idTour.equals(tour.idTour) && tmp.idUser.equals(User.getUid())) {
+                                if (tmp.trangThai.equals("Đã thanh toán")) {
                                     flag = true;
                                     int soVeDat = Integer.parseInt(txtSoLuongVeDat.getText().toString());
                                     int giaVe = Integer.parseInt(tour.giaTien);

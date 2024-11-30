@@ -108,9 +108,7 @@ public class XemBinhLuan extends AppCompatActivity {
                                 if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.soSao != 0) {
                                     tongSao += baiDanhGia.soSao;
                                     luongSao++;
-                                    if (baiDanhGia.binhLuan != "") {
-                                        soBinhLuan++;
-                                    }
+                                    soBinhLuan++;
                                 }
                             }
                             double tongSoSao = Double.parseDouble(String.valueOf(tongSao));

@@ -73,7 +73,7 @@ public class XemBinhLuanChuaDangNhap extends AppCompatActivity {
                 if(snapshot.exists()){
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
-                        if(baiDanhGia.idTour.equals(tour.idTour)){
+                        if(baiDanhGia.idTour.equals(tour.idTour)&&baiDanhGia.trangThai.equals("Đã thanh toán")){
                             baiDanhGias.add(baiDanhGia);
                         }
                     }
@@ -84,7 +84,7 @@ public class XemBinhLuanChuaDangNhap extends AppCompatActivity {
                         lvDanhGia.setAdapter(danhGiaAdapter);
                     }
                 }else{
-                    Toast.makeText(XemBinhLuanChuaDangNhap.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
+                       //Toast.makeText(XemBinhLuanChuaDangNhap.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
                 }
             }
 
