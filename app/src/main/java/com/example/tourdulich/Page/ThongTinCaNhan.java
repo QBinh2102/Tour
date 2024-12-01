@@ -227,14 +227,13 @@ public class ThongTinCaNhan extends AppCompatActivity {
                 if (thongTinUser != null) {
                     // Gán giá trị mặc định cho role nếu chưa tồn tại
                     if (thongTinUser.role == null) {
-                        thongTinUser.role = "user"; // Gán role mặc định là user nếu chưa có
+                        thongTinUser.role = "user";
                         databaseReference.child(userID).setValue(thongTinUser);
                     }
 
-                    // Lưu role vào SharedPreferences
                     SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("role", thongTinUser.role); // Lưu role
+                    editor.putString("role", thongTinUser.role);
                     editor.apply();
 
                     // Cập nhật thông tin người dùng

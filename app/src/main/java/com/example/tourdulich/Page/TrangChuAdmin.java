@@ -25,6 +25,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.util.Consumer;
 
+import com.example.tourdulich.Page.DatVe;
+import com.example.tourdulich.Page.GiaoDich;
+import com.example.tourdulich.Page.SuaVaXoaDanhMuc;
+import com.example.tourdulich.Page.ThongTinCaNhan;
+import com.example.tourdulich.Page.ThongTinChuaDangNhap;
+import com.example.tourdulich.Page.TinTuc;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -151,13 +157,18 @@ public class TrangChuAdmin extends AppCompatActivity {
             });
             btnSua.setOnClickListener(v -> {
                 try {
-                    // Xử lý sửa danh mục
-                    suaDanhMuc(v); // Truyền trực tiếp view bấm vào hàm sửa danh mục
+                    // Tạo một ImageView giả lập để truyền vào phương thức suaDanhMuc
+                    ImageView imgViewToEdit = new ImageView(this);
+                    imgViewToEdit.setTag("Danh mục cần sửa");  // Gắn tag với tên danh mục cần sửa
+
+                    // Gọi phương thức suaDanhMuc với đối tượng ImageView
+                    suaDanhMuc(imgViewToEdit);
                 } catch (Exception e) {
-                    Log.e("MainActivity", "Error in btnSua OnClickListener: " + e.getMessage(), e);
+                    Log.e("TrangChuAdmin", "Error in btnSua OnClickListener: " + e.getMessage(), e);
                     Toast.makeText(this, "Đã xảy ra lỗi khi mở dialog sửa danh mục!", Toast.LENGTH_SHORT).show();
                 }
             });
+
 
             // Hiển thị dialog
             dialog.show();
@@ -166,9 +177,16 @@ public class TrangChuAdmin extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        clearDanhMucSharedPreferences();
         loadDanhMuc();
     }
-
+    private void clearDanhMucSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear(); // Xóa tất cả dữ liệu trong "DanhMucPrefs"
+        editor.apply(); // Áp dụng thay đổi
+        Toast.makeText(this, "Đã xóa dữ liệu danh mục!", Toast.LENGTH_SHORT).show();
+    }
     //Hiện những danh mục đã thêm
     private void loadDanhMuc() {
         LinearLayout container = findViewById(R.id.layoutDanhMuc);
@@ -188,13 +206,19 @@ public class TrangChuAdmin extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;  // Mã yêu cầu để chọn ảnh
 
 
-    private void suaDanhMuc(View view) {
-        String category = "Danh mục cần sửa"; // Lấy thông tin danh mục bạn muốn sửa (có thể lấy từ view hoặc dữ liệu liên quan)
+    private void suaDanhMuc(ImageView imageView) {
+        String category = (String) imageView.getTag();  // Lấy category từ tag của imageView
+        if (category == null || category.isEmpty()) {
+            Toast.makeText(this, "Danh mục không hợp lệ!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent intent = new Intent(TrangChuAdmin.this, SuaVaXoaDanhMuc.class);
-        intent.putExtra("category", category); // Truyền dữ liệu vào intent
+        intent.putExtra("category", category);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
     }
+
+
 
     // Callback ảnh
     private Consumer<Uri> imagePickerCallback;
@@ -239,7 +263,6 @@ public class TrangChuAdmin extends AppCompatActivity {
                 editor.apply();
 
                 addDanhMucToLayout(newCategory);
-                loadDanhMuc();// Thêm danh mục mới vào layout
             } else {
                 Toast.makeText(this, "Vui lòng nhập tên danh mục!", Toast.LENGTH_SHORT).show();
             }
@@ -306,7 +329,7 @@ public class TrangChuAdmin extends AppCompatActivity {
 
 
     @Override
-        protected void onStart () {
+    protected void onStart () {
         super.onStart();
         // Kiểm tra lại nếu người dùng chưa đăng nhập, điều hướng về trang đăng nhập
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -316,4 +339,4 @@ public class TrangChuAdmin extends AppCompatActivity {
             finish();
         }
     }
-    }
+}
