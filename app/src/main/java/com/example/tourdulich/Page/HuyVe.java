@@ -32,7 +32,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class HuyVe extends AppCompatActivity {
@@ -95,7 +100,43 @@ public class HuyVe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(bdg.trangThai.equals("Đã thanh toán")) {
-                    openDialog(bdg);
+                    tourRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                    Tour tour = dataSnapshot.getValue(Tour.class);
+                                    if(bdg.idTour.equals(tour.idTour)){
+                                        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+                                        try {
+                                            Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(tour.ngayKhoiHanh);
+                                            int dKhoiHanh = Integer.parseInt(formatter.format(date1));
+                                            Calendar calendar = Calendar.getInstance();
+                                            String dd = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+                                            String MM = String.valueOf(calendar.get(Calendar.MONTH)+1);
+                                            String yyyy = String.valueOf(calendar.get(Calendar.YEAR));
+                                            String format = String.format("%s/%s/%s",dd,MM,yyyy);
+                                            Date date2 = new SimpleDateFormat("dd/MM/yyyy").parse(format);
+                                            int dHienTai = Integer.parseInt(formatter.format(date2));
+                                            int tg = dKhoiHanh-dHienTai;
+                                            if(tg>14){
+                                                openDialog(bdg);
+                                            }else{
+                                                Toast.makeText(HuyVe.this,"Đã hết hạn hủy vé",Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (ParseException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 } else if (bdg.trangThai.equals("Đã hủy vé")) {
                     Toast.makeText(HuyVe.this,"Bạn đã hủy vé!!!",Toast.LENGTH_SHORT).show();
                 }
@@ -180,6 +221,7 @@ public class HuyVe extends AppCompatActivity {
                                 Tour tour = dataSnapshot.getValue(Tour.class);
                                 if(tour.idTour.equals(bdg.idTour)) {
                                     tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe+bdg.soVe);
+                                    tourRef.child(tour.idTour).child("soLuongDat").setValue(tour.soLuongDat-1);
                                     bdgRef.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -164,6 +164,7 @@ public class ChiTietDatVe extends AppCompatActivity {
                                 public void onSuccess(Void unused) {
                                     DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
                                     tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                                    tourRef.child(idTour).child("soLuongDat").setValue(tour.soLuongDat+1);
                                     Toast.makeText(ChiTietDatVe.this, "Đặt vé thành công", Toast.LENGTH_SHORT).show();
                                     Intent datVe = new Intent(ChiTietDatVe.this, DatVe.class);
                                     startActivity(datVe);

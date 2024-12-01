@@ -34,8 +34,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -59,6 +64,7 @@ public class ThongTinDatVe extends AppCompatActivity {
     private ProgressBar sao5;
 
 
+    private boolean flag = false;
     private ViewPager2 viewPager2;
     private ArrayList<Uri> imageUris = new ArrayList<>();
     private FirebaseStorage storage;
@@ -132,9 +138,28 @@ public class ThongTinDatVe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(firebaseUser!=null){
-                    Intent ctdv = new Intent(ThongTinDatVe.this, ChiTietDatVe.class);
-                    ctdv.putExtra("tour",tour);
-                    startActivity(ctdv);
+                    DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+                    try {
+                        Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(tour.ngayKhoiHanh);
+                        int dKhoiHanh = Integer.parseInt(formatter.format(date1));
+                        Calendar calendar = Calendar.getInstance();
+                        String dd = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+                        String MM = String.valueOf(calendar.get(Calendar.MONTH)+1);
+                        String yyyy = String.valueOf(calendar.get(Calendar.YEAR));
+                        String format = String.format("%s/%s/%s",dd,MM,yyyy);
+                        Date date2 = new SimpleDateFormat("dd/MM/yyyy").parse(format);
+                        int dHienTai = Integer.parseInt(formatter.format(date2));
+                        int tg = dKhoiHanh-dHienTai;
+                        if(tg>14){
+                            Intent ctdv = new Intent(ThongTinDatVe.this, ChiTietDatVe.class);
+                            ctdv.putExtra("tour",tour);
+                            startActivity(ctdv);
+                        }else{
+                            Toast.makeText(ThongTinDatVe.this,"Đã hết hạn đặt vé",Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
                 }else{
                     Toast.makeText(ThongTinDatVe.this,"Bạn cần đăng nhập trước khi đặt vé!!!",Toast.LENGTH_SHORT).show();
                 }
@@ -151,7 +176,6 @@ public class ThongTinDatVe extends AppCompatActivity {
                     xbl.putExtra("tour", tour);
                     startActivity(xbl);
                 }else { //Đã đăng nhập
-                    //Đã đặt vé
                     bdgRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -161,10 +185,17 @@ public class ThongTinDatVe extends AppCompatActivity {
                                     //Đã đặt vé
                                     if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(firebaseUser.getUid())
                                             && baiDanhGia.trangThai.equals("Đã thanh toán")) {
+                                        flag=true;
                                         Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
                                         xbl.putExtra("tour", tour);
                                         startActivity(xbl);
                                     }
+                                }
+                                //Chưa đặt vé
+                                if(!flag) {
+                                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
+                                    xbl.putExtra("tour", tour);
+                                    startActivity(xbl);
                                 }
                             }
                         }
@@ -174,10 +205,6 @@ public class ThongTinDatVe extends AppCompatActivity {
                             Toast.makeText(ThongTinDatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-                    //Chưa đặt vé
-                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
-                    xbl.putExtra("tour", tour);
-                    startActivity(xbl);
 //                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
 //                    xbl.putExtra("tour", tour);
 //                    startActivity(xbl);

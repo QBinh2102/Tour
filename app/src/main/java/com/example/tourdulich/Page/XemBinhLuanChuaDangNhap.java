@@ -30,6 +30,7 @@ public class XemBinhLuanChuaDangNhap extends AppCompatActivity {
 
     private Button btnQuayLai;
     private ListView lvDanhGia;
+    private boolean flag = false;
 
     private DatabaseReference bdgRef = FirebaseDatabase.getInstance().getReference("Bài đánh giá");
 
@@ -74,19 +75,20 @@ public class XemBinhLuanChuaDangNhap extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
                         if(baiDanhGia.idTour.equals(tour.idTour)&&baiDanhGia.trangThai.equals("Đã thanh toán")){
+                            flag = true;
                             baiDanhGias.add(baiDanhGia);
                         }
                     }
-                    if(baiDanhGias.isEmpty()){
-                        Toast.makeText(XemBinhLuanChuaDangNhap.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
-                    }else {
-                        DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(XemBinhLuanChuaDangNhap.this, baiDanhGias, baiDanhGias.size());
-                        lvDanhGia.setAdapter(danhGiaAdapter);
-                    }
+                    DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(XemBinhLuanChuaDangNhap.this, baiDanhGias, baiDanhGias.size());
+                    lvDanhGia.setAdapter(danhGiaAdapter);
                 }else{
                        //Toast.makeText(XemBinhLuanChuaDangNhap.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
                 }
+                if(!flag){
+                    Toast.makeText(XemBinhLuanChuaDangNhap.this, "Chưa có đánh giá nào!", Toast.LENGTH_SHORT).show();
+                }
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class Tour implements Serializable {
     public String idTour;
+    public String tenTour;
     public String danhMuc;
     public String giaTien;
     public String hinhTour;
@@ -15,7 +16,7 @@ public class Tour implements Serializable {
     public int soLuongVe;
     public int soBinhLuan;
     public double soSao;
-    public String tenTour;
+    public int soLuongDat;
 
     public Tour(){}
 
@@ -33,6 +34,7 @@ public class Tour implements Serializable {
         this.soSao = 0;
         this.soBinhLuan = 0;
         this.soLuongVe = soLuongVe;
+        this.soLuongDat=0;
     }
 
 }
