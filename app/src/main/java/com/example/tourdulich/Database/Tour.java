@@ -2,6 +2,7 @@ package com.example.tourdulich.Database;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Tour implements Serializable {
     public String idTour;
@@ -36,5 +37,7 @@ public class Tour implements Serializable {
         this.soLuongVe = soLuongVe;
         this.soLuongDat=0;
     }
+
+
 
 }

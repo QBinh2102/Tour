@@ -10,16 +10,16 @@
     android:background="@color/white"
     tools:context=".Dialog.BoLocDatVe">
 
-    <TextView
-        android:id="@+id/txtReturn"
-        android:layout_width="166dp"
+    <Button
+        android:id="@+id/btnReturnBL"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/baseline_keyboard_return_24"
-        android:drawableTint="@color/black"
-        android:paddingBottom="10dp"
+        android:backgroundTint="@color/blue"
+        android:drawableLeft="@drawable/baseline_keyboard_return_24"
         android:text=" Quay lại"
-        android:textColor="@color/black"
-        android:textSize="50px" />
+        android:textColor="@color/white"
+        android:textSize="50px"
+        android:layout_marginBottom="5dp"/>
 
     <!-- Spinner for Service Type -->
     <TextView
@@ -37,19 +37,7 @@
         android:background="@drawable/spinner_background" />
 
     <!-- Spinner for City -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Địa điểm"
-        android:textSize="16sp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp" />
 
-    <Spinner
-        android:id="@+id/city_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/spinner_background" />
 
     <!-- Spinner for Service -->
     <TextView
@@ -64,7 +52,33 @@
         android:id="@+id/service_spinner"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/spinner_background" />
+        android:background= "@drawable/spinner_background"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ngày đi"
+        android:textSize="16sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/editTextNgayDi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/background"
+        android:ems="10"
+        android:text=""
+        android:hint="dd/MM/yyyy"
+        android:inputType="date"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="#96A0AA"
+        android:textSize="18dp" />
+
+
 
     <!-- Apply Button -->
     <Button
@@ -75,5 +89,13 @@
         android:backgroundTint="@color/blue"
         android:textColor="@android:color/white"
         android:layout_marginTop="24dp" />
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hủy Áp dụng"
+        android:backgroundTint="@color/red"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="2sp" />
 
 </LinearLayout>

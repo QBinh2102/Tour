@@ -15,6 +15,7 @@ import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
