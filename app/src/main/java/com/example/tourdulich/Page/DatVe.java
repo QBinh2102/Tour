@@ -42,6 +42,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+
+import java.time.format.DateTimeParseException;
+
+
+
 public class DatVe extends AppCompatActivity {
 
     private LinearLayout btnToiHoSo;
@@ -281,50 +286,52 @@ public class DatVe extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         arrayTour = new ArrayList<>();
+
                         if (dataSnapshot.exists()) {
+                            // Lấy dữ liệu từ bộ lọc
+                            String giaTienNguoiNhap = GiaTien;
+                            String phuongTienNguoiNhap = PhuongTien;
+                            String ngayNguoiNhap = edtTextNgayDi.getText().toString();
+
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Tour tour = snapshot.getValue(Tour.class);
-                                if (GiaTien.equals("") && PhuongTien.equals("") && edtTextNgayDi.getText().toString().equals("")) {
-                                    arrayTour.add(tour);
-//                                } else if (!GiaTien.equals("") && !PhuongTien.equals("") && !edtTextNgayDi.getText().toString().equals("")) {
-//                                    int giaTien = Integer.parseInt(GiaTien);
-//                                    int giaTour = Integer.parseInt(tour.giaTien);
-//
-//                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//                                    LocalDate ngayCanSoSanh = LocalDate.parse(edtTextNgayDi.getText().toString(), formatter);
-//                                    LocalDate ngayKhoiHanh = LocalDate.parse(tour.ngayKhoiHanh,formatter);
-//                                    if (Math.abs(ChronoUnit.DAYS.between(ngayKhoiHanh, ngayCanSoSanh)) <= 3) {
-//                                        arrayTour.add(tour);
-//                                    }
-                                } else if (GiaTien!="") {
-                                    int giaTien = Integer.parseInt(GiaTien);
-                                    int giaTour = Integer.parseInt(tour.giaTien);
-                                    if(0<giaTour&&giaTour<=giaTien){
-                                        arrayTour.add(tour);
-                                    }
-                                } else if (PhuongTien!="") {
-                                    if(tour.phuongTien.equals(PhuongTien))
-                                        arrayTour.add(tour);
-                                } else if ((GiaTien!="")&&(PhuongTien!="")) {
-                                    int giaTien = Integer.parseInt(GiaTien);
-                                    int giaTour = Integer.parseInt(tour.giaTien);
-                                    if (0 < giaTour && giaTour <= giaTien && tour.phuongTien.equals(PhuongTien)) {
-                                        arrayTour.add(tour);
-                                    }
-                                } else if (!edtTextNgayDi.getText().toString().equals("")) {
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                                    LocalDate ngayCanSoSanh = LocalDate.parse("20/12/2024", formatter);
-                                    LocalDate ngayKhoiHanh = LocalDate.parse(tour.ngayKhoiHanh,formatter);
-                                    if (Math.abs(ChronoUnit.DAYS.between(ngayKhoiHanh, ngayCanSoSanh)) <= 3) {
-                                        arrayTour.add(tour);
+
+                                // Kiểm tra giá tour
+                                boolean thoaManGiaTien = giaTienNguoiNhap.isEmpty() || (
+                                        Integer.parseInt(tour.giaTien) <= Integer.parseInt(giaTienNguoiNhap)
+                                );
+
+                                // Kiểm tra phương tiện
+                                boolean thoaManPhuongTien = phuongTienNguoiNhap.isEmpty() || (
+                                        tour.phuongTien.equals(phuongTienNguoiNhap)
+                                );
+
+                                // Kiểm tra ngày
+                                boolean thoaManNgay = true;
+                                if (!ngayNguoiNhap.isEmpty()) {
+                                    try {
+                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                        LocalDate ngayCanSoSanh = LocalDate.parse(ngayNguoiNhap, formatter);
+                                        LocalDate ngayKhoiHanh = LocalDate.parse(tour.ngayKhoiHanh, formatter);
+
+                                        // So sánh trong phạm vi 3 ngày
+                                        thoaManNgay = Math.abs(ChronoUnit.DAYS.between(ngayKhoiHanh, ngayCanSoSanh)) <= 3;
+                                    } catch (DateTimeParseException e) {
+                                        Toast.makeText(DatVe.this, "Ngày không hợp lệ", Toast.LENGTH_SHORT).show();
+                                        return; // Kết thúc nếu ngày nhập không hợp lệ
                                     }
                                 }
+
+                                // Nếu thỏa mãn tất cả điều kiện, thêm vào danh sách
+                                if (thoaManGiaTien && thoaManPhuongTien && thoaManNgay) {
+                                    arrayTour.add(tour);
+                                }
                             }
-
-
                         } else {
                             Toast.makeText(DatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
                         }
+
+                        // Cập nhật danh sách hiển thị
                         tourAdapter = new TourAdapter(DatVe.this, arrayTour);
                         lvTour.setAdapter(tourAdapter);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -338,6 +345,7 @@ public class DatVe extends AppCompatActivity {
                 });
             }
         });
+
 
 
         //Hủy Áp Dụng
