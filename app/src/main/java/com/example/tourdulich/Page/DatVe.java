@@ -45,11 +45,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+<<<<<<< HEAD
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+=======
+
+import java.time.format.DateTimeParseException;
+
+>>>>>>> f7edc176c2503b7c40f2fe45d94cd9d1fd3ec8ef
 
 
 public class DatVe extends AppCompatActivity {
@@ -436,8 +442,11 @@ public class DatVe extends AppCompatActivity {
 
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> f7edc176c2503b7c40f2fe45d94cd9d1fd3ec8ef
         //Hủy Áp Dụng
         Button HuyApDung = view.findViewById(R.id.cancel_button);
         HuyApDung.setOnClickListener(new View.OnClickListener() {

@@ -1,8 +1,9 @@
 package com.example.tourdulich.Page;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,19 +13,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+import com.example.tourdulich.Database.DanhMuc;
 import com.example.tourdulich.R;
+import com.google.firebase.database.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SuaVaXoaDanhMuc extends AppCompatActivity {
-    private static final int REQUEST_CODE_PICK_IMAGE = 1;
-    private String categoryToEdit = null;
+    private static final String DATABASE_PATH = "danhMuc";  // Đường dẫn Firebase
     private GridLayout gridDanhMuc;  // GridLayout chứa các danh mục
     private Button btnDelete;
     private Map<String, CheckBox> checkBoxMap;
     private Map<String, ImageView> categoryImagesMap;
-    private String selectedImageUri = null;
-    private String currentImageUri = null;
+    private DatabaseReference dbRef;  // Firebase reference
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,31 +45,25 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
         checkBoxMap = new HashMap<>(); // Khởi tạo Map lưu CheckBox
         categoryImagesMap = new HashMap<>(); // Khởi tạo Map lưu ImageView
 
-        // Lấy danh mục cần chỉnh sửa từ Intent
-        categoryToEdit = getIntent().getStringExtra("category");
+        // Kết nối Firebase
+        dbRef = FirebaseDatabase.getInstance().getReference(DATABASE_PATH);
 
-        if (categoryToEdit == null) {
-            Toast.makeText(this, "Không tìm thấy danh mục!", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+        // Lắng nghe thay đổi dữ liệu từ Firebase
         loadDanhMuc();
+
         btnDelete.setOnClickListener(v -> {
             boolean isDeleted = false; // Biến kiểm tra xem có danh mục nào được xóa hay không
 
             for (int i = 0; i < gridDanhMuc.getChildCount(); i++) {
                 LinearLayout categoryLayout = (LinearLayout) gridDanhMuc.getChildAt(i);
-                CheckBox checkBox = (CheckBox) categoryLayout.getChildAt(2); // Giả sử CheckBox là phần tử thứ 2 trong layout
+                CheckBox checkBox = (CheckBox) categoryLayout.getChildAt(2); // CheckBox là phần tử thứ 3
 
                 if (checkBox != null && checkBox.isChecked()) {
                     String category = (String) checkBox.getTag(); // Lấy tag của checkbox, là tên danh mục
-                    // Xóa danh mục khỏi SharedPreferences
-                    if (deleteDanhMuc(category)) {
-                        // Xóa phần tử trong GridLayout
-                        gridDanhMuc.removeViewAt(i);
-                        isDeleted = true;
-                        i--;  // Giảm chỉ số để tránh bỏ sót phần tử sau khi xóa
-                    }
+                    deleteDanhMuc(category);  // Xóa danh mục khỏi Firebase
+                    gridDanhMuc.removeViewAt(i);  // Xóa phần tử trong GridLayout
+                    isDeleted = true;
+                    i--;  // Giảm chỉ số để tránh bỏ sót phần tử sau khi xóa
                 }
             }
 
@@ -78,10 +75,7 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
         });
 
         btnSave.setOnClickListener(v -> {
-            // Tạo danh sách mới từ GridLayout
             StringBuilder danhMucMoi = new StringBuilder();
-            SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
 
             for (int i = 0; i < gridDanhMuc.getChildCount(); i++) {
                 LinearLayout categoryLayout = (LinearLayout) gridDanhMuc.getChildAt(i);
@@ -90,109 +84,80 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
                 danhMucMoi.append(category).append(","); // Thêm vào danh sách mới
             }
 
-            // Ghi đè danh sách mới lên danh sách cũ trong SharedPreferences
-            editor.putString("DanhMucList", danhMucMoi.toString());
-            editor.apply();
+            // Ghi đè danh sách mới lên danh sách cũ trong Firebase
+            dbRef.setValue(danhMucMoi.toString());
 
-            // Thông báo và chuyển về Trang Chủ Admin
             Toast.makeText(SuaVaXoaDanhMuc.this, "Danh mục đã được cập nhật!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(SuaVaXoaDanhMuc.this, TrangChuAdmin.class);
             startActivity(intent);
             finish();
         });
 
-        btnCancel.setOnClickListener(v -> {
-            loadDanhMuc();
-            finish();
+        btnCancel.setOnClickListener(v -> finish());
+    }
+
+    private void loadDanhMuc() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("danhmuc");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    Toast.makeText(SuaVaXoaDanhMuc.this, "Không có danh mục nào!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    DanhMuc danhMuc = snapshot.getValue(DanhMuc.class);
+                    if (danhMuc != null) {
+                        // Log để kiểm tra dữ liệu
+                        Log.d("DanhMuc", "Tên danh mục: " + danhMuc.ten);
+                        addDanhMucToLayout(danhMuc);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(SuaVaXoaDanhMuc.this, "Lỗi tải danh mục!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
 
-    private void loadDanhMuc() {
-        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        String danhMucList = sharedPreferences.getString("DanhMucList", "");
 
-        if (!danhMucList.isEmpty()) {
-            String[] categories = danhMucList.split(",");
-            for (String category : categories) {
-                addDanhMucToLayout(category);
-            }
-        }
-
-    }
-
-    private void addDanhMucToLayout(String category) {
+    private void addDanhMucToLayout(DanhMuc danhMuc) {
         LinearLayout categoryLayout = new LinearLayout(this);
         categoryLayout.setOrientation(LinearLayout.VERTICAL);
         categoryLayout.setGravity(Gravity.CENTER);
-        categoryLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         // Tạo TextView hiển thị tên danh mục
         TextView categoryName = new TextView(this);
-        categoryName.setText(category);
-        categoryName.setTextSize(18);
+        categoryName.setText(danhMuc.ten);
 
-        // Tạo Checkbox để chọn danh mục
+        // Tạo CheckBox
         CheckBox checkBox = new CheckBox(this);
-        checkBox.setTag(category); // Đặt tag là tên danh mục
-        checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        checkBox.setTag(danhMuc.ten);  // Lưu tên danh mục vào tag
+        checkBoxMap.put(danhMuc.ten, checkBox);
 
-        // Lưu CheckBox vào Map
-        checkBoxMap.put(category, checkBox);
-
-        // Tạo ImageView để hiển thị ảnh
+        // Tạo ImageView và hiển thị ảnh từ URL
         ImageView categoryImage = new ImageView(this);
-        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        String imageUri = sharedPreferences.getString(category + "_image", null);
-
-        if (imageUri != null) {
-            categoryImage.setImageURI(android.net.Uri.parse(imageUri));
+        if (danhMuc.hinh != null) {
+            categoryImage.setImageURI(Uri.parse(danhMuc.hinh));  // Sử dụng Uri cho hình ảnh
         } else {
-            categoryImage.setImageResource(R.drawable.danh_muc_mac_dinh); // Ảnh mặc định
+            categoryImage.setImageResource(R.drawable.danh_muc_mac_dinh); // Ảnh mặc định nếu không có
         }
 
-        categoryImage.setLayoutParams(new LinearLayout.LayoutParams(150, 150));
-
-        // Lưu ImageView vào Map
-        categoryImagesMap.put(category, categoryImage);
-
+        categoryImagesMap.put(danhMuc.ten, categoryImage);
         categoryLayout.addView(categoryName);
         categoryLayout.addView(categoryImage);
         categoryLayout.addView(checkBox);
 
-        // Thêm vào GridLayout
-        gridDanhMuc.addView(categoryLayout);
+        gridDanhMuc.addView(categoryLayout);  // Thêm vào GridLayout
     }
 
-    private boolean deleteDanhMuc(String categoryToDelete) {
-        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        String danhMucList = sharedPreferences.getString("DanhMucList", "");
-        if (!danhMucList.isEmpty()) {
-            String[] categories = danhMucList.split(",");
-            StringBuilder newDanhMucList = new StringBuilder();
-            boolean isDeleted = false;
-            for (String category : categories) {
-                if (!category.equals(categoryToDelete)) {
-                    newDanhMucList.append(category).append(",");
-                } else {
-                    isDeleted = true;
-                }
-            }
-            if (isDeleted) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("DanhMucList", newDanhMucList.toString());
-                editor.remove(categoryToDelete + "_image");
-                editor.apply();
-            }
-            return isDeleted;
-        }
-        return false;
-    }
 
-    private void saveNewImage(String category, String imageUri) {
-        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(category + "_image", imageUri);
-        editor.apply();
+    private void deleteDanhMuc(String categoryToDelete) {
+        dbRef.child(categoryToDelete).removeValue(); // Xóa danh mục khỏi Firebase
     }
 }

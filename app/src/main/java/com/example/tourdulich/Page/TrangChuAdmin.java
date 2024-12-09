@@ -2,10 +2,11 @@ package com.example.tourdulich.Page;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -20,138 +21,49 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.util.Consumer;
 
-import com.example.tourdulich.Page.DatVe;
-import com.example.tourdulich.Page.GiaoDich;
-import com.example.tourdulich.Page.SuaVaXoaDanhMuc;
-import com.example.tourdulich.Page.ThongTinCaNhan;
-import com.example.tourdulich.Page.ThongTinChuaDangNhap;
-import com.example.tourdulich.Page.TinTuc;
+import com.bumptech.glide.Glide;
+import com.example.tourdulich.Database.DanhMuc;
 import com.example.tourdulich.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class TrangChuAdmin extends AppCompatActivity {
-    private TextView lbWelcome;
-    private LinearLayout btnToiDatVe;
-    private LinearLayout btnToiHoSo;
-    private LinearLayout btnToiTinTuc;
-    private LinearLayout btnToiGiaoDich;
-    private Button btnDangXuat;
-    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private String hoTen;
-    private ImageView imgVPopupMenu;
-    private ActivityResultLauncher<Intent> imagePickerLauncher;
-    private Uri selectedImageUri; // Dùng để lưu trữ URI của ảnh được chọn
+
     private LinearLayout danhMucContainer;
-    ArrayList<ImageView> danhMucList = new ArrayList<>();
+    ArrayList<DanhMuc> danhMucList = new ArrayList<>();
+    private Uri selectedImageUri; // Dùng để lưu trữ URI của ảnh được chọn
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trang_chu_admin);
 
+        danhMucContainer = findViewById(R.id.layoutDanhMuc);
+
         loadDanhMuc();
 
-        ImageView imgViewMayBay = findViewById(R.id.imgVMayBay);
-        ImageView imgViewTauThuy = findViewById(R.id.imgVTauThuy);
-        ImageView imgViewXe = findViewById(R.id.imgVXe);
-        ImageView imgViewBien = findViewById(R.id.imgVBien);
-        ImageView imgViewDao = findViewById(R.id.imgVDao);
-        ImageView imgViewRung = findViewById(R.id.imgVRung);
-
-        // Gọi hàm suaDanhMuc khi người dùng click vào bất kỳ ImageView nào
-        imgViewMayBay.setOnClickListener(v -> suaDanhMuc(imgViewMayBay));
-        imgViewTauThuy.setOnClickListener(v -> suaDanhMuc(imgViewTauThuy));
-        imgViewXe.setOnClickListener(v -> suaDanhMuc(imgViewXe));
-        imgViewBien.setOnClickListener(v -> suaDanhMuc(imgViewBien));
-        imgViewDao.setOnClickListener(v -> suaDanhMuc(imgViewDao));
-        imgViewRung.setOnClickListener(v -> suaDanhMuc(imgViewRung));
-        // Khởi tạo ActivityResultLauncher
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        selectedImageUri = result.getData().getData(); // Lấy URI của ảnh được chọn
-                    }
-                }
-        );
-
-        // Kiểm tra trạng thái đăng nhập khi mở trang
-        if (firebaseUser == null) {
-            Intent intent = new Intent(TrangChuAdmin.this, ThongTinChuaDangNhap.class);
-            startActivity(intent);
-            finish();
-        }
-        //Kiểm tra vai trò của user -> chuyển đúng giao diện của từng vai trò
-        SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
-        String role = preferences.getString("role", "user"); // Default là "user" nếu không tìm thấy role
-        if (role.equals("admin")) {
-            // Mở trang chủ Admin
-            setContentView(R.layout.activity_trang_chu_admin);
-        } else {
-            // Mở trang chủ User
-            setContentView(R.layout.activity_trang_chu);
-        }
-        // Hiển thị thông tin người dùng
-        lbWelcome = findViewById(R.id.textViewWelcome);
-        hoTen = firebaseUser.getDisplayName();
-        lbWelcome.setText("Chào mừng " + hoTen);
-
-        // Chuyển sang trang thông tin cá nhân
-        Intent ttcn = new Intent(this, ThongTinCaNhan.class);
-        btnToiHoSo = findViewById(R.id.btTrangChuToiHoSo);
-        btnToiHoSo.setOnClickListener(v -> {
-            startActivity(ttcn);
-            overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
-        });
-
-        // Chuyển sang trang Đặt Vé
-        Intent datVe = new Intent(this, DatVe.class);
-        btnToiDatVe = findViewById(R.id.btTrangChuToiDatVe);
-        btnToiDatVe.setOnClickListener(view -> {
-            startActivity(datVe);
-            overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
-        });
-
-        // Chuyển sang trang Tin Tức
-        Intent tinTuc = new Intent(this, TinTuc.class);
-        btnToiTinTuc = findViewById(R.id.btTrangChuToiTinTuc);
-        btnToiTinTuc.setOnClickListener(view -> {
-            startActivity(tinTuc);
-            overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
-        });
-
-        // Chuyển sang trang Giao Dịch
-        Intent gd = new Intent(this, GiaoDich.class);
-        btnToiGiaoDich = findViewById(R.id.btTrangChuToiGiaoDich);
-        btnToiGiaoDich.setOnClickListener(view -> {
-            startActivity(gd);
-            overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
-        });
-
-
-        // Xử lý khi bấm vào thanh menu
-        imgVPopupMenu = findViewById(R.id.imgViewPopupMenu);
+        ImageView imgVPopupMenu = findViewById(R.id.imgViewPopupMenu);
         imgVPopupMenu.setOnClickListener(view -> {
-            // Tạo một dialog với layout dialog_menu.xml
             Dialog dialog = new Dialog(TrangChuAdmin.this);
             dialog.setContentView(R.layout.dialog_menu_danh_muc);
             dialog.setCancelable(true);  // Cho phép đóng dialog khi bấm ra ngoài
 
-            // Đặt sự kiện cho các nút trong dialog
             Button btnCong = dialog.findViewById(R.id.menu_add);
             Button btnSua = dialog.findViewById(R.id.menu_edit);
 
-            // Thiết lập sự kiện cho các nút
             btnCong.setOnClickListener(v -> {
-                // Xử lý thêm danh mục
                 themDanhMuc();
                 dialog.dismiss();
             });
@@ -168,43 +80,9 @@ public class TrangChuAdmin extends AppCompatActivity {
                     Toast.makeText(this, "Đã xảy ra lỗi khi mở dialog sửa danh mục!", Toast.LENGTH_SHORT).show();
                 }
             });
-
-
-            // Hiển thị dialog
             dialog.show();
         });
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        clearDanhMucSharedPreferences();
-        loadDanhMuc();
-    }
-    private void clearDanhMucSharedPreferences() {
-        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear(); // Xóa tất cả dữ liệu trong "DanhMucPrefs"
-        editor.apply(); // Áp dụng thay đổi
-        Toast.makeText(this, "Đã xóa dữ liệu danh mục!", Toast.LENGTH_SHORT).show();
-    }
-    //Hiện những danh mục đã thêm
-    private void loadDanhMuc() {
-        LinearLayout container = findViewById(R.id.layoutDanhMuc);
-        SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-        String danhMucList = sharedPreferences.getString("danhMucList", "");  // Đảm bảo tên khóa phải giống nhau
-
-        // Nếu có danh mục đã lưu, chia chuỗi danh mục và thêm vào layout
-        if (!danhMucList.isEmpty()) {
-            String[] categories = danhMucList.split(",");
-            for (String category : categories) {
-                addDanhMucToLayout(category);
-            }
-        }
-    }
-
-
-    private static final int PICK_IMAGE_REQUEST = 1;  // Mã yêu cầu để chọn ảnh
-
 
     private void suaDanhMuc(ImageView imageView) {
         String category = (String) imageView.getTag();  // Lấy category từ tag của imageView
@@ -212,71 +90,78 @@ public class TrangChuAdmin extends AppCompatActivity {
             Toast.makeText(this, "Danh mục không hợp lệ!", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Truyền danh sách danh mục vào Intent
         Intent intent = new Intent(TrangChuAdmin.this, SuaVaXoaDanhMuc.class);
-        intent.putExtra("category", category);
+        ArrayList<DanhMuc> danhMucList = getDanhMucList(); // Giả sử bạn có một phương thức để lấy danh sách danh mục
+        intent.putParcelableArrayListExtra("danhMucList", danhMucList);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
     }
 
-
-
-    // Callback ảnh
-    private Consumer<Uri> imagePickerCallback;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null && imagePickerCallback != null) {
-            Uri selectedImageUri = data.getData();
-            imagePickerCallback.accept(selectedImageUri);
-        }
-    }
-
-
-    private void themDanhMuc() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Thêm danh mục mới");
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        EditText editText = new EditText(this);
-        editText.setHint("Nhập tên danh mục");
-        layout.addView(editText);
-
-        builder.setView(layout);
-
-        builder.setPositiveButton("Thêm", (dialog, which) -> {
-            String newCategory = editText.getText().toString().trim();
-            if (!newCategory.isEmpty()) {
-                SharedPreferences sharedPreferences = getSharedPreferences("DanhMucPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                String danhMucList = sharedPreferences.getString("DanhMucList", "");
-                // Kiểm tra và thêm danh mục mới vào danh sách
-                if (!danhMucList.isEmpty()) {
-                    danhMucList = danhMucList + "," + newCategory;
-                } else {
-                    danhMucList = newCategory;
+    // Phương thức lấy danh sách danh mục từ Firebase
+    private ArrayList<DanhMuc> getDanhMucList() {
+        ArrayList<DanhMuc> danhMucList = new ArrayList<>();
+        // Lấy dữ liệu từ Firebase và đưa vào danh sách danh mục
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Danh mục");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    DanhMuc danhMuc = dataSnapshot.getValue(DanhMuc.class);
+                    if (danhMuc != null) {
+                        danhMucList.add(danhMuc);
+                    }
                 }
+            }
 
-                editor.putString("DanhMucList", danhMucList);
-                editor.apply();
-
-                addDanhMucToLayout(newCategory);
-            } else {
-                Toast.makeText(this, "Vui lòng nhập tên danh mục!", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Error fetching danh mục: " + error.getMessage());
             }
         });
-        builder.setNegativeButton("Hủy", null);
-        builder.show();
+        return danhMucList;
     }
 
 
-    private void addDanhMucToLayout(String danhMuc) {
+    private void loadDanhMuc() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Danh mục");
+
+        dbRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, String previousChildName) {
+                DanhMuc danhMuc = snapshot.getValue(DanhMuc.class);
+                if (danhMuc != null) {
+                    addDanhMucToLayout(danhMuc.ten, danhMuc.hinh); // Add to layout
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, String previousChildName) {
+                // Handle category update if necessary
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                // Handle category removal if necessary
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, String previousChildName) {
+                // Handle child move if necessary
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Cannot load categories: " + error.getMessage());
+            }
+        });
+    }
+
+    private void addDanhMucToLayout(String danhMuc, String hinhUrl) {
         LinearLayout container = findViewById(R.id.layoutDanhMuc);
         LinearLayout currentRow = null;
 
-        // Ensure that if the container is empty or the last row has 3 items, we create a new row
         if (container.getChildCount() == 0 || ((LinearLayout) container.getChildAt(container.getChildCount() - 1)).getChildCount() >= 3) {
             currentRow = new LinearLayout(this);
             currentRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -290,7 +175,6 @@ public class TrangChuAdmin extends AppCompatActivity {
             currentRow = (LinearLayout) container.getChildAt(container.getChildCount() - 1);
         }
 
-        // Create a CardView for the new category
         CardView cardView = new CardView(this);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 0,
@@ -318,8 +202,17 @@ public class TrangChuAdmin extends AppCompatActivity {
         );
         imageParams.gravity = Gravity.CENTER;
         imageView.setLayoutParams(imageParams);
-        imageView.setImageResource(R.drawable.danh_muc_mac_dinh);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        // Kiểm tra nếu có URL hình ảnh, dùng Glide để tải ảnh từ URL Firebase
+        if (hinhUrl != null && !hinhUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(hinhUrl)
+                    .placeholder(R.drawable.danh_muc_mac_dinh)
+                    .error(R.drawable.danh_muc_mac_dinh)
+                    .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.danh_muc_mac_dinh);  // Hình mặc định
+        }
 
         frameLayout.addView(imageView);
         cardView.addView(frameLayout);
@@ -328,15 +221,61 @@ public class TrangChuAdmin extends AppCompatActivity {
     }
 
 
+
+    private void themDanhMuc() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Thêm danh mục mới");
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        EditText edtTenDanhMuc = new EditText(this);
+        edtTenDanhMuc.setHint("Nhập tên danh mục");
+        layout.addView(edtTenDanhMuc);
+
+        Button btnChonHinh = new Button(this);
+        btnChonHinh.setText("Chọn hình ảnh");
+        layout.addView(btnChonHinh);
+
+        builder.setView(layout);
+
+        btnChonHinh.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        });
+
+        builder.setPositiveButton("Thêm", (dialog, which) -> {
+            String tenDanhMuc = edtTenDanhMuc.getText().toString().trim();
+
+            if (tenDanhMuc.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập tên danh mục!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String hinhUrl = selectedImageUri != null ? selectedImageUri.toString() : null;
+
+            // Save category to Firebase
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Danh mục");
+            String key = dbRef.push().getKey();
+            if (key != null) {
+                DanhMuc danhMuc = new DanhMuc(tenDanhMuc, hinhUrl);
+                dbRef.child(key).setValue(danhMuc);
+                Toast.makeText(TrangChuAdmin.this, "Danh mục đã được thêm", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+
+        builder.show();
+    }
+
     @Override
-    protected void onStart () {
-        super.onStart();
-        // Kiểm tra lại nếu người dùng chưa đăng nhập, điều hướng về trang đăng nhập
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null) {
-            Intent intent = new Intent(TrangChuAdmin.this, ThongTinChuaDangNhap.class);
-            startActivity(intent);
-            finish();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            Log.d("Image URI", "URI: " + selectedImageUri.toString());  // Log URI để kiểm tra
         }
     }
 }
