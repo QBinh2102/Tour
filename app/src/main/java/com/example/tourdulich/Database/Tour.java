@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Tour implements Serializable {
+    private String name;
     public String idTour;
     public String tenTour;
     public String danhMuc;
@@ -21,7 +22,7 @@ public class Tour implements Serializable {
 
     public Tour(){}
 
-    public Tour(String idTour, String tenTour, String hinhTour, String danhMuc, String phuongTien,
+    public Tour(String idTour, String tenTour, String hinhTour, String danhMuc, String phuongTien, String name,
                 String gioiThieu, String ngayKhoiHanh, String ngayKetThuc, String giaTien, int soLuongVe) {
         this.idTour = idTour;
         this.tenTour = tenTour;
@@ -37,6 +38,15 @@ public class Tour implements Serializable {
         this.soLuongVe = soLuongVe;
         this.soLuongDat=0;
     }
+    // Getter và Setter
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
 
 

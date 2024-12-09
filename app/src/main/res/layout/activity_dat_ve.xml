@@ -37,15 +37,16 @@
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="20dp">
 
-                        <EditText
+                        <SearchView
                             android:id="@+id/txtTimKiem"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:drawableRight="@drawable/search_24"
+                            android:iconifiedByDefault="false"
+                            android:searchHintIcon="@null"
+                            android:queryHint="Search"
                             android:ems="10"
-                            android:hint="Search"
-                            android:inputType="text"
-                            android:paddingLeft="10dp"
+                            android:focusable="false"
                             android:textColor="@color/black"
                             android:textColorHint="#96A0AA" />
                     </androidx.cardview.widget.CardView>

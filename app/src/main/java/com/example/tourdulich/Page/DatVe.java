@@ -11,10 +11,12 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -33,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -41,6 +44,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
 
 public class DatVe extends AppCompatActivity {
 
@@ -61,6 +71,9 @@ public class DatVe extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
+    private SearchView TimKiem;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,10 +86,34 @@ public class DatVe extends AppCompatActivity {
 
         arrayTour = new ArrayList<>();
         lvTour = findViewById(R.id.listViewTour);
+
+//        tourAdapter = new TourAdapter(DatVe.this, arrayTour);
+//        lvTour.setAdapter(tourAdapter);
+
+
         progressBar = findViewById(R.id.progressBar2);
 
         progressBar.setVisibility(View.VISIBLE);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
+
+        //Show toàn bộ tour trên firebase
+        showTour();
+
+        TimKiem = findViewById(R.id.txtTimKiem);
+        TimKiem.clearFocus();
+        TimKiem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterTours(newText);
+                return true;
+            }
+        });
 
         //Chuyển Trang Thông Tin Cá Nhân
         if (firebaseUser != null) {
@@ -136,8 +173,7 @@ public class DatVe extends AppCompatActivity {
             }
         });
 
-        //Show toàn bộ tour trên firebase
-        showTour();
+
 
         //Chuyển sang thông tin đặt vé
         lvTour.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -156,30 +192,86 @@ public class DatVe extends AppCompatActivity {
 
 
     private void showTour() {
+        // Hiển thị progress bar khi đang tải
+        progressBar.setVisibility(View.VISIBLE);
+
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    arrayTour.clear(); // Xóa danh sách cũ trước khi tải mới
+
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Lấy từng tour từ Firebase
                         Tour tour = snapshot.getValue(Tour.class);
                         if (tour != null) {
-                            arrayTour.add(tour); // Thêm tour vào danh sách
+                            arrayTour.add(tour); // Thêm vào danh sách nếu hợp lệ
                         }
                     }
-                    tourAdapter = new TourAdapter(DatVe.this, arrayTour);
-                    lvTour.setAdapter(tourAdapter);
-                    progressBar.setVisibility(View.INVISIBLE);
+
+                    // Kiểm tra danh sách sau khi tải
+                    if (!arrayTour.isEmpty()) {
+                        // Gắn adapter và hiển thị dữ liệu
+                        if (tourAdapter == null) {
+                            tourAdapter = new TourAdapter(DatVe.this, arrayTour);
+                            lvTour.setAdapter(tourAdapter);
+                        } else {
+                            tourAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        Toast.makeText(DatVe.this, "Không có dữ liệu để hiển thị", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(DatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DatVe.this, "Không có tour nào trong cơ sở dữ liệu", Toast.LENGTH_SHORT).show();
                 }
+
+                // Ẩn progress bar sau khi tải xong
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                Toast.makeText(DatVe.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressBar.setVisibility(View.INVISIBLE); // Ẩn progress bar nếu xảy ra lỗi
+                Toast.makeText(DatVe.this, "Lỗi tải dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private String removeAccent(String s) {
+        if (s == null) return ""; // Trả về chuỗi rỗng nếu input null
+        String normalized = Normalizer.normalize(s, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", ""); // Loại bỏ các ký tự dấu
+    }
+
+    // Lọc danh sách dựa trên từ khóa tìm kiếm
+    private void filterTours(String query) {
+        List<Tour> filteredList = new ArrayList<>();
+
+        if (query == null || query.isEmpty()) {
+            query = ""; // Gán giá trị rỗng nếu null hoặc trống
+        }
+        String queryNormalized = removeAccent(query.toLowerCase());
+        for (Tour tour : arrayTour) {
+            // Chuyển đổi tên tour thành không dấu
+            String tourNameNormalized = removeAccent(tour.tenTour.toLowerCase());
+
+            // So sánh tên tour với query
+            if (tourNameNormalized.contains(queryNormalized)) {
+                filteredList.add(tour);
+            }
+        }
+
+        // Cập nhật danh sách hiển thị
+        tourAdapter.searchDataList(filteredList);
+        lvTour.setAdapter(tourAdapter);
+
+        // Thông báo nếu không có kết quả
+        if (filteredList.isEmpty()) {
+            Toast.makeText(DatVe.this, "Không tìm thấy kết quả", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     String GiaTien = "";
     String PhuongTien = "";
@@ -273,6 +365,7 @@ public class DatVe extends AppCompatActivity {
             }
         });
 
+
         Button ApDung = view.findViewById(R.id.apply_button);
         ApDung.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,50 +374,52 @@ public class DatVe extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         arrayTour = new ArrayList<>();
+
                         if (dataSnapshot.exists()) {
+                            // Lấy dữ liệu từ bộ lọc
+                            String giaTienNguoiNhap = GiaTien;
+                            String phuongTienNguoiNhap = PhuongTien;
+                            String ngayNguoiNhap = edtTextNgayDi.getText().toString();
+
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Tour tour = snapshot.getValue(Tour.class);
-                                if (GiaTien.equals("") && PhuongTien.equals("") && edtTextNgayDi.getText().toString().equals("")) {
-                                    arrayTour.add(tour);
-//                                } else if (!GiaTien.equals("") && !PhuongTien.equals("") && !edtTextNgayDi.getText().toString().equals("")) {
-//                                    int giaTien = Integer.parseInt(GiaTien);
-//                                    int giaTour = Integer.parseInt(tour.giaTien);
-//
-//                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//                                    LocalDate ngayCanSoSanh = LocalDate.parse(edtTextNgayDi.getText().toString(), formatter);
-//                                    LocalDate ngayKhoiHanh = LocalDate.parse(tour.ngayKhoiHanh,formatter);
-//                                    if (Math.abs(ChronoUnit.DAYS.between(ngayKhoiHanh, ngayCanSoSanh)) <= 3) {
-//                                        arrayTour.add(tour);
-//                                    }
-                                } else if (GiaTien!="") {
-                                    int giaTien = Integer.parseInt(GiaTien);
-                                    int giaTour = Integer.parseInt(tour.giaTien);
-                                    if(0<giaTour&&giaTour<=giaTien){
-                                        arrayTour.add(tour);
-                                    }
-                                } else if (PhuongTien!="") {
-                                    if(tour.phuongTien.equals(PhuongTien))
-                                        arrayTour.add(tour);
-                                } else if ((GiaTien!="")&&(PhuongTien!="")) {
-                                    int giaTien = Integer.parseInt(GiaTien);
-                                    int giaTour = Integer.parseInt(tour.giaTien);
-                                    if (0 < giaTour && giaTour <= giaTien && tour.phuongTien.equals(PhuongTien)) {
-                                        arrayTour.add(tour);
-                                    }
-                                } else if (!edtTextNgayDi.getText().toString().equals("")) {
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                                    LocalDate ngayCanSoSanh = LocalDate.parse("20/12/2024", formatter);
-                                    LocalDate ngayKhoiHanh = LocalDate.parse(tour.ngayKhoiHanh,formatter);
-                                    if (Math.abs(ChronoUnit.DAYS.between(ngayKhoiHanh, ngayCanSoSanh)) <= 3) {
-                                        arrayTour.add(tour);
+
+                                // Kiểm tra giá tour
+                                boolean thoaManGiaTien = giaTienNguoiNhap.isEmpty() || (
+                                        Integer.parseInt(tour.giaTien) <= Integer.parseInt(giaTienNguoiNhap)
+                                );
+
+                                // Kiểm tra phương tiện
+                                boolean thoaManPhuongTien = phuongTienNguoiNhap.isEmpty() || (
+                                        tour.phuongTien.equals(phuongTienNguoiNhap)
+                                );
+
+                                // Kiểm tra ngày
+                                boolean thoaManNgay = true;
+                                if (!ngayNguoiNhap.isEmpty()) {
+                                    try {
+                                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                        LocalDate ngayCanSoSanh = LocalDate.parse(ngayNguoiNhap, formatter);
+                                        LocalDate ngayKhoiHanh = LocalDate.parse(tour.ngayKhoiHanh, formatter);
+
+                                        // So sánh trong phạm vi 3 ngày
+                                        thoaManNgay = Math.abs(ChronoUnit.DAYS.between(ngayKhoiHanh, ngayCanSoSanh)) <= 3;
+                                    } catch (DateTimeParseException e) {
+                                        Toast.makeText(DatVe.this, "Ngày không hợp lệ", Toast.LENGTH_SHORT).show();
+                                        return; // Kết thúc nếu ngày nhập không hợp lệ
                                     }
                                 }
+
+                                // Nếu thỏa mãn tất cả điều kiện, thêm vào danh sách
+                                if (thoaManGiaTien && thoaManPhuongTien && thoaManNgay) {
+                                    arrayTour.add(tour);
+                                }
                             }
-
-
                         } else {
                             Toast.makeText(DatVe.this, "Không có tour nào", Toast.LENGTH_SHORT).show();
                         }
+
+                        // Cập nhật danh sách hiển thị
                         tourAdapter = new TourAdapter(DatVe.this, arrayTour);
                         lvTour.setAdapter(tourAdapter);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -338,6 +433,9 @@ public class DatVe extends AppCompatActivity {
                 });
             }
         });
+
+
+
 
 
         //Hủy Áp Dụng

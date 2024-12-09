@@ -10,14 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 
 public class TourAdapter extends BaseAdapter {
 
@@ -31,6 +33,7 @@ public class TourAdapter extends BaseAdapter {
 
         inflater = LayoutInflater.from(context);
     }
+
 
     @Override
     public int getCount() {
@@ -48,7 +51,7 @@ public class TourAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         convertView = inflater.inflate(R.layout.tour_items,null);
 
         ImageView imgHinh = (ImageView) convertView.findViewById(R.id.imageViewHinhTourItem);
@@ -146,7 +149,23 @@ public class TourAdapter extends BaseAdapter {
         }
         txtSoBinhLuan.setText(String.format("%d đánh giá", tour.soBinhLuan));
 
+//        if (convertView == null) {
+//            convertView = LayoutInflater.from(context).inflate(R.layout.tour_items, parent, false);
+//        }
+//
+//        // Gán dữ liệu vào view
+//        Tour currentTour = tourList.get(position);
+//
+//        TextView tvName = convertView.findViewById(R.id.txtTimKiem);
+//
+//        tvName.setText(currentTour.getName());
+
         return convertView;
+    }
+
+    public void searchDataList(List<Tour> searchList){
+        tourList = searchList;
+        notifyDataSetChanged();
     }
 
     private String formatPrice(String price) {
