@@ -47,23 +47,20 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
 
         // Kết nối Firebase
         dbRef = FirebaseDatabase.getInstance().getReference(DATABASE_PATH);
-
+        Log.d("Firebase", "Kết nối thành công!");
         // Lắng nghe thay đổi dữ liệu từ Firebase
         loadDanhMuc();
 
         btnDelete.setOnClickListener(v -> {
-            boolean isDeleted = false; // Biến kiểm tra xem có danh mục nào được xóa hay không
+            boolean isDeleted = false;
 
-            for (int i = 0; i < gridDanhMuc.getChildCount(); i++) {
-                LinearLayout categoryLayout = (LinearLayout) gridDanhMuc.getChildAt(i);
-                CheckBox checkBox = (CheckBox) categoryLayout.getChildAt(2); // CheckBox là phần tử thứ 3
-
-                if (checkBox != null && checkBox.isChecked()) {
-                    String category = (String) checkBox.getTag(); // Lấy tag của checkbox, là tên danh mục
-                    deleteDanhMuc(category);  // Xóa danh mục khỏi Firebase
-                    gridDanhMuc.removeViewAt(i);  // Xóa phần tử trong GridLayout
+            for (String key : checkBoxMap.keySet()) {
+                CheckBox checkBox = checkBoxMap.get(key);
+                if (checkBox.isChecked()) {
+                    deleteDanhMuc(key); // Xóa trong Firebase
+                    LinearLayout categoryLayout = (LinearLayout) checkBox.getParent();
+                    gridDanhMuc.removeView(categoryLayout); // Xóa giao diện
                     isDeleted = true;
-                    i--;  // Giảm chỉ số để tránh bỏ sót phần tử sau khi xóa
                 }
             }
 
@@ -74,34 +71,86 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
             }
         });
 
-        btnSave.setOnClickListener(v -> {
-            StringBuilder danhMucMoi = new StringBuilder();
 
-            for (int i = 0; i < gridDanhMuc.getChildCount(); i++) {
-                LinearLayout categoryLayout = (LinearLayout) gridDanhMuc.getChildAt(i);
-                CheckBox checkBox = (CheckBox) categoryLayout.getChildAt(2); // CheckBox là phần tử thứ 3
-                String category = (String) checkBox.getTag(); // Lấy tên danh mục từ tag
-                danhMucMoi.append(category).append(","); // Thêm vào danh sách mới
+        btnSave.setOnClickListener(v -> {
+            CheckBox selectedCheckBox = null;
+            String selectedCategoryKey = null;
+
+            // Xác định danh mục được chọn (chỉ một danh mục)
+            for (String key : checkBoxMap.keySet()) {
+                CheckBox checkBox = checkBoxMap.get(key);
+                if (checkBox.isChecked()) {
+                    if (selectedCheckBox != null) {
+                        Toast.makeText(SuaVaXoaDanhMuc.this, "Chỉ được chọn một danh mục để sửa!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    selectedCheckBox = checkBox;
+                    selectedCategoryKey = key;
+                }
             }
 
-            // Ghi đè danh sách mới lên danh sách cũ trong Firebase
-            dbRef.setValue(danhMucMoi.toString());
+            if (selectedCheckBox == null) {
+                // Nếu không chọn danh mục nào, trở về trang chủ
+                Intent intent = new Intent(SuaVaXoaDanhMuc.this, TrangChuAdmin.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
 
-            Toast.makeText(SuaVaXoaDanhMuc.this, "Danh mục đã được cập nhật!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(SuaVaXoaDanhMuc.this, TrangChuAdmin.class);
-            startActivity(intent);
+            // Cập nhật dữ liệu nếu danh mục được chọn
+            LinearLayout categoryLayout = (LinearLayout) selectedCheckBox.getParent();
+            TextView categoryName = (TextView) categoryLayout.getChildAt(0);
+
+            String newCategoryName = categoryName.getText().toString(); // Tên mới
+            DatabaseReference categoryRef = dbRef.child(selectedCategoryKey);
+
+            categoryRef.child("ten").get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    String currentName = task.getResult().getValue(String.class);
+
+                    // Chỉ cập nhật nếu có thay đổi
+                    if (!newCategoryName.equals(currentName)) {
+                        Map<String, Object> updatedData = new HashMap<>();
+                        updatedData.put("ten", newCategoryName);
+
+                        categoryRef.updateChildren(updatedData).addOnCompleteListener(updateTask -> {
+                            if (updateTask.isSuccessful()) {
+                                Toast.makeText(SuaVaXoaDanhMuc.this, "Danh mục đã được cập nhật!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(SuaVaXoaDanhMuc.this, "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
+                            }
+                            // Dù thành công hay thất bại, quay về trang chủ
+                            Intent intent = new Intent(SuaVaXoaDanhMuc.this, TrangChuAdmin.class);
+                            startActivity(intent);
+                            finish();
+                        });
+                    } else {
+                        // Nếu không thay đổi, chỉ trở về trang chủ
+                        Intent intent = new Intent(SuaVaXoaDanhMuc.this, TrangChuAdmin.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(SuaVaXoaDanhMuc.this, "Không thể lấy dữ liệu hiện tại!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+
+        btnCancel.setOnClickListener(v -> {
+            Toast.makeText(SuaVaXoaDanhMuc.this, "Không có thay đổi nào được lưu!", Toast.LENGTH_SHORT).show();
             finish();
         });
 
-        btnCancel.setOnClickListener(v -> finish());
     }
 
     private void loadDanhMuc() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("danhmuc");
-
-        ref.addValueEventListener(new ValueEventListener() {
+        dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                gridDanhMuc.removeAllViews();
+                checkBoxMap.clear();
+
                 if (!dataSnapshot.exists()) {
                     Toast.makeText(SuaVaXoaDanhMuc.this, "Không có danh mục nào!", Toast.LENGTH_SHORT).show();
                     return;
@@ -110,9 +159,10 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     DanhMuc danhMuc = snapshot.getValue(DanhMuc.class);
                     if (danhMuc != null) {
-                        // Log để kiểm tra dữ liệu
-                        Log.d("DanhMuc", "Tên danh mục: " + danhMuc.ten);
-                        addDanhMucToLayout(danhMuc);
+                        Log.d("DanhMuc", "Tên: " + danhMuc.ten + ", Hình: " + danhMuc.hinh);
+                        addDanhMucToLayout(danhMuc, snapshot.getKey());
+                    } else {
+                        Log.d("DanhMuc", "Dữ liệu null từ Firebase");
                     }
                 }
             }
@@ -125,35 +175,44 @@ public class SuaVaXoaDanhMuc extends AppCompatActivity {
     }
 
 
+    private void addDanhMucToLayout(DanhMuc danhMuc, String key) {
+        if (checkBoxMap.containsKey(key)) {
+            Log.w("ViewDuplication", "View với Key = " + key + " đã tồn tại, bỏ qua");
+            return;
+        }
 
-    private void addDanhMucToLayout(DanhMuc danhMuc) {
         LinearLayout categoryLayout = new LinearLayout(this);
         categoryLayout.setOrientation(LinearLayout.VERTICAL);
         categoryLayout.setGravity(Gravity.CENTER);
 
-        // Tạo TextView hiển thị tên danh mục
         TextView categoryName = new TextView(this);
-        categoryName.setText(danhMuc.ten);
+        categoryName.setText(danhMuc.ten != null ? danhMuc.ten : "Không tên");
 
-        // Tạo CheckBox
-        CheckBox checkBox = new CheckBox(this);
-        checkBox.setTag(danhMuc.ten);  // Lưu tên danh mục vào tag
-        checkBoxMap.put(danhMuc.ten, checkBox);
-
-        // Tạo ImageView và hiển thị ảnh từ URL
+        // Kiểm tra lại hình ảnh từ Firebase
         ImageView categoryImage = new ImageView(this);
-        if (danhMuc.hinh != null) {
-            categoryImage.setImageURI(Uri.parse(danhMuc.hinh));  // Sử dụng Uri cho hình ảnh
+        if (danhMuc.hinh != null && !danhMuc.hinh.isEmpty()) {
+            // Kiểm tra nếu đường dẫn là URI hợp lệ
+            if (danhMuc.hinh.startsWith("android.resource")) {
+                Uri imageUri = Uri.parse(danhMuc.hinh);
+                categoryImage.setImageURI(imageUri);  // Đặt hình ảnh từ resource
+            } else {
+                Glide.with(this).load(danhMuc.hinh).into(categoryImage);  // Nếu là URL, dùng Glide
+            }
         } else {
-            categoryImage.setImageResource(R.drawable.danh_muc_mac_dinh); // Ảnh mặc định nếu không có
+            categoryImage.setImageResource(R.drawable.danh_muc_mac_dinh);  // Hình mặc định nếu không có ảnh
         }
 
-        categoryImagesMap.put(danhMuc.ten, categoryImage);
+        CheckBox checkBox = new CheckBox(this);
+        checkBox.setTag(key);
+        checkBoxMap.put(key, checkBox);
+
+        // Thêm vào layout
         categoryLayout.addView(categoryName);
         categoryLayout.addView(categoryImage);
         categoryLayout.addView(checkBox);
 
-        gridDanhMuc.addView(categoryLayout);  // Thêm vào GridLayout
+        gridDanhMuc.addView(categoryLayout);
+        Log.d("GridLayout", "Thêm danh mục vào GridLayout: Key = " + key);
     }
 
 

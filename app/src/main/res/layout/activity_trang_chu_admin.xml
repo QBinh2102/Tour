@@ -182,6 +182,8 @@
                     android:textStyle="bold" />
 
                 <androidx.cardview.widget.CardView
+
+                    android:id="@+id/cardViewNoiBat1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
@@ -193,12 +195,11 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/imageView9"
+                            android:id="@+id/imageViewNoiBat1"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/da_lat" />
+                            android:layout_weight="1" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -208,25 +209,69 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView17"
+                                android:id="@+id/textViewTenNoiBat1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Tour du lịch Đà Lạt"
                                 android:textColor="@color/black"
                                 android:textSize="17dp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/textView18"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Giá: 500.000đ"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageView1SaoNoiBat1"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView2SaoNoiBat1"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView3SaoNoiBat1"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView4SaoNoiBat1"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView5SaoNoiBat1"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/textViewLuongDatVeNoiBat1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/textViewGiaNoiBat1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/black" />
                         </LinearLayout>
+
                     </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progressBarNB1"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:visibility="invisible"/>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewNoiBat2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
@@ -238,12 +283,11 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/imageView10"
+                            android:id="@+id/imageViewNoiBat2"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/osaka_kyoto_phu_si" />
+                            android:layout_weight="1" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -253,25 +297,71 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView19"
+                                android:id="@+id/textViewTenNoiBat2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Tour du lịch Osaka-Kyoto"
                                 android:textColor="@color/black"
                                 android:textSize="17dp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/textView20"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Giá: 2.000.000đ"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageView1SaoNoiBat2"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView2SaoNoiBat2"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView3SaoNoiBat2"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView4SaoNoiBat2"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView5SaoNoiBat2"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/textViewLuongDatVeNoiBat2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/textViewGiaNoiBat2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/black" />
                         </LinearLayout>
+
                     </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressBarNB2"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:visibility="invisible"/>
+
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewNoiBat3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
@@ -283,12 +373,11 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/imageView11"
+                            android:id="@+id/imageViewNoiBat3"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/phu_quoc" />
+                            android:layout_weight="1" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -298,63 +387,109 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView21"
+                                android:id="@+id/textViewTenNoiBat3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Tour du lịch đảo Phú Quốc"
                                 android:textColor="@color/black"
                                 android:textSize="17dp"
                                 android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageView1SaoNoiBat3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView2SaoNoiBat3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView3SaoNoiBat3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView4SaoNoiBat3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+
+                                <ImageView
+                                    android:id="@+id/imageView5SaoNoiBat3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/textViewLuongDatVeNoiBat3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                android:id="@+id/textViewGiaNoiBat3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black" />
                         </LinearLayout>
+
                     </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressBarNB3"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:visibility="invisible"/>
+
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:background="@color/my_color2"
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/textView75"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:text="Thông tin về chúng tôi:"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:textColor="@color/white"/>
 
-                        <ImageView
-                            android:id="@+id/imageView12"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            app:srcCompat="@drawable/nui_ba_den" />
+                    <TextView
+                        android:id="@+id/textView76"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Võ Ngọc Hạnh: 2251012056"
+                        android:textSize="15dp"
+                        android:textColor="@color/white" />
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="7"
-                            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/textView77"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tô Quốc Bình: 2251012017"
+                        android:textSize="15dp"
+                        android:textColor="@color/white" />
 
-                            <TextView
-                                android:id="@+id/textView22"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Tour du lịch núi Bà Đen"
-                                android:textColor="@color/black"
-                                android:textSize="17dp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/textView78"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nguyễn Đăng Khôi: 2251010052"
+                        android:textSize="15dp"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Các thể bạn quan tâm:"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>
