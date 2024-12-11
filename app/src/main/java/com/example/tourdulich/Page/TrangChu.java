@@ -2,13 +2,18 @@ package com.example.tourdulich.Page;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -17,7 +22,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import com.example.tourdulich.Database.DanhMuc;
 import com.bumptech.glide.Glide;
 import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
@@ -62,7 +67,7 @@ public class TrangChu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trang_chu);
-
+        loadDanhMucFromFirebase();
         img1 = findViewById(R.id.imageViewNoiBat1);
         img2 = findViewById(R.id.imageViewNoiBat2);
         img3 = findViewById(R.id.imageViewNoiBat3);
@@ -225,6 +230,102 @@ public class TrangChu extends AppCompatActivity {
             return insets;
         });
     }
+
+    private void loadDanhMucFromFirebase() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Danh mục");
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Lấy LinearLayout chứa danh mục
+                LinearLayout container = findViewById(R.id.layoutDanhMuc);
+
+                // Đếm số lượng view hiện tại (bỏ qua các danh mục có sẵn)
+                int existingChildCount = container.getChildCount();
+
+                // Xóa các danh mục đã tải từ Firebase trước đó
+                while (container.getChildCount() > existingChildCount) {
+                    container.removeViewAt(existingChildCount);
+                }
+
+                // Thêm danh mục từ Firebase
+                for (DataSnapshot danhMucSnapshot : snapshot.getChildren()) {
+                    DanhMuc danhMuc = danhMucSnapshot.getValue(DanhMuc.class);
+                    if (danhMuc != null) {
+                        addDanhMucToLayout(danhMuc.ten, danhMuc.hinh);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(TrangChu.this, "Lỗi khi tải danh mục!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addDanhMucToLayout(String danhMuc, String hinhUrl) {
+        LinearLayout container = findViewById(R.id.layoutDanhMuc);
+        LinearLayout currentRow = null;
+
+        if (container.getChildCount() == 0 || ((LinearLayout) container.getChildAt(container.getChildCount() - 1)).getChildCount() >= 3) {
+            currentRow = new LinearLayout(this);
+            currentRow.setOrientation(LinearLayout.HORIZONTAL);
+            currentRow.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            currentRow.setPadding(5, 5, 5, 5);
+            container.addView(currentRow);
+        } else {
+            currentRow = (LinearLayout) container.getChildAt(container.getChildCount() - 1);
+        }
+
+        CardView cardView = new CardView(this);
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1.0f
+        );
+        cardParams.setMargins(10, 5, 10, 5);
+        cardView.setLayoutParams(cardParams);
+        cardView.setCardElevation(0);
+        cardView.setRadius(10f);
+        cardView.setPadding(0, 0, 0, 0);
+        cardView.setCardBackgroundColor(Color.WHITE);
+
+        FrameLayout frameLayout = new FrameLayout(this);
+        FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        );
+        frameLayout.setLayoutParams(frameParams);
+
+        ImageView imageView = new ImageView(this);
+        FrameLayout.LayoutParams imageParams = new FrameLayout.LayoutParams(
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 46, getResources().getDisplayMetrics())
+        );
+        imageParams.gravity = Gravity.CENTER;
+        imageView.setLayoutParams(imageParams);
+
+        // Kiểm tra nếu có URL hình ảnh, dùng Glide để tải ảnh từ URL Firebase
+        if (hinhUrl != null && !hinhUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(hinhUrl)
+                    .placeholder(R.drawable.danh_muc_mac_dinh)
+                    .error(R.drawable.danh_muc_mac_dinh)
+                    .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.danh_muc_mac_dinh);  // Hình mặc định
+        }
+
+        frameLayout.addView(imageView);
+        cardView.addView(frameLayout);
+
+        currentRow.addView(cardView);
+    }
+
 
     private void showTT(){
         tourRef.addValueEventListener(new ValueEventListener() {

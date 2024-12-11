@@ -207,25 +207,13 @@ public class TrangChuAdmin extends AppCompatActivity {
             dialog.setCancelable(true);  // Cho phép đóng dialog khi bấm ra ngoài
 
             Button btnCong = dialog.findViewById(R.id.menu_add);
-            Button btnSua = dialog.findViewById(R.id.menu_edit);
+
 
             btnCong.setOnClickListener(v -> {
                 themDanhMuc();
                 dialog.dismiss();
             });
-            btnSua.setOnClickListener(v -> {
-                try {
-                    // Tạo một ImageView giả lập để truyền vào phương thức suaDanhMuc
-                    ImageView imgViewToEdit = new ImageView(this);
-                    imgViewToEdit.setTag("Danh mục cần sửa");  // Gắn tag với tên danh mục cần sửa
 
-                    // Gọi phương thức suaDanhMuc với đối tượng ImageView
-                    suaDanhMuc(imgViewToEdit);
-                } catch (Exception e) {
-                    Log.e("TrangChuAdmin", "Error in btnSua OnClickListener: " + e.getMessage(), e);
-                    Toast.makeText(this, "Đã xảy ra lỗi khi mở dialog sửa danh mục!", Toast.LENGTH_SHORT).show();
-                }
-            });
             dialog.show();
         });
     }
@@ -507,8 +495,6 @@ public class TrangChuAdmin extends AppCompatActivity {
         });
 
     }
-
-
 
     private void suaDanhMuc(ImageView imageView) {
         String category = (String) imageView.getTag();  // Lấy category từ tag của imageView
