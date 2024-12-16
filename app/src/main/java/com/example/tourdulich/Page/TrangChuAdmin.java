@@ -199,7 +199,44 @@ public class TrangChuAdmin extends AppCompatActivity {
         danhMucContainer = findViewById(R.id.layoutDanhMuc);
 
         loadDanhMuc();
+        //Hiển thị chào mừng người dùng trên trang chủ
+        lbWelcome = findViewById(R.id.textViewWelcome);
+        if (firebaseUser != null) {
+            hoTen = firebaseUser.getDisplayName();
+            lbWelcome.setText("Chào mừng " + hoTen);
+        }
+        //Chuyển sang trang ĐẶT VÉ
+        Intent datVe = new Intent(this, DatVe.class);
+        btnToiDatVe = findViewById(R.id.btTrangChuToiDatVe);
+        btnToiDatVe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(datVe);
+                overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
+            }
+        });
 
+        //Chuyển sang trang TIN TỨC
+        Intent tinTuc = new Intent(this, TinTuc.class);
+        btnToiTinTuc = findViewById(R.id.btTrangChuToiTinTuc);
+        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(tinTuc);
+                overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
+            }
+        });
+
+        //Chuyển sang trang GIAO DỊCH
+        Intent gd = new Intent(this, GiaoDich.class);
+        btnToiGiaoDich = findViewById(R.id.btTrangChuToiGiaoDich);
+        btnToiGiaoDich.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(gd);
+                overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
+            }
+        });
         ImageView imgVPopupMenu = findViewById(R.id.imgViewPopupMenu);
         imgVPopupMenu.setOnClickListener(view -> {
             Dialog dialog = new Dialog(TrangChuAdmin.this);
@@ -207,7 +244,6 @@ public class TrangChuAdmin extends AppCompatActivity {
             dialog.setCancelable(true);  // Cho phép đóng dialog khi bấm ra ngoài
 
             Button btnCong = dialog.findViewById(R.id.menu_add);
-
 
             btnCong.setOnClickListener(v -> {
                 themDanhMuc();
@@ -496,44 +532,6 @@ public class TrangChuAdmin extends AppCompatActivity {
 
     }
 
-    private void suaDanhMuc(ImageView imageView) {
-        String category = (String) imageView.getTag();  // Lấy category từ tag của imageView
-        if (category == null || category.isEmpty()) {
-            Toast.makeText(this, "Danh mục không hợp lệ!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Truyền danh sách danh mục vào Intent
-        Intent intent = new Intent(TrangChuAdmin.this, SuaVaXoaDanhMuc.class);
-        ArrayList<DanhMuc> danhMucList = getDanhMucList(); // Giả sử bạn có một phương thức để lấy danh sách danh mục
-        intent.putParcelableArrayListExtra("danhMucList", danhMucList);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
-    }
-
-    // Phương thức lấy danh sách danh mục từ Firebase
-    private ArrayList<DanhMuc> getDanhMucList() {
-        ArrayList<DanhMuc> danhMucList = new ArrayList<>();
-        // Lấy dữ liệu từ Firebase và đưa vào danh sách danh mục
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Danh mục");
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    DanhMuc danhMuc = dataSnapshot.getValue(DanhMuc.class);
-                    if (danhMuc != null) {
-                        danhMucList.add(danhMuc);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase", "Error fetching danh mục: " + error.getMessage());
-            }
-        });
-        return danhMucList;
-    }
 
 
     private void loadDanhMuc() {

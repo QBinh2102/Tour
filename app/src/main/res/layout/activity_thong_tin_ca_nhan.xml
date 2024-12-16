@@ -82,9 +82,10 @@
 
                     <ImageView
                         android:id="@+id/imgViewEmailHoSo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/baseline_email_24" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_email"
+                        android:scaleType="centerInside"/>
 
                     <TextView
                         android:id="@+id/txtEmailHoSo"
@@ -106,9 +107,9 @@
 
                     <ImageView
                         android:id="@+id/imgViewDTHoSo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/local_phone_24" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_mobile" />
 
                     <TextView
                         android:id="@+id/txtDienThoaiHoSo"
@@ -131,9 +132,9 @@
 
                     <ImageView
                         android:id="@+id/imgViewDiaChiHoSo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/home_24" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_home" />
 
                     <TextView
                         android:id="@+id/txtDiaChiHoSo"
@@ -155,9 +156,9 @@
 
                     <ImageView
                         android:id="@+id/imgViewNgaySinhHoSo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/create_24" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_birthday" />
 
                     <TextView
                         android:id="@+id/txtNgaySinhHoSo"
@@ -179,9 +180,9 @@
 
                     <ImageView
                         android:id="@+id/imgViewGioiTinhHoSo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/search_24" />
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/ic_gender" />
 
                     <TextView
                         android:id="@+id/txtGioiTinhHoSo"
