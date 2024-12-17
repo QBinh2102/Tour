@@ -133,6 +133,11 @@ public class GiaoDich extends AppCompatActivity {
         });
     }
     private void showLSGD() {
+        if (firebaseUser == null) {
+            Toast.makeText(this, "Bạn phải đăng nhập để xem giao dịch!", Toast.LENGTH_LONG).show();
+            finish(); // Đóng activity nếu cần
+            return;
+        }
         // Lấy thông tin người dùng từ Firebase
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký").child(firebaseUser.getUid());
 
