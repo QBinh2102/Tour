@@ -87,8 +87,7 @@ public class TrangDangKy extends AppCompatActivity {
         radioGroupGioiTinh.clearCheck();
 
         //Gạch dưới text ngày sinh
-        TextView tv = findViewById(R.id.editTextNgaySinhDangKy);
-        tv.setPaintFlags(tv.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+        edtTextNgaySinhDangKy.setPaintFlags(edtTextNgaySinhDangKy.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
 
         edtTextNgaySinhDangKy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,7 +238,7 @@ public class TrangDangKy extends AppCompatActivity {
                                     String id = nguoiDungFB.getUid();
                                     //Hình mặc định của user
                                     String hinh = "https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesUser%2F1732333793835.jpg?alt=media&token=054bb7bf-9135-415c-bc16-abaceff9d8ff";
-                                    LuuThongTinUser thongTinUser = new LuuThongTinUser(id,tenDangNhap,hinh,diaChi, soDienThoai, email, ngaySinh, gioiTinh);
+                                    LuuThongTinUser thongTinUser = new LuuThongTinUser(id,tenDangNhap,hinh,diaChi, soDienThoai, email, ngaySinh, gioiTinh, "user");
                                     DatabaseReference refDuLieu = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
                                     refDuLieu.child(nguoiDungFB.getUid()).setValue(thongTinUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override

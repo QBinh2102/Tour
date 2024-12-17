@@ -23,6 +23,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.tourdulich.Database.LuuThongTinUser;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -182,10 +183,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void kiemTraVaiTro(String userId) {
         // Kiểm tra nếu userId không hợp lệ
-        if (userId == null || userId.isEmpty()) {
-            Toast.makeText(MainActivity.this, "User ID không hợp lệ", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (userId == null || userId.isEmpty()) {
+//            Toast.makeText(MainActivity.this, "User ID không hợp lệ", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         // Truy xuất vai trò từ Firebase Realtime Database
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký").child(userId);
@@ -193,9 +194,11 @@ public class MainActivity extends AppCompatActivity {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                LuuThongTinUser user = snapshot.getValue(LuuThongTinUser.class);
                 // Lấy giá trị role từ Firebase
-                String role = snapshot.child("role").getValue(String.class);
-                Log.d(TAG, "Role: " + role);
+//                String role = snapshot.child("role").getValue(String.class);
+//                Log.d(TAG, "Role: " + role);
+                String role = user.role;
                 // Kiểm tra xem role có tồn tại không
                 if (role != null) {
                     // Kiểm tra vai trò và chuyển hướng tương ứng
@@ -252,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, ThongTinCaNhan.class));
             finish();
         }else{
-            Toast.makeText(MainActivity.this, "Bạn có thể đăng nhập được rồi", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "Bạn có thể đăng nhập được rồi", Toast.LENGTH_SHORT).show();
         }
     }
 }

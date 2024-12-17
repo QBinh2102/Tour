@@ -90,13 +90,7 @@ public class DatVe extends AppCompatActivity {
 
         arrayTour = new ArrayList<>();
         lvTour = findViewById(R.id.listViewTour);
-
-//        tourAdapter = new TourAdapter(DatVe.this, arrayTour);
-//        lvTour.setAdapter(tourAdapter);
-
-
         progressBar = findViewById(R.id.progressBar2);
-
         progressBar.setVisibility(View.VISIBLE);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
@@ -443,7 +437,7 @@ public class DatVe extends AppCompatActivity {
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        new ArrayList<>();
+                        arrayTour.clear();
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Tour tour = snapshot.getValue(Tour.class);
@@ -486,11 +480,6 @@ public class DatVe extends AppCompatActivity {
                 R.array.service_types, android.R.layout.simple_spinner_item);
         serviceTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serviceTypeSpinner.setAdapter(serviceTypeAdapter);
-
-//        ArrayAdapter<CharSequence> cityAdapter = ArrayAdapter.createFromResource(this,
-//                R.array.cities, android.R.layout.simple_spinner_item);
-//        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        citySpinner.setAdapter(cityAdapter);
 
         ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(this,
                 R.array.cars, android.R.layout.simple_spinner_item);

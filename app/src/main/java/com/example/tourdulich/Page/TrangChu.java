@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.example.tourdulich.Database.DanhMuc;
 import com.bumptech.glide.Glide;
+import com.example.tourdulich.Database.LuuThongTinUser;
 import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +61,9 @@ public class TrangChu extends AppCompatActivity {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
     private String hoTen;
+    private String userId="";
+
+
 
 
     @Override
@@ -67,6 +71,9 @@ public class TrangChu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_trang_chu);
+
+
+
         loadDanhMucFromFirebase();
         img1 = findViewById(R.id.imageViewNoiBat1);
         img2 = findViewById(R.id.imageViewNoiBat2);
@@ -139,14 +146,6 @@ public class TrangChu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        c4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(TrangChu.this,ThongTinDatVe.class);
-//                intent.putExtra("tour_item",tours.get(3));
-//                startActivity(intent);
-//            }
-//        });
 
         //Chuyển Trang Thông Tin Cá Nhân
         if (firebaseUser != null) {
@@ -174,15 +173,16 @@ public class TrangChu extends AppCompatActivity {
         }
 
         // Kiểm tra lại role từ SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
-        String role = preferences.getString("role", "user");  // Mặc định là "user" nếu chưa có role
+//        SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
+//        String role = preferences.getString("role", "user");  // Mặc định là "user" nếu chưa có role
+//
+//        // Nếu role là admin, chuyển đến TrangChuAdmin
+//        if ("admin".equals(role)) {
+//            Intent intent = new Intent(TrangChu.this, TrangChuAdmin.class);
+//            startActivity(intent);
+//            finish();  // Đảm bảo không quay lại TrangChu
+//        }
 
-        // Nếu role là admin, chuyển đến TrangChuAdmin
-        if ("admin".equals(role)) {
-            Intent intent = new Intent(TrangChu.this, TrangChuAdmin.class);
-            startActivity(intent);
-            finish();  // Đảm bảo không quay lại TrangChu
-        }
 
         //Chuyển sang trang ĐẶT VÉ
         Intent datVe = new Intent(this, DatVe.class);
@@ -220,8 +220,28 @@ public class TrangChu extends AppCompatActivity {
         //Hiển thị chào mừng người dùng trên trang chủ
         lbWelcome = findViewById(R.id.textViewWelcome);
         if (firebaseUser != null) {
-            hoTen = firebaseUser.getDisplayName();
-            lbWelcome.setText("Chào mừng " + hoTen);
+            userId = firebaseUser.getUid();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký").child(userId);
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    LuuThongTinUser user = snapshot.getValue(LuuThongTinUser.class);
+                    if(user.role.equals("admin")){
+                        Intent tcAdmin = new Intent(TrangChu.this, TrangChuAdmin.class);
+                        startActivity(tcAdmin);
+                    }else
+                    if(user.role.equals("user")){
+                        hoTen = firebaseUser.getDisplayName();
+                        lbWelcome.setText("Chào mừng " + hoTen);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

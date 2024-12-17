@@ -66,6 +66,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 
     private Uri hinh;
     String name;
+    String img;
+    String imgChange;
     private String tenHoSo, SDT, diaChi, ngaySinh, gioiTinh, email;
     private ImageView imgHinhDaiDien;
     private EditText edtTen;
@@ -74,6 +76,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     private TextView txtDate;
 
     private DatePickerDialog picker;
+
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
 
 
     // Khai báo ActivityResultLauncher
@@ -84,6 +88,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                     if(o.getResultCode() == RESULT_OK){
                         if(o.getData()!=null) {
                             hinh = o.getData().getData();
+                            imgChange = String.valueOf(hinh);
                             imgHinhDaiDien.setImageURI(hinh);
                         }
                     }
@@ -224,8 +229,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                     txtDate.setError("Vui lòng nhập ngày sinh");
                     txtDate.requestFocus();
                 } else{
-                    String img = String.valueOf(hinh);
-                    UpdateUser(img,tenHoSo,email,diaChi,SDT,ngaySinh,gioiTinh);
+                    UpdateUser(imgChange,tenHoSo,email,diaChi,SDT,ngaySinh,gioiTinh);
                 }
             }
         });
@@ -257,6 +261,8 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                 Glide.with(ChinhSuaThongTinCaNhan.this)
                         .load(hinh)
                         .into(imgHinhDaiDien);
+                img = thongTinUser.hinhDaiDien;
+                imgChange = thongTinUser.hinhDaiDien;
                 edtDiaChi.setText(diaChi);
                 edtSDT.setText(SDT);
                 txtDate.setText(ngaySinh);
@@ -285,46 +291,56 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
         pd.setTitle("Đang cập nhật...");
         pd.show();
 
-        FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
-        //Đặt tên hình trên storage
-        name = System.currentTimeMillis()+"."+getFileExtension(Uri.parse(hinh));
-        StorageReference imgRef = reference.getReference().child("imagesUser/"+firebaseUser.getUid()+"/"+name);
-        imgRef.putFile(Uri.parse(hinh)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                pd.dismiss();
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
-                firebaseUser.updateProfile(profileUpdates);
-                String userID = firebaseUser.getUid();
-                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
+        if(img.equals(imgChange)){
+            mDatabase.child(firebaseUser.getUid()).child("diaChi").setValue(diaChi);
+            mDatabase.child(firebaseUser.getUid()).child("gioiTinh").setValue(gioiTinh);
+            mDatabase.child(firebaseUser.getUid()).child("ngaySinh").setValue(ngaySinh);
+            mDatabase.child(firebaseUser.getUid()).child("soDienThoai").setValue(dienThoai);
+            mDatabase.child(firebaseUser.getUid()).child("tenNguoiDung").setValue(username);
+            Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            Intent ttcn = new Intent(ChinhSuaThongTinCaNhan.this, QuanLyUser.class);
+            startActivity(ttcn);
+        }else {
+            FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
+            //Đặt tên hình trên storage
+            name = System.currentTimeMillis() + "." + getFileExtension(Uri.parse(hinh));
+            StorageReference imgRef = reference.getReference().child("imagesUser/" + firebaseUser.getUid() + "/" + name);
+            imgRef.putFile(Uri.parse(hinh)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    pd.dismiss();
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                    firebaseUser.updateProfile(profileUpdates);
+                    String userID = firebaseUser.getUid();
+                    imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
 
-                        LuuThongTinUser user = new LuuThongTinUser(userID,username,String.valueOf(uri),diaChi,dienThoai,email,ngaySinh,gioiTinh);
-                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
-                        mDatabase.child(userID).setValue(user);
+                            LuuThongTinUser user = new LuuThongTinUser(userID, username, String.valueOf(uri), diaChi, dienThoai, email, ngaySinh, gioiTinh, "user");
 
-                    }
-                });
-                Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                Intent ttcn = new Intent(ChinhSuaThongTinCaNhan.this, TrangChu.class);
-                startActivity(ttcn);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
-                //
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                pd.setMessage("Progress: " + (int) progressPercent + "%");
-            }
-        });
+                            mDatabase.child(userID).setValue(user);
 
+                        }
+                    });
+                    Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                    Intent ttcn = new Intent(ChinhSuaThongTinCaNhan.this, TrangChu.class);
+                    startActivity(ttcn);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    pd.dismiss();
+                    //
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                    pd.setMessage("Progress: " + (int) progressPercent + "%");
+                }
+            });
 
+        }
 //        mDatabase.child(userID).child("hinhDaiDien").setValue(hinh);
 //        mDatabase.child(userID).child("diaChi").setValue(diaChi);
 //        mDatabase.child(userID).child("gioiTinh").setValue(gioiTinh);

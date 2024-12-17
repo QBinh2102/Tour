@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,6 +20,7 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
 
     private Button btnDangNhap;
     private Button btnDangKy;
+    private TextView btnInfo;
 
     private LinearLayout btnToiTrangChu;
     private LinearLayout btnToiDatVe;
@@ -92,6 +95,18 @@ public class ThongTinChuaDangNhap extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(giaoDich);
                 overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
+            }
+        });
+
+        btnInfo = findViewById(R.id.txtInfo1);
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ThongTinChuaDangNhap.this);
+                builder.setTitle("Thông tin về chúng tôi!");
+                View view = getLayoutInflater().inflate(R.layout.information, null);
+                builder.setView(view);
+                builder.show();
             }
         });
 

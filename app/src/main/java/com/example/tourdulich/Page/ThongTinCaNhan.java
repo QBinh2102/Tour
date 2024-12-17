@@ -45,6 +45,7 @@ public class ThongTinCaNhan extends AppCompatActivity {
     private Button btnChinhSua;
     private Button btnThayDoiMK;
     private Button btnDangXuat;
+    private TextView btnInfo;
 
     private TextView txtEmail;
     private TextView txtNgaySinh;
@@ -162,10 +163,21 @@ public class ThongTinCaNhan extends AppCompatActivity {
         txtDiaChi = findViewById(R.id.txtDiaChiHoSo);
         txtNgaySinh = findViewById(R.id.txtNgaySinhHoSo);
         txtGioiTinh = findViewById(R.id.txtGioiTinhHoSo);
+        btnInfo = findViewById(R.id.txtInfo2);
         xacThucFirebase = FirebaseAuth.getInstance();
         firebaseUser = xacThucFirebase.getCurrentUser();
         thanhTienTrinh = findViewById(R.id.thanhTienTrinh);
 
+        btnInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ThongTinCaNhan.this);
+                builder.setTitle("Thông tin về chúng tôi!");
+                View view = getLayoutInflater().inflate(R.layout.information, null);
+                builder.setView(view);
+                builder.show();
+            }
+        });
 
         if (firebaseUser == null) {
             Toast.makeText(ThongTinCaNhan.this, "Thông tin người dùng không tồn tại",

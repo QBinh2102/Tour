@@ -20,7 +20,6 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-
 public class TourAdapter extends BaseAdapter {
 
     private Context context;
@@ -148,17 +147,6 @@ public class TourAdapter extends BaseAdapter {
             sao5.setImageResource(R.drawable.star_24);
         }
         txtSoBinhLuan.setText(String.format("%d đánh giá", tour.soBinhLuan));
-
-//        if (convertView == null) {
-//            convertView = LayoutInflater.from(context).inflate(R.layout.tour_items, parent, false);
-//        }
-//
-//        // Gán dữ liệu vào view
-//        Tour currentTour = tourList.get(position);
-//
-//        TextView tvName = convertView.findViewById(R.id.txtTimKiem);
-//
-//        tvName.setText(currentTour.getName());
 
         return convertView;
     }

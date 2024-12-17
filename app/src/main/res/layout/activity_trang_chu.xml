@@ -444,46 +444,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/my_color2"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView75"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Thông tin về chúng tôi:"
-                        android:textStyle="bold"
-                        android:textSize="20dp"
-                        android:textColor="@color/white"/>
-
-                    <TextView
-                        android:id="@+id/textView76"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Võ Ngọc Hạnh: 2251012056"
-                        android:textSize="15dp"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/textView77"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Tô Quốc Bình: 2251012017"
-                        android:textSize="15dp"
-                        android:textColor="@color/white" />
-
-                    <TextView
-                        android:id="@+id/textView78"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Nguyễn Đăng Khôi: 2251010052"
-                        android:textSize="15dp"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-
 
             </LinearLayout>
         </ScrollView>
