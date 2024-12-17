@@ -200,6 +200,22 @@ public class QuanLyUser extends AppCompatActivity {
                     }
                 });
 
+                role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (position == 0) {
+                            vaiTro = "user";
+                        } else if (position == 1) {
+                            vaiTro = "admin";
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
                 btnDangKy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -211,21 +227,7 @@ public class QuanLyUser extends AppCompatActivity {
                         String ngaySinh = edtUserBirth.getText().toString();
                         String gioiTinh;
 
-                        role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                if (position == 0) {
-                                    vaiTro = "user";
-                                } else if (position == 1) {
-                                    vaiTro = "admin";
-                                }
-                            }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
 
                         //Kiem tra so dien thoai co hop li khong
                         //So dien thoai chi hop ly khi bat dau voi 3 so ben duoi va 7 so con lai tu 0->9
@@ -289,8 +291,8 @@ public class QuanLyUser extends AppCompatActivity {
                             }
                             thanhTienTrinh.setVisibility(View.VISIBLE);
                             nguoiDangKy(tenDangNhap, matKhau, diaChi, soDienThoai, email, ngaySinh, vaiTro, gioiTinh, edtUserMail, thanhTienTrinh);
+                            dialog.dismiss();
                         }
-                        dialog.dismiss();
                     }
                 });
             }

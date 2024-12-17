@@ -3,7 +3,9 @@ package com.example.tourdulich.Page;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -70,6 +74,7 @@ public class CapNhatUser extends AppCompatActivity {
     private Uri hinh;
     private String img;
     private DatePickerDialog picker;
+    private ProgressBar progressBar;
 
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
 
@@ -90,16 +95,12 @@ public class CapNhatUser extends AppCompatActivity {
         rdbNu = findViewById(R.id.radioNuCapNhat);
         btnDel = findViewById(R.id.btnDeleteUser);
         btnUpload = findViewById(R.id.btnUploadUser);
+        progressBar = findViewById(R.id.progressBar6);
 
         Intent intent = getIntent();
         LuuThongTinUser user = (LuuThongTinUser) intent.getSerializableExtra("user_item");
 
         showTT(user);
-
-        ArrayAdapter<CharSequence> roleAdapter = ArrayAdapter.createFromResource(CapNhatUser.this,
-                R.array.role, android.R.layout.simple_spinner_item);
-        roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        role.setAdapter(roleAdapter);
 
         role.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -229,6 +230,35 @@ public class CapNhatUser extends AppCompatActivity {
             }
         });
 
+        btnDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(CapNhatUser.this);
+                dialog.setTitle("Thông báo!!!");
+                dialog.setMessage("Bạn có chắc muốn xóa tài khoản này?");
+                dialog.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDatabase.child(user.id).removeValue()
+                                .addOnSuccessListener(aVoid -> {
+                                    Intent ql = new Intent(CapNhatUser.this, QuanLyUser.class);
+                                    startActivity(ql);
+                                })
+                                .addOnFailureListener(e -> {
+
+                                });
+                    }
+                });
+                dialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -321,6 +351,10 @@ public class CapNhatUser extends AppCompatActivity {
         txtBirth.setText(user.ngaySinh);
         txtAddress.setText(user.diaChi);
         txtPhone.setText(user.soDienThoai);
+        ArrayAdapter<CharSequence> roleAdapter = ArrayAdapter.createFromResource(CapNhatUser.this,
+                R.array.role, android.R.layout.simple_spinner_item);
+        roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        role.setAdapter(roleAdapter);
         if(user.role.equals("user")){
             role.setSelection(0);
         }else
@@ -334,6 +368,7 @@ public class CapNhatUser extends AppCompatActivity {
             rdbNu.setChecked(true);
         }
     }
+
 
     // Khai báo ActivityResultLauncher
     private final ActivityResultLauncher<Intent> selectImage = registerForActivityResult(

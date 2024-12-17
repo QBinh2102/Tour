@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnQuayLai;
     private TextView textQuenPass;
     private static final String TAG = "MainActivity";
+    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         edtTextPasswordDangNhap = findViewById(R.id.editTextPasswordDangNhap);
         xacThucFirebase = FirebaseAuth.getInstance();
         thanhTienTrinh = findViewById(R.id.thanhTienTrinh);
-        
+
         btLogin = findViewById(R.id.btDangNhapTuDangNhap);
         btLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,11 +137,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
-            });
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
 
     }
@@ -151,19 +152,43 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     //lấy thông tin của người dùng hiện tại đang đăng nhập vào ứng dụng
                     FirebaseUser firebaseUser = xacThucFirebase.getCurrentUser();
+                    String userId = firebaseUser.getUid();
+                    mDatabase.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            LuuThongTinUser user = snapshot.getValue(LuuThongTinUser.class);
+                            if(user!=null){
+                                if (firebaseUser.isEmailVerified()) {
+                                    Toast.makeText(MainActivity.this, "Đăng nhập thành công",
+                                            Toast.LENGTH_SHORT).show();
 
-                    if (firebaseUser.isEmailVerified()){
-                        Toast.makeText(MainActivity.this, "Đăng nhập thành công",
-                                Toast.LENGTH_SHORT).show();
-                        String userId = firebaseUser.getUid();
-                        kiemTraVaiTro(userId);
-                        finish();
-                    }else{
-                        firebaseUser.sendEmailVerification();
-                        xacThucFirebase.signOut();
-                        showAlertDialog();
-                    }
+                                    kiemTraVaiTro(userId);
+                                    finish();
+                                } else {
+                                    firebaseUser.sendEmailVerification();
+                                    xacThucFirebase.signOut();
+                                    showAlertDialog();
+                                }
+                            }else
+                                Toast.makeText(MainActivity.this, "Tài khoản không tồn tại", Toast.LENGTH_SHORT).show();
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//                        if (firebaseUser.isEmailVerified()) {
+//                            Toast.makeText(MainActivity.this, "Đăng nhập thành công",
+//                                    Toast.LENGTH_SHORT).show();
+//
+//                            kiemTraVaiTro(userId);
+//                            finish();
+//                        } else {
+//                            firebaseUser.sendEmailVerification();
+//                            xacThucFirebase.signOut();
+//                            showAlertDialog();
+//                        }
                 } else {
                     try {
                         throw task.getException();
@@ -244,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-//Kiem tra neu user da log in roi -> vao thang profile
+    //Kiem tra neu user da log in roi -> vao thang profile
     @Override
     protected void onStart() {
         super.onStart();
