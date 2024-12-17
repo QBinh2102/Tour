@@ -94,7 +94,7 @@ public class TrangChuAdmin extends AppCompatActivity {
         btnQLDanhMuc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent qlDanhMuc = new Intent(TrangChuAdmin.this, QuanLyUser.class);
+                Intent qlDanhMuc = new Intent(TrangChuAdmin.this, QuanLyDanhMuc.class);
                 startActivity(qlDanhMuc);
             }
         });

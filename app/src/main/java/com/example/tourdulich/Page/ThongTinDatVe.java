@@ -122,6 +122,7 @@ public class ThongTinDatVe extends AppCompatActivity {
 
         //Show thông tin tour
         getImageUris(tour);
+//        showThongTinTour(tour);
 
         // Khởi tạo TextView "Quay lại" và thiết lập sự kiện onClick
         TextView txtQuayLai = findViewById(R.id.txtReturn);

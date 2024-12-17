@@ -87,7 +87,7 @@ public class QuanLyUser extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar4);
         progressBar.setVisibility(View.VISIBLE);
 
-        showTT();
+        showDanhSach();
 
         btnQuaiLai.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -388,7 +388,7 @@ public class QuanLyUser extends AppCompatActivity {
         });
     }
 
-    private void showTT(){
+    private void showDanhSach(){
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

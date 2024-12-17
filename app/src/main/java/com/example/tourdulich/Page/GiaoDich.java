@@ -133,53 +133,35 @@ public class GiaoDich extends AppCompatActivity {
         });
     }
     private void showLSGD() {
-        if (firebaseUser == null) {
-            Toast.makeText(this, "Bạn phải đăng nhập để xem giao dịch!", Toast.LENGTH_LONG).show();
-            finish(); // Đóng activity nếu cần
-            return;
-        }
-        // Lấy thông tin người dùng từ Firebase
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký").child(firebaseUser.getUid());
-
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String role = dataSnapshot.child("role").getValue(String.class);
-
-                bdgRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
-
-                                // Kiểm tra vai trò và chỉ hiển thị giao dịch của người dùng hoặc tất cả giao dịch nếu là admin
-                                if (role != null && role.equals("admin")) {
-                                    baiDanhGias.add(baiDanhGia); // Admin xem tất cả giao dịch
-                                } else if (baiDanhGia.idUser.equals(firebaseUser.getUid())) {
-                                    baiDanhGias.add(baiDanhGia); // User chỉ xem giao dịch của mình
-                                }
+        if(firebaseUser==null){
+            progressBar.setVisibility(View.INVISIBLE);
+            Toast.makeText(GiaoDich.this, "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+        }else {
+            bdgRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
+                            if (baiDanhGia.idUser.equals(firebaseUser.getUid())) {
+                                baiDanhGias.add(baiDanhGia);
                             }
-                            giaoDichAdapter = new GiaoDichAdapter(GiaoDich.this, baiDanhGias);
-                            lvTourGD.setAdapter(giaoDichAdapter);
-                            progressBar.setVisibility(View.INVISIBLE);
                         }
+                        giaoDichAdapter = new GiaoDichAdapter(GiaoDich.this, baiDanhGias);
+                        lvTourGD.setAdapter(giaoDichAdapter);
                         if (baiDanhGias.isEmpty()) {
                             Toast.makeText(GiaoDich.this, "Không có giao dịch nào!", Toast.LENGTH_SHORT).show();
                         }
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(GiaoDich.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(GiaoDich.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(GiaoDich.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
