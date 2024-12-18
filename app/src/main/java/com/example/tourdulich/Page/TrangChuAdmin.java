@@ -110,7 +110,7 @@ public class TrangChuAdmin extends AppCompatActivity {
         btnQLDonDat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent qlDonDat = new Intent(TrangChuAdmin.this, QuanLyUser.class);
+                Intent qlDonDat = new Intent(TrangChuAdmin.this, QuanLyDonDat.class);
                 startActivity(qlDonDat);
             }
         });

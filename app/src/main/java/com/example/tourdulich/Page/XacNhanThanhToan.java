@@ -247,7 +247,6 @@ public class XacNhanThanhToan extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
-
     }
 }
 

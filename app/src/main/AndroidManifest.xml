@@ -20,12 +20,16 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
+            android:name=".Page.QuanLyDonDat"
+            android:exported="false" />
+        <activity
             android:name=".Page.XacNhanThanhToan"
             android:exported="true"
             android:label="Merchant Demo"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
