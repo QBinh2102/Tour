@@ -80,21 +80,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
     DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
 
 
-    // Khai báo ActivityResultLauncher
-    private final ActivityResultLauncher<Intent> selectImage = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult o) {
-                    if(o.getResultCode() == RESULT_OK){
-                        if(o.getData()!=null) {
-                            hinh = o.getData().getData();
-                            imgChange = String.valueOf(hinh);
-                            imgHinhDaiDien.setImageURI(hinh);
-                        }
-                    }
-                }
-            }
-    );
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,6 +333,22 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
 //        mDatabase.child(userID).child("ngaySinh").setValue(ngaySinh);
 //        mDatabase.child(userID).child("soDienThoai").setValue(dienThoai);
     }
+
+    // Khai báo ActivityResultLauncher
+    private final ActivityResultLauncher<Intent> selectImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult o) {
+                    if(o.getResultCode() == RESULT_OK){
+                        if(o.getData()!=null) {
+                            hinh = o.getData().getData();
+                            imgChange = String.valueOf(hinh);
+                            imgHinhDaiDien.setImageURI(hinh);
+                        }
+                    }
+                }
+            }
+    );
 
     private String getFileExtension(Uri mUri){
         ContentResolver cr = getContentResolver();

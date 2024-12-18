@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,20 +36,24 @@ public class DanhMucAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return danhMucList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.danh_muc_list,null);
+        if (convertView == null) {
+            // Inflate layout chỉ khi convertView là null
+            convertView = inflater.inflate(R.layout.danh_muc_list, parent, false);
+        }
 
         ImageView img = (ImageView) convertView.findViewById(R.id.imgVHinhDanhMuclist);
         TextView txtTen = (TextView) convertView.findViewById(R.id.txtTenDanhMuclist);
+        ImageView ibtn = (ImageView) convertView.findViewById(R.id.imgVXoaDanhMuc);
 
         DanhMuc danhMuc = danhMucList.get(position);
         Uri imageUri = Uri.parse(danhMuc.hinh);

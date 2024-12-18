@@ -35,31 +35,30 @@
                     <TextView
                         android:id="@+id/txtTenDanhMuclist"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
                         android:paddingBottom="10dp"
                         android:text="Tên"
                         android:textColor="@color/black"
                         android:textSize="20dp" />
 
-                    <TextView
-                        android:id="@+id/txtLoaiDanhMuclist"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="loại"
-                        android:textColor="@color/black"
-                        android:textSize="15dp" />
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/imageButton"
+                <ImageView
+                    android:id="@+id/imgVXoaDanhMuc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/white"
                     app:srcCompat="@drawable/cancel_24" />
+
+                <!--                <ImageButton-->
+<!--                    android:id="@+id/ibtnXoaDanhMuc"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    app:srcCompat="@drawable/cancel_24" />-->
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

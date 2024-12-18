@@ -3,7 +3,10 @@ package com.example.tourdulich.Database;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class DanhMuc {
+import java.io.Serializable;
+
+public class DanhMuc implements Serializable {
+    public String id;
     public String ten;
     public String hinh;
 
@@ -11,7 +14,8 @@ public class DanhMuc {
     public DanhMuc() {}
 
     // Constructor có tham số
-    public DanhMuc(String ten, String hinh) {
+    public DanhMuc(String id, String ten, String hinh) {
+        this.id = id;
         this.ten = ten;
         this.hinh = hinh;
     }
