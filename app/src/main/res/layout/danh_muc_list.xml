@@ -44,21 +44,6 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imgVXoaDanhMuc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/cancel_24" />
-
-                <!--                <ImageButton-->
-<!--                    android:id="@+id/ibtnXoaDanhMuc"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    app:srcCompat="@drawable/cancel_24" />-->
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

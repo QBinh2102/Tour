@@ -2,6 +2,7 @@ package com.example.tourdulich.Page;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -62,8 +63,8 @@ public class QuanLyDanhMuc extends AppCompatActivity {
     private ImageView imgHinh;
 
     private Uri hinh;
-    private String img;
-    private String imgDef;
+    private String img = "https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesDanhMuc%2F1734511298957.jpg?alt=media&token=d0ab7cdd-cc98-4a5f-9db0-c2e4defe0d39";
+    private String imgDef ="https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesDanhMuc%2F1734511298957.jpg?alt=media&token=d0ab7cdd-cc98-4a5f-9db0-c2e4defe0d39";
 
     private DatabaseReference danhMucRef = FirebaseDatabase.getInstance().getReference("Danh mục");
 
@@ -138,42 +139,51 @@ public class QuanLyDanhMuc extends AppCompatActivity {
                             Toast.makeText(QuanLyDanhMuc.this, "Chưa đặt tên danh mục", Toast.LENGTH_SHORT).show();
                             edtTen.setError("Vui lòng điền tên đăng nhập");
                             edtTen.requestFocus();
+                            pd.dismiss();
                         }else{
                             id = danhMucRef.push().getKey();
-                            FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
-                            name = System.currentTimeMillis() + "." + getFileExtension(Uri.parse(img));
-                            StorageReference imgRef = reference.getReference().child("imagesDanhMuc/" + tenDanhMuc + "/" + name);
-                            imgRef.putFile(Uri.parse(img)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
+                            if(img!=imgDef) {
+                                FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
+                                name = System.currentTimeMillis() + "." + getFileExtension(Uri.parse(img));
+                                StorageReference imgRef = reference.getReference().child("imagesDanhMuc/" + tenDanhMuc + "/" + name);
+                                imgRef.putFile(Uri.parse(img)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
 
-                                            DanhMuc danhMuc = new DanhMuc(id,tenDanhMuc,String.valueOf(uri));
+                                                DanhMuc danhMuc = new DanhMuc(id, tenDanhMuc, String.valueOf(uri));
 
-                                            danhMucRef.child(id).setValue(danhMuc);
+                                                danhMucRef.child(id).setValue(danhMuc);
 
-                                        }
-                                    });
-                                    Toast.makeText(QuanLyDanhMuc.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
-                                    pd.dismiss();
-                                    dialog.dismiss();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    pd.dismiss();
-                                    dialog.dismiss();
-                                    //
-                                }
-                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                                    double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                                    pd.setMessage("Progress: " + (int) progressPercent + "%");
-                                }
-                            });
+                                            }
+                                        });
+                                        Toast.makeText(QuanLyDanhMuc.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                        pd.dismiss();
+                                        dialog.dismiss();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        pd.dismiss();
+                                        dialog.dismiss();
+                                        //
+                                    }
+                                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                        double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                                        pd.setMessage("Progress: " + (int) progressPercent + "%");
+                                    }
+                                });
+                            }else{
+                                DanhMuc danhMuc = new DanhMuc(id, tenDanhMuc, imgDef);
+                                danhMucRef.child(id).setValue(danhMuc);
+                                Toast.makeText(QuanLyDanhMuc.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                pd.dismiss();
+                                dialog.dismiss();
+                            }
                         }
                     }
                 });
@@ -188,16 +198,17 @@ public class QuanLyDanhMuc extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyDanhMuc.this);
                 builder.setTitle("Chỉnh sửa danh mục");
-                View dialogView = getLayoutInflater().inflate(R.layout.add_danh_muc, null);
+                View dialogView = getLayoutInflater().inflate(R.layout.info_danh_muc, null);
                 builder.setView(dialogView);
                 builder.setCancelable(true);
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
-                Button btnHuy = dialogView.findViewById(R.id.btnHuyDanhMuc);
-                Button btnXacNhan = dialogView.findViewById(R.id.btnXacNhanDanhMuc);
-                imgHinh = dialogView.findViewById(R.id.imgVChonAnhDanhMuc);
-                EditText edtTen = dialogView.findViewById(R.id.edtTenDanhMuc);
+                Button btnHuy = dialogView.findViewById(R.id.btnHuyCapNhatDanhMuc);
+                Button btnXacNhan = dialogView.findViewById(R.id.btnXacNhanCapNhatDanhMuc);
+                Button btnXoa = dialogView.findViewById(R.id.btnXoaDanhMuc);
+                imgHinh = dialogView.findViewById(R.id.imgVCapNhatAnhDanhMuc);
+                EditText edtTen = dialogView.findViewById(R.id.edtCapNhatTenDanhMuc);
 
                 Glide.with(QuanLyDanhMuc.this)
                         .load(Uri.parse(danhMuc.hinh))
@@ -214,6 +225,30 @@ public class QuanLyDanhMuc extends AppCompatActivity {
                         intent.setType("image/*");
                         // Sử dụng ActivityResultLauncher thay cho startActivityForResult
                         selectImage.launch(intent);
+                    }
+                });
+
+                btnXoa.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder build = new AlertDialog.Builder(QuanLyDanhMuc.this);
+                        build.setTitle("Thông báo!!!");
+                        build.setMessage("Bạn có chắc muốn xóa danh mục này?");
+                        build.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog1, int which) {
+                                Toast.makeText(QuanLyDanhMuc.this,"Xóa thành công!",Toast.LENGTH_SHORT).show();
+                                danhMucRef.child(danhMuc.id).removeValue();
+                                dialog.dismiss();
+                            }
+                        });
+                        build.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog1, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        build.show();
                     }
                 });
 
