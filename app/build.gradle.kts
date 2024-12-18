@@ -50,9 +50,16 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:21.0.0")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation ("androidx.viewpager2:viewpager2:1.1.0")
+    implementation(fileTree(mapOf(
+        "dir" to "C:\\Users\\ADMIN\\OneDrive\\Desktop\\ZaloLib",
+        "include" to listOf("*.aar", "*.jar"),
+        "exclude" to listOf("")
+    )))
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(kotlin("script-runtime"))
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
 }

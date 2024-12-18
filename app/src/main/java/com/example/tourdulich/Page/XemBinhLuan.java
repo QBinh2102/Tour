@@ -371,7 +371,9 @@ public class XemBinhLuan extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
                         if (!baiDanhGia.idUser.equals(userID) && baiDanhGia.idTour.equals(tour.idTour)) {
-                            baiDanhGias.add(baiDanhGia);
+                            if(baiDanhGia.soSao!=0) {
+                                baiDanhGias.add(baiDanhGia);
+                            }
                         }
                     }
                     DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(XemBinhLuan.this, baiDanhGias, baiDanhGias.size());

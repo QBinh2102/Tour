@@ -76,7 +76,9 @@ public class XemBinhLuanChuaDangNhap extends AppCompatActivity {
                         BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
                         if(baiDanhGia.idTour.equals(tour.idTour)&&baiDanhGia.trangThai.equals("Đã thanh toán")){
                             flag = true;
-                            baiDanhGias.add(baiDanhGia);
+                            if(baiDanhGia.soSao!=0) {
+                                baiDanhGias.add(baiDanhGia);
+                            }
                         }
                     }
                     DanhGiaAdapter danhGiaAdapter = new DanhGiaAdapter(XemBinhLuanChuaDangNhap.this, baiDanhGias, baiDanhGias.size());
