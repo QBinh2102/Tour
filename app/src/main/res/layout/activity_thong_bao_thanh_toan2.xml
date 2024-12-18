@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:padding="16dp"
+    tools:context=".Page.ThongBaoThanhToan2">
+
+    <!-- Biểu tượng thành công -->
+    <ImageView
+        android:id="@+id/success_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icons8_cancel__1_" />
+
+
+    <!-- Tiêu đề thông báo -->
+    <TextView
+        android:id="@+id/tv_success_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/success_icon"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:text="Thanh toán thành công!"
+        android:textColor="@color/red"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Nội dung chi tiết -->
+    <TextView
+        android:id="@+id/tv_success_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_success_title"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:text="Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi."
+        android:textColor="#757575"
+        android:textSize="16sp" />
+
+    <!-- Nút quay lại trang chính -->
+    <Button
+        android:id="@+id/btn_back_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_success_message"
+        android:layout_marginTop="24dp"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/red"
+        android:text="Về trang chính"
+        android:textColor="#FFFFFF"
+        android:padding="12dp" />
+</RelativeLayout>

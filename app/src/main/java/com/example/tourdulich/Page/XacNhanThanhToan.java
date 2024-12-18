@@ -222,14 +222,14 @@ public class    XacNhanThanhToan extends AppCompatActivity {
 
                             @Override
                             public void onPaymentCanceled(String s, String s1) {
-                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan2.class);
                                 intent1.putExtra("result", "Hủy thanh toán");
                                 startActivity(intent1);
                             }
 
                             @Override
                             public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan3.class);
                                 intent1.putExtra("result", "Lỗi Thanh toán");
                                 startActivity(intent1);
                             }
