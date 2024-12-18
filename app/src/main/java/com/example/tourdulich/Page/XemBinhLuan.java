@@ -50,6 +50,7 @@ public class XemBinhLuan extends AppCompatActivity {
     private ImageView sao5;
     private EditText noiDung;
     private ListView lvDanhGia;
+    private ArrayList<BaiDanhGia> baiDanhGias = new ArrayList<>();
 
     private int soSao = 0;
 
@@ -246,6 +247,7 @@ public class XemBinhLuan extends AppCompatActivity {
                 String format = String.format("%s/%s/%s",dd,MM,yyyy);
                 bdgRef.child(idBaiDanhGiaCaNhan).child("thoiGian").setValue(format);
                 Toast.makeText(XemBinhLuan.this, "Đánh giá thành công!", Toast.LENGTH_SHORT).show();
+                showDSDanhGia();
             }
         });
         btnDangDanhGia.setClickable(false);
@@ -360,10 +362,11 @@ public class XemBinhLuan extends AppCompatActivity {
         Intent intent = getIntent();
         Tour tour = (Tour) intent.getSerializableExtra("tour");
         String userID = firebaseUser.getUid();
-        ArrayList<BaiDanhGia> baiDanhGias = new ArrayList<>();
+
         bdgRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                baiDanhGias.clear();
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);

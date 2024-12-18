@@ -97,7 +97,7 @@ public class QuanLyDanhMuc extends AppCompatActivity {
                         Toast.makeText(QuanLyDanhMuc.this, "Không có dữ liệu để hiển thị", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(QuanLyDanhMuc.this, "Không có user nào trong cơ sở dữ liệu", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuanLyDanhMuc.this, "Không có danh mục nào trong cơ sở dữ liệu", Toast.LENGTH_SHORT).show();
                 }
 
                 // Ẩn progress bar sau khi tải xong

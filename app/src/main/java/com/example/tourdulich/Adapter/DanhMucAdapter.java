@@ -49,7 +49,6 @@ public class DanhMucAdapter extends BaseAdapter {
 
         ImageView img = (ImageView) convertView.findViewById(R.id.imgVHinhDanhMuclist);
         TextView txtTen = (TextView) convertView.findViewById(R.id.txtTenDanhMuclist);
-        TextView txtLoai = (TextView) convertView.findViewById(R.id.txtLoaiDanhMuclist);
 
         DanhMuc danhMuc = danhMucList.get(position);
         Uri imageUri = Uri.parse(danhMuc.hinh);
@@ -57,7 +56,6 @@ public class DanhMucAdapter extends BaseAdapter {
                 .load(imageUri)
                 .into(img);
         txtTen.setText(danhMuc.ten);
-        txtLoai.setText(danhMuc.loai);
 
         return convertView;
     }
