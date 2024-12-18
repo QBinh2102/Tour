@@ -1,16 +1,13 @@
 package com.example.tourdulich.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.tourdulich.Database.DanhMuc;
@@ -19,7 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class DanhMucAdapter extends BaseAdapter {
 
@@ -67,5 +63,11 @@ public class DanhMucAdapter extends BaseAdapter {
         txtTen.setText(danhMuc.ten);
 
         return convertView;
+    }
+
+    //TimKiemDanhMuc
+    public void searchDanhMucList(List<DanhMuc> searchList) {
+        danhMucList = searchList;
+        notifyDataSetChanged();
     }
 }

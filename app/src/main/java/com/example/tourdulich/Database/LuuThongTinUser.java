@@ -26,4 +26,12 @@ public class LuuThongTinUser implements Serializable {
         this.gioiTinh = gioiTinh;
         this.role = role;
     }
+
+    public String getName() {
+        return tenNguoiDung;
+    }
+
+    public void setName(String name) {
+        this.tenNguoiDung = name;
+    }
 }

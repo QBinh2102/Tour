@@ -1,48 +1,24 @@
 package com.example.tourdulich.Page;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
-import com.bumptech.glide.Glide;
-import com.example.tourdulich.Database.DanhMuc;
 import com.example.tourdulich.Database.LuuThongTinUser;
-import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class TrangChuAdmin extends AppCompatActivity {
 
@@ -102,7 +78,7 @@ public class TrangChuAdmin extends AppCompatActivity {
         btnQLTour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent qlTour = new Intent(TrangChuAdmin.this, QuanLyUser.class);
+                Intent qlTour = new Intent(TrangChuAdmin.this, QuanLyTour.class);
                 startActivity(qlTour);
             }
         });

@@ -19,6 +19,7 @@ public class Tour implements Serializable {
     public int soBinhLuan;
     public double soSao;
     public int soLuongDat;
+    public boolean active = true;
 
     public Tour(){}
 

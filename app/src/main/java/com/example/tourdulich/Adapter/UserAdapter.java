@@ -5,11 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.tourdulich.Database.LuuThongTinUser;
-import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 
 import java.util.List;
@@ -52,5 +50,11 @@ public class UserAdapter extends BaseAdapter {
         txtRole.setText(user.role);
 
         return convertView;
+    }
+
+    //TimKiemUser
+    public void searchUserList(List<LuuThongTinUser> searchList){
+        userList = searchList;
+        notifyDataSetChanged();
     }
 }

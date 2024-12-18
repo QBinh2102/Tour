@@ -30,13 +30,13 @@ import org.json.JSONObject;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-//import vn.zalopay.sdk.Environment;
-//import vn.zalopay.sdk.ZaloPayError;
-//import vn.zalopay.sdk.ZaloPaySDK;
-//import vn.zalopay.sdk.listeners.PayOrderListener;
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
 
 
-public class XacNhanThanhToan extends AppCompatActivity {
+public class    XacNhanThanhToan extends AppCompatActivity {
 
     private TextView txtTongTien;
     private Button btnThanhToan;
@@ -72,8 +72,8 @@ public class XacNhanThanhToan extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        // ZaloPay SDK Init
-//        ZaloPaySDK.init(553, Environment.SANDBOX);
+        //ZaloPay SDK Init
+        ZaloPaySDK.init(553, Environment.SANDBOX);
 
         // Nút quay lại ChiTietDatVe
         btnQuayLai.setOnClickListener(new View.OnClickListener() {
@@ -86,168 +86,168 @@ public class XacNhanThanhToan extends AppCompatActivity {
         });
 
 
-//        btnThanhToan.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                CreateOrder orderApi = new CreateOrder();
-//                try {
-//                    JSONObject data = orderApi.createOrder(String.valueOf(total));
-//                    String code = data.getString("returncode");
-//
-//                    if (code.equals("1")) {
-//                        String token = data.getString("zptranstoken");
-//                        ZaloPaySDK.getInstance().payOrder(XacNhanThanhToan.this, token, "demozpdk://app", new PayOrderListener() {
-//                            @Override
-//                            public void onPaymentSucceeded(String s, String s1, String s2) {
-//                                bdgRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                                            BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
-//                                            if (tmp.idTour.equals(tour.idTour) && tmp.idUser.equals(User.getUid())) {
-//                                                if (tmp.trangThai.equals("Đã thanh toán")) {
-//                                                    flag = true;
-//                                                    int soVeDat = sl;
-//                                                    int giaVe = Integer.parseInt(tour.giaTien);
-//                                                    int tongTien = giaVe * soVeDat;
-//                                                    tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
-//                                                    bdgRef.child(tmp.idBaiDanhGia).child("soVe").setValue(tmp.soVe + soVeDat);
-//                                                    bdgRef.child(tmp.idBaiDanhGia).child("tongTien").setValue(tmp.tongTien + tongTien);
-//                                                    bdgRef.addValueEventListener(new ValueEventListener() {
-//                                                        @Override
-//                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                            if (snapshot.exists()) {
-//                                                                int tongSao = 0;
-//                                                                int luongSao = 0;
-//                                                                int soBinhLuan = 0;
-//                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                                                                    BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
-//                                                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.soSao != 0) {
-//                                                                        tongSao += baiDanhGia.soSao;
-//                                                                        luongSao++;
-//                                                                        soBinhLuan++;
-//                                                                    }
-//                                                                }
-//                                                                double tongSoSao = Double.parseDouble(String.valueOf(tongSao));
-//                                                                double soLuongSao = Double.parseDouble(String.valueOf(luongSao));
-//                                                                if(soLuongSao!=0) {
-//                                                                    double tbSao = tongSoSao / soLuongSao;
-//                                                                    tourRef.child(tour.idTour).child("soSao").setValue(tbSao);
-//                                                                }else
-//                                                                    tourRef.child(tour.idTour).child("soSao").setValue(0);
-//                                                                tourRef.child(tour.idTour).child("soBinhLuan").setValue(soBinhLuan);
-//                                                            }
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                                        }
-//                                                    });
-//                                                    Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
-//                                                    intent1.putExtra("result", "Thanh toán thành công");
-//                                                    startActivity(intent1);
-//
-//                                                    break;
-//                                                }
-//                                            }
-//                                        }
-//                                        if (!flag) {
-//                                            FirebaseAuth auth = FirebaseAuth.getInstance();
-//                                            String idUser = User.getUid();
-//                                            String idTour = tour.idTour;
-//                                            String idBDG = auth.getUid() + System.currentTimeMillis();
-//                                            int soVeDat = sl;
-//                                            int giaVe = Integer.parseInt(tour.giaTien);
-//                                            int tongTien = giaVe * soVeDat;
-//                                            BaiDanhGia baiDanhGia = new BaiDanhGia(idBDG, idUser, idTour, soVeDat, tongTien);
-//                                            bdgRef.child(idBDG).setValue(baiDanhGia).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                @Override
-//                                                public void onSuccess(Void unused) {
-//
-//                                                    tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
-//                                                    tourRef.child(idTour).child("soLuongDat").setValue(tour.soLuongDat+1);
-//                                                    bdgRef.addValueEventListener(new ValueEventListener() {
-//                                                        @Override
-//                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                            if (snapshot.exists()) {
-//                                                                int tongSao = 0;
-//                                                                int luongSao = 0;
-//                                                                int soBinhLuan = 0;
-//                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                                                                    BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
-//                                                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.soSao != 0) {
-//                                                                        tongSao += baiDanhGia.soSao;
-//                                                                        luongSao++;
-//                                                                        soBinhLuan++;
-//                                                                    }
-//                                                                }
-//                                                                double tongSoSao = Double.parseDouble(String.valueOf(tongSao));
-//                                                                double soLuongSao = Double.parseDouble(String.valueOf(luongSao));
-//                                                                if(soLuongSao!=0) {
-//                                                                    double tbSao = tongSoSao / soLuongSao;
-//                                                                    tourRef.child(tour.idTour).child("soSao").setValue(tbSao);
-//                                                                }else
-//                                                                    tourRef.child(tour.idTour).child("soSao").setValue(0);
-//                                                                tourRef.child(tour.idTour).child("soBinhLuan").setValue(soBinhLuan);
-//                                                            }
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                                        }
-//                                                    });
-//                                                    Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
-//                                                    intent1.putExtra("result", "Thanh toán thành công");
-//                                                    startActivity(intent1);
-//                                                }
-//                                            });
-//
-//                                        }
-//
-//                                        //
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//                                        Toast.makeText(XacNhanThanhToan.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                    //
-//                                });
-////                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
-////                                intent1.putExtra("result", "Thanh toán thành công");
-////                                startActivity(intent1);
-//                            }
-//
-//                            @Override
-//                            public void onPaymentCanceled(String s, String s1) {
+        btnThanhToan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateOrder orderApi = new CreateOrder();
+                try {
+                    JSONObject data = orderApi.createOrder(String.valueOf(total));
+                    String code = data.getString("returncode");
+
+                    if (code.equals("1")) {
+                        String token = data.getString("zptranstoken");
+                        ZaloPaySDK.getInstance().payOrder(XacNhanThanhToan.this, token, "demozpdk://app", new PayOrderListener() {
+                            @Override
+                            public void onPaymentSucceeded(String s, String s1, String s2) {
+                                bdgRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
+                                            if (tmp.idTour.equals(tour.idTour) && tmp.idUser.equals(User.getUid())) {
+                                                if (tmp.trangThai.equals("Đã thanh toán")) {
+                                                    flag = true;
+                                                    int soVeDat = sl;
+                                                    int giaVe = Integer.parseInt(tour.giaTien);
+                                                    int tongTien = giaVe * soVeDat;
+                                                    tourRef.child(tour.idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                                                    bdgRef.child(tmp.idBaiDanhGia).child("soVe").setValue(tmp.soVe + soVeDat);
+                                                    bdgRef.child(tmp.idBaiDanhGia).child("tongTien").setValue(tmp.tongTien + tongTien);
+                                                    bdgRef.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if (snapshot.exists()) {
+                                                                int tongSao = 0;
+                                                                int luongSao = 0;
+                                                                int soBinhLuan = 0;
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
+                                                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.soSao != 0) {
+                                                                        tongSao += baiDanhGia.soSao;
+                                                                        luongSao++;
+                                                                        soBinhLuan++;
+                                                                    }
+                                                                }
+                                                                double tongSoSao = Double.parseDouble(String.valueOf(tongSao));
+                                                                double soLuongSao = Double.parseDouble(String.valueOf(luongSao));
+                                                                if(soLuongSao!=0) {
+                                                                    double tbSao = tongSoSao / soLuongSao;
+                                                                    tourRef.child(tour.idTour).child("soSao").setValue(tbSao);
+                                                                }else
+                                                                    tourRef.child(tour.idTour).child("soSao").setValue(0);
+                                                                tourRef.child(tour.idTour).child("soBinhLuan").setValue(soBinhLuan);
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                                    Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                                    intent1.putExtra("result", "Thanh toán thành công");
+                                                    startActivity(intent1);
+
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if (!flag) {
+                                            FirebaseAuth auth = FirebaseAuth.getInstance();
+                                            String idUser = User.getUid();
+                                            String idTour = tour.idTour;
+                                            String idBDG = auth.getUid() + System.currentTimeMillis();
+                                            int soVeDat = sl;
+                                            int giaVe = Integer.parseInt(tour.giaTien);
+                                            int tongTien = giaVe * soVeDat;
+                                            BaiDanhGia baiDanhGia = new BaiDanhGia(idBDG, idUser, idTour, soVeDat, tongTien);
+                                            bdgRef.child(idBDG).setValue(baiDanhGia).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+
+                                                    tourRef.child(idTour).child("soLuongVe").setValue(tour.soLuongVe - soVeDat);
+                                                    tourRef.child(idTour).child("soLuongDat").setValue(tour.soLuongDat+1);
+                                                    bdgRef.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if (snapshot.exists()) {
+                                                                int tongSao = 0;
+                                                                int luongSao = 0;
+                                                                int soBinhLuan = 0;
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
+                                                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.soSao != 0) {
+                                                                        tongSao += baiDanhGia.soSao;
+                                                                        luongSao++;
+                                                                        soBinhLuan++;
+                                                                    }
+                                                                }
+                                                                double tongSoSao = Double.parseDouble(String.valueOf(tongSao));
+                                                                double soLuongSao = Double.parseDouble(String.valueOf(luongSao));
+                                                                if(soLuongSao!=0) {
+                                                                    double tbSao = tongSoSao / soLuongSao;
+                                                                    tourRef.child(tour.idTour).child("soSao").setValue(tbSao);
+                                                                }else
+                                                                    tourRef.child(tour.idTour).child("soSao").setValue(0);
+                                                                tourRef.child(tour.idTour).child("soBinhLuan").setValue(soBinhLuan);
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                                    Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                                    intent1.putExtra("result", "Thanh toán thành công");
+                                                    startActivity(intent1);
+                                                }
+                                            });
+
+                                        }
+
+                                        //
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(XacNhanThanhToan.this, "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
+                                    }
+                                    //
+                                });
 //                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
-//                                intent1.putExtra("result", "Hủy thanh toán");
+//                                intent1.putExtra("result", "Thanh toán thành công");
 //                                startActivity(intent1);
-//                            }
-//
-//                            @Override
-//                            public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-//                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
-//                                intent1.putExtra("result", "Lỗi Thanh toán");
-//                                startActivity(intent1);
-//                            }
-//                        });
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        });
+                            }
+
+                            @Override
+                            public void onPaymentCanceled(String s, String s1) {
+                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                intent1.putExtra("result", "Hủy thanh toán");
+                                startActivity(intent1);
+                            }
+
+                            @Override
+                            public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                intent1.putExtra("result", "Lỗi Thanh toán");
+                                startActivity(intent1);
+                            }
+                        });
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
     }
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        ZaloPaySDK.getInstance().onResult(intent);
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ZaloPaySDK.getInstance().onResult(intent);
+    }
 }
 
 

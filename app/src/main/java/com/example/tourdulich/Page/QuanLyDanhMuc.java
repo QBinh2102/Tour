@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -16,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,13 +32,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.tourdulich.Adapter.DanhMucAdapter;
-import com.example.tourdulich.Adapter.UserAdapter;
 import com.example.tourdulich.Database.DanhMuc;
-import com.example.tourdulich.Database.LuuThongTinUser;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,8 +46,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
+import java.util.List;
 
 public class QuanLyDanhMuc extends AppCompatActivity {
 
@@ -61,6 +59,7 @@ public class QuanLyDanhMuc extends AppCompatActivity {
     private DanhMucAdapter danhMucAdapter;
     private ProgressBar progressBar;
     private ImageView imgHinh;
+    private SearchView TimKiemDanhMuc;
 
     private Uri hinh;
     private String img = "https://firebasestorage.googleapis.com/v0/b/tourdulich-ae976.firebasestorage.app/o/imagesDanhMuc%2F1734511298957.jpg?alt=media&token=d0ab7cdd-cc98-4a5f-9db0-c2e4defe0d39";
@@ -80,6 +79,21 @@ public class QuanLyDanhMuc extends AppCompatActivity {
         arrayDanhMuc = new ArrayList<>();
         progressBar = findViewById(R.id.progressBar7);
         progressBar.setVisibility(View.VISIBLE);
+
+        TimKiemDanhMuc = findViewById(R.id.txtTimKiemDanhMuc);
+        TimKiemDanhMuc.clearFocus();
+        TimKiemDanhMuc.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterDanhMuc(newText);
+                return true;
+            }
+        });
 
         showDanhSach();
 
@@ -329,6 +343,7 @@ public class QuanLyDanhMuc extends AppCompatActivity {
     }
 
     private void showDanhSach() {
+        progressBar.setVisibility(View.VISIBLE);
         danhMucRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -390,5 +405,35 @@ public class QuanLyDanhMuc extends AppCompatActivity {
         ContentResolver cr = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(mUri));
+    }
+
+    private String removeAccent(String s) {
+        if (s == null) return ""; // Trả về chuỗi rỗng nếu input null
+        String normalized = Normalizer.normalize(s, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", ""); // Loại bỏ các ký tự dấu
+    }
+
+    // Lọc danh sách dựa trên từ khóa tìm kiếm
+    private void filterDanhMuc(String query) {
+        List<DanhMuc> filteredList = new ArrayList<>();
+
+        if (query == null || query.isEmpty()) {
+            query = ""; // Gán giá trị rỗng nếu null hoặc trống
+        }
+        String queryNormalized = removeAccent(query.toLowerCase());
+
+        for (DanhMuc danhMuc : arrayDanhMuc) {
+            // Chuyển đổi tên người dùng thành không dấu
+            String userNameNormalized = removeAccent(danhMuc.ten.toLowerCase());
+
+            // So sánh tên người dùng với query
+            if (userNameNormalized.contains(queryNormalized)) {
+                filteredList.add(danhMuc);
+            }
+        }
+
+        // Cập nhật danh sách hiển thị
+        danhMucAdapter.searchDanhMucList(filteredList);
+        lvDanhMuc.setAdapter(danhMucAdapter);
     }
 }

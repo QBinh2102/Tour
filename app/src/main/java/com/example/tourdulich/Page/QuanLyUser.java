@@ -14,10 +14,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +30,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.tourdulich.Adapter.TourAdapter;
 import com.example.tourdulich.Adapter.UserAdapter;
 import com.example.tourdulich.Database.LuuThongTinUser;
-import com.example.tourdulich.Database.Tour;
 import com.example.tourdulich.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,8 +47,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +66,7 @@ public class QuanLyUser extends AppCompatActivity {
     boolean gt = true;
     boolean isPassShow = false;
     String vaiTro="user";
+    private SearchView TimKiemUser;
 
     private DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
 
@@ -86,6 +87,21 @@ public class QuanLyUser extends AppCompatActivity {
         arrayUser = new ArrayList<>();
         progressBar = findViewById(R.id.progressBar4);
         progressBar.setVisibility(View.VISIBLE);
+
+        TimKiemUser = findViewById(R.id.txtTimKiemUser);
+        TimKiemUser.clearFocus();
+        TimKiemUser.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterUsers(newText);
+                return true;
+            }
+        });
 
         showDanhSach();
 
@@ -431,5 +447,33 @@ public class QuanLyUser extends AppCompatActivity {
         });
     }
 
+    private String removeAccent(String s) {
+        if (s == null) return ""; // Trả về chuỗi rỗng nếu input null
+        String normalized = Normalizer.normalize(s, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", ""); // Loại bỏ các ký tự dấu
+    }
 
+    // Lọc danh sách dựa trên từ khóa tìm kiếm
+    private void filterUsers(String query) {
+        List<LuuThongTinUser> filteredList = new ArrayList<>();
+
+        if (query == null || query.isEmpty()) {
+            query = ""; // Gán giá trị rỗng nếu null hoặc trống
+        }
+        String queryNormalized = removeAccent(query.toLowerCase());
+
+        for (LuuThongTinUser user : arrayUser) {
+            // Chuyển đổi tên người dùng thành không dấu
+            String userNameNormalized = removeAccent(user.tenNguoiDung.toLowerCase());
+
+            // So sánh tên người dùng với query
+            if (userNameNormalized.contains(queryNormalized)) {
+                filteredList.add(user);
+            }
+        }
+
+        // Cập nhật danh sách hiển thị
+        userAdapter.searchUserList(filteredList);
+        lvUser.setAdapter(userAdapter);
+    }
 }

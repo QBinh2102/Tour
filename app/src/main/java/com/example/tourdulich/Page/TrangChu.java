@@ -1,7 +1,6 @@
 package com.example.tourdulich.Page;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -313,6 +312,20 @@ public class TrangChu extends AppCompatActivity {
         cardView.setRadius(10f);
         cardView.setPadding(0, 0, 0, 0);
         cardView.setCardBackgroundColor(Color.WHITE);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Xử lý sự kiện click vào danh mục
+                Intent intent = new Intent(TrangChu.this, DatVe.class);
+
+                // Gửi dữ liệu về danh mục đã chọn (tùy chọn)
+//                intent.putExtra("danh_muc_da_chon", danhMuc); // Ví dụ: gửi tên danh mục
+
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
+            }
+        });
 
         FrameLayout frameLayout = new FrameLayout(this);
         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
