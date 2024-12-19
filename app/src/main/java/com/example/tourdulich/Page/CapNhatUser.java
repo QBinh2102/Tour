@@ -238,6 +238,7 @@ public class CapNhatUser extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         mDatabase.child(user.id).removeValue()
                                 .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(CapNhatUser.this,"Xóa thành công",Toast.LENGTH_SHORT).show();
                                     Intent ql = new Intent(CapNhatUser.this, QuanLyUser.class);
                                     startActivity(ql);
                                 })

@@ -286,6 +286,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
             Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
             Intent ttcn = new Intent(ChinhSuaThongTinCaNhan.this, QuanLyUser.class);
             startActivity(ttcn);
+            finish();
         }else {
             FirebaseStorage reference = FirebaseStorage.getInstance("gs://tourdulich-ae976.firebasestorage.app");
             //Đặt tên hình trên storage
@@ -311,6 +312,7 @@ public class ChinhSuaThongTinCaNhan extends AppCompatActivity {
                     Toast.makeText(ChinhSuaThongTinCaNhan.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                     Intent ttcn = new Intent(ChinhSuaThongTinCaNhan.this, TrangChu.class);
                     startActivity(ttcn);
+                    finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
