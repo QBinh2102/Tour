@@ -154,7 +154,7 @@ public class    XacNhanThanhToan extends AppCompatActivity {
                                             }
                                         }
                                         if (!flag) {
-                                            Toast.makeText(XacNhanThanhToan.this, "Lỗi do Sang tìm ra 2", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(XacNhanThanhToan.this, "Đặt Vé Thành Công", Toast.LENGTH_SHORT).show();
                                             FirebaseAuth auth = FirebaseAuth.getInstance();
                                             String idUser = User.getUid();
                                             String idTour = tour.idTour;
