@@ -166,8 +166,8 @@ public class TrangDangKy extends AppCompatActivity {
 
                 //Kiem tra so dien thoai co hop li khong
                 //So dien thoai chi hop ly khi bat dau voi 3 so ben duoi va 7 so con lai tu 0->9
-                String quyDinhSDT = "(039|038|037|036|035|034|033|032|096|097|098|086|083|084|085|081" +
-                        "|088|082|070|079|077|076|078|090|093|089|052|056|058|092)[0-9]{7}";
+                String quyDinhSDT = "(098|097|096|086|039|038|037|036|035|034|033|032|090|093|089|070" +
+                        "|079|077|076|078|091|094|080|083|084|085|081|082|092|056|058|)[0-9]{7}";
                 Matcher mauKiemTraSDT;
                 Pattern sdtHopLe = Pattern.compile(quyDinhSDT);
                 mauKiemTraSDT = sdtHopLe.matcher(soDienThoai);
