@@ -20,16 +20,19 @@
         android:theme="@style/Theme.TourDuLich"
         tools:targetApi="31">
         <activity
+            android:name=".Page.CapNhatTour1"
+            android:exported="false" />
+        <activity
+            android:name=".Page.CapNhatThongTinTour"
+            android:exported="false" />
+        <activity
             android:name=".Page.ThongBaoThanhToan3"
             android:exported="false" />
         <activity
             android:name=".Page.ThongBaoThanhToan2"
             android:exported="false" />
         <activity
-            android:name=".Page.MainActivity2"
-            android:exported="false" />
-        <activity
-            android:name=".Page.ThemTour"
+            android:name=".Page.AddTour"
             android:exported="false" />
         <activity
             android:name=".Page.QuanLyTour"
@@ -92,9 +95,6 @@
             android:exported="false" />
         <activity
             android:name=".Page.GiaoDich"
-            android:exported="false" />
-        <activity
-            android:name=".Page.TinTuc"
             android:exported="false" />
         <activity
             android:name=".Page.ThongTinChuaDangNhap"

@@ -33,18 +33,18 @@
                         android:layout_gravity="center"></ImageView>
 
                 </androidx.cardview.widget.CardView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="@color/black"
-                        android:hint="Đang tải..."
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="center"
-                        android:textAlignment="center"
-                        android:id="@+id/txtTenHoSo"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                        android:textColor="@color/black">
-                    </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/black"
+                    android:hint="Đang tải..."
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:id="@+id/txtTenHoSo"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/black">
+                </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -254,30 +254,6 @@
                     android:layout_weight="4"
                     android:gravity="center"
                     android:text="Trang chủ"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btHoSoToiTinTuc"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageView19"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="7"
-                    app:srcCompat="@drawable/newspaper_24" />
-
-                <TextView
-                    android:id="@+id/textView30"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="4"
-                    android:gravity="center"
-                    android:text="Tin tức"
                     android:textColor="@color/black" />
             </LinearLayout>
 

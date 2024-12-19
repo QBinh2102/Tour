@@ -39,7 +39,6 @@ public class ThongTinCaNhan extends AppCompatActivity {
 
     private LinearLayout btnToiTrangChu;
     private LinearLayout btnToiDatVe;
-    private LinearLayout btnToiTinTuc;
     private LinearLayout btnToiGiaoDich;
 
     private Button btnChinhSua;
@@ -79,17 +78,6 @@ public class ThongTinCaNhan extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(trangChu);
-                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
-            }
-        });
-
-        //Chuyển sang trang TIN TỨC
-        Intent tinTuc = new Intent(this, TinTuc.class);
-        btnToiTinTuc = findViewById(R.id.btHoSoToiTinTuc);
-        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(tinTuc);
                 overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
             }
         });

@@ -41,6 +41,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,7 +104,27 @@ public class TrangDangKy extends AppCompatActivity {
                 picker = new DatePickerDialog(TrangDangKy.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        edtTextNgaySinhDangKy.setText(dayOfMonth + "/" + (month+1) +  "/" + year);
+                        String ngaySinhStr = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        edtTextNgaySinhDangKy.setText(ngaySinhStr);
+
+                        // Tính tuổi và kiểm tra
+                        try {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                            LocalDate ngaySinhLocalDate = LocalDate.parse(ngaySinhStr, formatter);
+                            LocalDate ngayHienTai = LocalDate.now();
+                            Period tuoi = Period.between(ngaySinhLocalDate, ngayHienTai);
+
+                            if (tuoi.getYears() < 16) {
+                                Toast.makeText(TrangDangKy.this, "Bạn phải đủ 16 tuổi trở lên để đăng ký", Toast.LENGTH_SHORT).show();
+                                edtTextNgaySinhDangKy.setError("Ngày sinh không hợp lệ");
+                                edtTextNgaySinhDangKy.setText("");
+                            } else {
+                                edtTextNgaySinhDangKy.setError(null);
+                            }
+                        } catch (DateTimeParseException e) {
+                            Toast.makeText(TrangDangKy.this, "Định dạng ngày sinh không hợp lệ", Toast.LENGTH_SHORT).show();
+                            edtTextNgaySinhDangKy.setError("Ngày sinh không hợp lệ");
+                        }
                     }
                 },year, month, day);
                 picker.show();

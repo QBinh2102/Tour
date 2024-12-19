@@ -3,6 +3,7 @@ package com.example.tourdulich.Page;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -63,8 +64,18 @@ public class QuanLyTour extends AppCompatActivity {
         btnThem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent add = new Intent(QuanLyTour.this,ThemTour.class);
+                Intent add = new Intent(QuanLyTour.this, AddTour.class);
                 startActivity(add);
+            }
+        });
+
+        lvTour.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Tour tour = arrayTour.get(position);
+                Intent intent = new Intent(QuanLyTour.this, CapNhatTour.class);
+                intent.putExtra("tour",tour);
+                startActivity(intent);
             }
         });
 

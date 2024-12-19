@@ -43,7 +43,6 @@ public class TrangChu extends AppCompatActivity {
     private TextView lbWelcome;
     private LinearLayout btnToiDatVe;
     private LinearLayout btnToiHoSo;
-    private LinearLayout btnToiTinTuc;
     private LinearLayout btnToiGiaoDich;
     private ImageView img1, img2, img3;
     private TextView txtTen1, txtTen2, txtTen3;
@@ -171,18 +170,6 @@ public class TrangChu extends AppCompatActivity {
             });
         }
 
-        // Kiểm tra lại role từ SharedPreferences
-//        SharedPreferences preferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
-//        String role = preferences.getString("role", "user");  // Mặc định là "user" nếu chưa có role
-//
-//        // Nếu role là admin, chuyển đến TrangChuAdmin
-//        if ("admin".equals(role)) {
-//            Intent intent = new Intent(TrangChu.this, TrangChuAdmin.class);
-//            startActivity(intent);
-//            finish();  // Đảm bảo không quay lại TrangChu
-//        }
-
-
         //Chuyển sang trang ĐẶT VÉ
         Intent datVe = new Intent(this, DatVe.class);
         btnToiDatVe = findViewById(R.id.btTrangChuToiDatVe);
@@ -190,17 +177,6 @@ public class TrangChu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(datVe);
-                overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
-            }
-        });
-
-        //Chuyển sang trang TIN TỨC
-        Intent tinTuc = new Intent(this, TinTuc.class);
-        btnToiTinTuc = findViewById(R.id.btTrangChuToiTinTuc);
-        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(tinTuc);
                 overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
             }
         });
@@ -320,7 +296,7 @@ public class TrangChu extends AppCompatActivity {
                 Intent intent = new Intent(TrangChu.this, DatVe.class);
 
                 // Gửi dữ liệu về danh mục đã chọn (tùy chọn)
-//                intent.putExtra("danh_muc_da_chon", danhMuc); // Ví dụ: gửi tên danh mục
+                intent.putExtra("danh_muc_da_chon", danhMuc); // Ví dụ: gửi tên danh mục
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_2_trai_qua_phai, R.anim.slide_1_trai_qua_phai);
@@ -367,7 +343,8 @@ public class TrangChu extends AppCompatActivity {
                 if(snapshot.exists()){
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         Tour tour = dataSnapshot.getValue(Tour.class);
-                        tours.add(tour);
+                        if(tour.active)
+                            tours.add(tour);
                     }
                 }
                 for(int i = 0;i<tours.size()-1;i++){

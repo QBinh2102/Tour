@@ -33,7 +33,6 @@ public class GiaoDich extends AppCompatActivity {
 
     private LinearLayout btnToiTrangChu;
     private LinearLayout btnToiDatVe;
-    private LinearLayout btnToiTinTuc;
     private LinearLayout btnToiHoSo;
 
     private ArrayList<BaiDanhGia> baiDanhGias;
@@ -104,17 +103,6 @@ public class GiaoDich extends AppCompatActivity {
             }
         });
 
-        //Chuyển sang trang TIN TỨC
-        Intent tinTuc = new Intent(this, TinTuc.class);
-        btnToiTinTuc = findViewById(R.id.btGiaoDichToiTinTuc);
-        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(tinTuc);
-                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
-            }
-        });
-
         //Chuyển sang ĐẶT VÉ
         Intent datVe = new Intent(this, DatVe.class);
         btnToiDatVe = findViewById(R.id.btGiaoDichToiDatVe);
@@ -149,12 +137,11 @@ public class GiaoDich extends AppCompatActivity {
                         }
                         giaoDichAdapter = new GiaoDichAdapter(GiaoDich.this, baiDanhGias);
                         lvTourGD.setAdapter(giaoDichAdapter);
-                        if (baiDanhGias.isEmpty()) {
-                            Toast.makeText(GiaoDich.this, "Không có giao dịch nào!", Toast.LENGTH_SHORT).show();
-                        }
-                        progressBar.setVisibility(View.INVISIBLE);
                     }
-
+                    if (baiDanhGias.isEmpty()) {
+                        Toast.makeText(GiaoDich.this, "Không có giao dịch nào!", Toast.LENGTH_SHORT).show();
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override

@@ -180,24 +180,22 @@ public class ThongTinDatVe extends AppCompatActivity {
                     bdgRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
-                                    //Đã đặt vé
-                                    if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(firebaseUser.getUid())
-                                            && baiDanhGia.trangThai.equals("Đã thanh toán")) {
-                                        flag=true;
-                                        Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
-                                        xbl.putExtra("tour", tour);
-                                        startActivity(xbl);
-                                    }
-                                }
-                                //Chưa đặt vé
-                                if(!flag) {
-                                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                BaiDanhGia baiDanhGia = dataSnapshot.getValue(BaiDanhGia.class);
+                                //Đã đặt vé
+                                if (baiDanhGia.idTour.equals(tour.idTour) && baiDanhGia.idUser.equals(firebaseUser.getUid())
+                                        && baiDanhGia.trangThai.equals("Đã thanh toán")) {
+                                    flag=true;
+                                    Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuan.class);
                                     xbl.putExtra("tour", tour);
                                     startActivity(xbl);
                                 }
+                            }
+                            //Chưa đặt vé
+                            if(!flag) {
+                                Intent xbl = new Intent(ThongTinDatVe.this, XemBinhLuanChuaDangNhap.class);
+                                xbl.putExtra("tour", tour);
+                                startActivity(xbl);
                             }
                         }
 

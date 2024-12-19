@@ -49,7 +49,6 @@ public class DatVe extends AppCompatActivity {
 
     private LinearLayout btnToiHoSo;
     private LinearLayout btnToiTrangChu;
-    private LinearLayout btnToiTinTuc;
     private LinearLayout btnToiGiaoDich;
 
     private ListView lvTour;
@@ -57,10 +56,6 @@ public class DatVe extends AppCompatActivity {
     private TourAdapter tourAdapter;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-    private String selectedServiceType = ""; // Không lọc loại dịch vụ mặc định
-    private String selectedCity = ""; // Không lọc thành phố mặc định
-    private String selectedClub = ""; // Không lọc câu lạc bộ mặc định
 
     private ProgressBar progressBar;
 
@@ -84,8 +79,15 @@ public class DatVe extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Tour");
 
-        //Show toàn bộ tour trên firebase
-        showTour();
+        Intent intent = getIntent();
+        String tenDanhMuc = intent.getStringExtra("danh_muc_da_chon");
+        if (tenDanhMuc != null) {
+            // Hiển thị tour theo danh mục được chọn
+            showTourTheoDanhMuc(tenDanhMuc);
+        } else {
+            // Hiển thị tất cả tour
+            showTour();
+        }
 
         TimKiem = findViewById(R.id.txtTimKiem);
         TimKiem.clearFocus();
@@ -138,17 +140,6 @@ public class DatVe extends AppCompatActivity {
             }
         });
 
-        //Chuyển sang trang TIN TỨC
-        Intent tinTuc = new Intent(this, TinTuc.class);
-        btnToiTinTuc = findViewById(R.id.btDatVeToiTinTuc);
-        btnToiTinTuc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(tinTuc);
-                overridePendingTransition(R.anim.slide_1_phai_qua_trai, R.anim.slide_2_phai_qua_trai);
-            }
-        });
-
         //Chuyển sang trang GIAO DỊCH
         Intent giaoDich = new Intent(this, GiaoDich.class);
         btnToiGiaoDich = findViewById(R.id.btDatVeToiGiaoDich);
@@ -177,7 +168,6 @@ public class DatVe extends AppCompatActivity {
         filterButton.setOnClickListener(v -> showFilterDialog());
     }
 
-
     private void showTour() {
         // Hiển thị progress bar khi đang tải
         progressBar.setVisibility(View.VISIBLE);
@@ -191,7 +181,7 @@ public class DatVe extends AppCompatActivity {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         // Lấy từng tour từ Firebase
                         Tour tour = snapshot.getValue(Tour.class);
-                        if (tour != null) {
+                        if (tour.active) {
                             arrayTour.add(tour); // Thêm vào danh sách nếu hợp lệ
                         }
                     }
@@ -207,6 +197,52 @@ public class DatVe extends AppCompatActivity {
                         }
                     } else {
                         Toast.makeText(DatVe.this, "Không có dữ liệu để hiển thị", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(DatVe.this, "Không có tour nào trong cơ sở dữ liệu", Toast.LENGTH_SHORT).show();
+                }
+
+                // Ẩn progress bar sau khi tải xong
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressBar.setVisibility(View.INVISIBLE); // Ẩn progress bar nếu xảy ra lỗi
+                Toast.makeText(DatVe.this, "Lỗi tải dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showTourTheoDanhMuc(String tenDanhMuc) {
+        // Hiển thị progress bar khi đang tải
+        progressBar.setVisibility(View.VISIBLE);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    arrayTour.clear(); // Xóa danh sách cũ trước khi tải mới
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        // Lấy từng tour từ Firebase
+                        Tour tour = snapshot.getValue(Tour.class);
+                        if (tour.active && tour.danhMuc.equals(tenDanhMuc)) {
+                            arrayTour.add(tour); // Thêm vào danh sách nếu hợp lệ
+                        }
+                    }
+
+                    // Kiểm tra danh sách sau khi tải
+                    if (!arrayTour.isEmpty()) {
+                        // Gắn adapter và hiển thị dữ liệu
+                        if (tourAdapter == null) {
+                            tourAdapter = new TourAdapter(DatVe.this, arrayTour);
+                            lvTour.setAdapter(tourAdapter);
+                        } else {
+                            tourAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        Toast.makeText(DatVe.this, "Không có tour thuộc danh mục " + tenDanhMuc, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(DatVe.this, "Không có tour nào trong cơ sở dữ liệu", Toast.LENGTH_SHORT).show();
@@ -269,16 +305,6 @@ public class DatVe extends AppCompatActivity {
         Spinner serviceTypeSpinner = view.findViewById(R.id.service_type_spinner);
         Spinner clubSpinner = view.findViewById(R.id.service_spinner);
 
-//        ArrayAdapter<CharSequence> serviceTypeAdapter = ArrayAdapter.createFromResource(this,
-//                R.array.service_types, android.R.layout.simple_spinner_item);
-//        serviceTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        serviceTypeSpinner.setAdapter(serviceTypeAdapter);
-//
-//        ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(this,
-//                R.array.cars, android.R.layout.simple_spinner_item);
-//        clubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        clubSpinner.setAdapter(clubAdapter);
-
         showTTBoLoc(serviceTypeSpinner,clubSpinner,view);
         serviceTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -317,16 +343,7 @@ public class DatVe extends AppCompatActivity {
 
         Button applyButton = view.findViewById(R.id.apply_button);
 
-        AlertDialog dialog = builder.create();  // Tạo đối tượng dialog
-//        applyButton.setOnClickListener(v -> {
-//            // Lấy giá trị từ spinner
-//            selectedServiceType = serviceTypeSpinner.getSelectedItem().toString();
-//            selectedClub = clubSpinner.getSelectedItem().toString();
-//
-//            // Cập nhật danh sách tour
-//            showTour();
-//            dialog.dismiss(); // Đóng dialog
-//        });
+        AlertDialog dialog = builder.create();
 
         //Chọn Ngày Bộ lọc
         TextView edtTextNgayDi = view.findViewById(R.id.editTextNgayDi);
@@ -476,11 +493,6 @@ public class DatVe extends AppCompatActivity {
         clubSpinner.setAdapter(clubAdapter);
 
         TextView edtTextNgayDi = view.findViewById(R.id.editTextNgayDi);
-//        Calendar calendar = Calendar.getInstance();
-//        String dd = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-//        String MM = String.valueOf(calendar.get(Calendar.MONTH)+1);
-//        String yyyy = String.valueOf(calendar.get(Calendar.YEAR));
-//        String format = String.format("%s/%s/%s",dd,MM,yyyy);
         edtTextNgayDi.setHint("dd/MM/yyyy");
     }
 

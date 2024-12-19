@@ -142,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|center_horizontal"
-                         android:visibility="invisible"/>
+                        android:visibility="invisible"/>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -365,30 +365,6 @@
                     android:gravity="center"
                     android:text="Trang chủ"
                     android:textColor="@color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btTrangChuToiTinTuc"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageView14"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="7"
-                    app:srcCompat="@drawable/newspaper_24" />
-
-                <TextView
-                    android:id="@+id/textView25"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="4"
-                    android:gravity="center"
-                    android:text="Tin tức"
-                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
