@@ -73,7 +73,7 @@ public class    XacNhanThanhToan extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         //ZaloPay SDK Init
-        ZaloPaySDK.init(553, Environment.SANDBOX);
+//        ZaloPaySDK.init(553, Environment.SANDBOX);
 
         // Nút quay lại ChiTietDatVe
         btnQuayLai.setOnClickListener(new View.OnClickListener() {

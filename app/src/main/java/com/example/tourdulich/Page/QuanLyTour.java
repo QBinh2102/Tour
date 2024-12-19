@@ -73,7 +73,7 @@ public class QuanLyTour extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tour tour = arrayTour.get(position);
-                Intent intent = new Intent(QuanLyTour.this, CapNhatTour.class);
+                Intent intent = new Intent(QuanLyTour.this, CapNhatTour1.class);
                 intent.putExtra("tour",tour);
                 startActivity(intent);
             }
