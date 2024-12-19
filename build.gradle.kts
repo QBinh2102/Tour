@@ -7,8 +7,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        flatDir {
+            dirs ("libs")
+        }
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0")
+        classpath("com.android.tools.build:gradle:8.2.0")
     }
 }

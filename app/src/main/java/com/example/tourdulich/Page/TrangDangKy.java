@@ -192,6 +192,11 @@ public class TrangDangKy extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                     edtTextPhoneDangKy.setError("Số điện thoại bao gồm 10 số");
                     edtTextPhoneDangKy.requestFocus();
+                }else if (!soDienThoai.matches("^[0-9]+$")) {
+                    Toast.makeText(TrangDangKy.this, "Vui lòng xem lại số điện thoại",
+                            Toast.LENGTH_LONG).show();
+                    edtTextPhoneDangKy.setError("Số điện thoại chỉ được chứa số");
+                    edtTextPhoneDangKy.requestFocus();
                 }else if (TextUtils.isEmpty(email)) {
                     Toast.makeText(TrangDangKy.this, "Vui lòng điền đầy đủ thông tin",
                             Toast.LENGTH_LONG).show();

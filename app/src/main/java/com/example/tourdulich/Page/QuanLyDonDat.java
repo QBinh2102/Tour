@@ -35,7 +35,7 @@ public class QuanLyDonDat extends AppCompatActivity {
 
     private UserAdapter userAdapter;
     private GiaoDichAdapter giaoDichAdapter;
-
+    private boolean hasShownMessage = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +50,6 @@ public class QuanLyDonDat extends AppCompatActivity {
         arrayLSGD = new ArrayList<>();
 
         btnQuayLai.setOnClickListener(v -> finish());
-
         // Load dữ liệu người dùng
         loadUserData();
 
@@ -66,10 +65,32 @@ public class QuanLyDonDat extends AppCompatActivity {
             xoaDanhGia(selectedGiaoDich);
         });
     }
+    private void themBaiDanhGiaThuCong() {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("baiDanhGia"); // Sửa tên thành đúng node của mày.
+
+        // Tạo bài đánh giá mẫu
+        String idBaiDanhGia = dbRef.push().getKey(); // Tạo id ngẫu nhiên.
+        BaiDanhGia baiDanhGia = new BaiDanhGia(
+                idBaiDanhGia,
+                "user1", // ID user mẫu.
+                "tour1", // ID tour mẫu.
+                2, // Số vé.
+                4000000 // Tổng tiền.
+        );
+        baiDanhGia.soSao = 5; // Thêm số sao đánh giá.
+        baiDanhGia.binhLuan = "Tour rất tuyệt vời!"; // Thêm bình luận.
+        baiDanhGia.thoiGian = "2024-12-19"; // Thêm thời gian đánh giá.
+        baiDanhGia.trangThai = "Đã thanh toán"; // Thêm trạng thái.
+
+        // Đẩy bài đánh giá lên Firebase
+        dbRef.child(idBaiDanhGia).setValue(baiDanhGia)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Thêm bài đánh giá thành công!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
 
     private void loadUserData() {
         progressBar.setVisibility(View.VISIBLE);
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Người đã đăng ký");
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -78,14 +99,35 @@ public class QuanLyDonDat extends AppCompatActivity {
 
                 for (DataSnapshot data : snapshot.getChildren()) {
                     LuuThongTinUser user = data.getValue(LuuThongTinUser.class);
-                    arrayUser.add(user);
+
+                    // Kiểm tra nếu người dùng này đã đặt vé hay chưa
+                    DatabaseReference baiDanhGiaRef = FirebaseDatabase.getInstance().getReference("baiDanhGia");
+                    baiDanhGiaRef.orderByChild("idUser").equalTo(user.id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                arrayUser.add(user);
+                            }
+
+                            if (arrayUser.size() == snapshot.getChildrenCount()) {
+                                if (arrayUser.isEmpty()&& !hasShownMessage) {
+                                    Toast.makeText(QuanLyDonDat.this, "Không có người dùng nào đã đặt vé", Toast.LENGTH_SHORT).show();
+                                    hasShownMessage = true;
+                                }
+                                userAdapter = new UserAdapter(QuanLyDonDat.this, arrayUser);
+                                lvUser.setAdapter(userAdapter);
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(QuanLyDonDat.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
                 }
-
-                userAdapter = new UserAdapter(QuanLyDonDat.this, arrayUser);
-                lvUser.setAdapter(userAdapter);
-                progressBar.setVisibility(View.GONE);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(QuanLyDonDat.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -94,13 +136,14 @@ public class QuanLyDonDat extends AppCompatActivity {
         });
     }
 
+
+
     private void loadLSGD(String userId) {
         progressBar.setVisibility(View.VISIBLE);
         lvUser.setVisibility(View.GONE);
         lvLSGD.setVisibility(View.VISIBLE);
 
-        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("donDatHang");
-
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("baiDanhGia");
         orderRef.orderByChild("idUser").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -129,7 +172,7 @@ public class QuanLyDonDat extends AppCompatActivity {
     }
 
     private void xoaDanhGia(BaiDanhGia giaoDich) {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("donDatHang");
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("baiDanhGia");
 
         dbRef.child(giaoDich.idBaiDanhGia).removeValue()
                 .addOnSuccessListener(aVoid -> {
