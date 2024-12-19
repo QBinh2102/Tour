@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,7 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuanLyTour extends AppCompatActivity {
 
@@ -35,6 +38,7 @@ public class QuanLyTour extends AppCompatActivity {
     private CreateTourAdapter tourAdapter;
     private ArrayList<Tour> arrayTour;
     private ProgressBar progressBar;
+    private SearchView txtTimKiemTour;
 
     private DatabaseReference tourRef = FirebaseDatabase.getInstance().getReference("Tour");
 
@@ -50,6 +54,20 @@ public class QuanLyTour extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar10);
         progressBar.setVisibility(View.VISIBLE);
         arrayTour = new ArrayList<>();
+        txtTimKiemTour = findViewById(R.id.txtTimKiemTour);
+        txtTimKiemTour.clearFocus();
+        txtTimKiemTour.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterTours(newText);
+                return true;
+            }
+        });
 
         showDanhSach();
 
@@ -127,5 +145,33 @@ public class QuanLyTour extends AppCompatActivity {
                 Toast.makeText(QuanLyTour.this, "Lỗi tải dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private String removeAccent(String s) {
+        if (s == null) return ""; // Trả về chuỗi rỗng nếu input null
+        String normalized = Normalizer.normalize(s, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{M}", ""); // Loại bỏ các ký tự dấu
+    }
+
+    // Lọc danh sách dựa trên từ khóa tìm kiếm
+    private void filterTours(String query) {
+        List<Tour> filteredList = new ArrayList<>();
+
+        if (query == null || query.isEmpty()) {
+            query = ""; // Gán giá trị rỗng nếu null hoặc trống
+        }
+        String queryNormalized = removeAccent(query.toLowerCase());
+        for (Tour tour : arrayTour) {
+            // Chuyển đổi tên tour thành không dấu
+            String tourNameNormalized = removeAccent(tour.tenTour.toLowerCase());
+
+            // So sánh tên tour với query
+            if (tourNameNormalized.contains(queryNormalized)) {
+                filteredList.add(tour);
+            }
+        }
+        // Cập nhật lại dữ liệu cho Adapter
+        if (tourAdapter != null) {
+            tourAdapter.searchDataList(filteredList);  // Gọi phương thức trong Adapter để cập nhật dữ liệu
+        }
     }
 }

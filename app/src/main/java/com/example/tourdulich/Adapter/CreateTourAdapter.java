@@ -68,6 +68,11 @@ public class CreateTourAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void searchDataList(List<Tour> searchList){
+        tourList = searchList;
+        notifyDataSetChanged();
+    }
+
     private String formatPrice(String price) {
         try {
             // Xóa tất cả các dấu phẩy và khoảng trắng, rồi chia giá thành các phần
@@ -81,4 +86,5 @@ public class CreateTourAdapter extends BaseAdapter {
             return price;  // Nếu không thể chuyển đổi, giữ nguyên giá gốc
         }
     }
+
 }
