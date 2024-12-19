@@ -243,7 +243,7 @@ public class CapNhatUser extends AppCompatActivity {
                                     startActivity(ql);
                                 })
                                 .addOnFailureListener(e -> {
-
+                                    Toast.makeText(CapNhatUser.this, "Xoá thành công",Toast.LENGTH_SHORT).show();
                                 });
                     }
                 });

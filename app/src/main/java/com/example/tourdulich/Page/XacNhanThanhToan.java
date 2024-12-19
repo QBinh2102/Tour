@@ -72,7 +72,7 @@ public class    XacNhanThanhToan extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        ZaloPay SDK Init
+        //ZaloPay SDK Init
         ZaloPaySDK.init(553, Environment.SANDBOX);
 
         // Nút quay lại ChiTietDatVe
@@ -106,6 +106,7 @@ public class    XacNhanThanhToan extends AppCompatActivity {
                                             BaiDanhGia tmp = dataSnapshot.getValue(BaiDanhGia.class);
                                             if (tmp.idTour.equals(tour.idTour) && tmp.idUser.equals(User.getUid())) {
                                                 if (tmp.trangThai.equals("Đã thanh toán")) {
+                                                    Toast.makeText(XacNhanThanhToan.this, "Đặt Vé Thành Công", Toast.LENGTH_SHORT).show();
                                                     flag = true;
                                                     int soVeDat = sl;
                                                     int giaVe = Integer.parseInt(tour.giaTien);
@@ -153,6 +154,7 @@ public class    XacNhanThanhToan extends AppCompatActivity {
                                             }
                                         }
                                         if (!flag) {
+                                            Toast.makeText(XacNhanThanhToan.this, "Lỗi do Sang tìm ra 2", Toast.LENGTH_SHORT).show();
                                             FirebaseAuth auth = FirebaseAuth.getInstance();
                                             String idUser = User.getUid();
                                             String idTour = tour.idTour;
@@ -215,9 +217,9 @@ public class    XacNhanThanhToan extends AppCompatActivity {
                                     }
                                     //
                                 });
-//                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
-//                                intent1.putExtra("result", "Thanh toán thành công");
-//                                startActivity(intent1);
+                                Intent intent1 = new Intent(XacNhanThanhToan.this, ThongBaoThanhToan.class);
+                                intent1.putExtra("result", "Thanh toán thành công");
+                                startActivity(intent1);
                             }
 
                             @Override
